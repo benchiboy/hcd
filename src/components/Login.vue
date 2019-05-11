@@ -2,6 +2,16 @@
   <div class="login">
    <!-- <h2>健康链医疗设备数据监测系统</h2>
 	 -->	
+	 
+	 
+<div>
+  <b-button v-b-toggle.collapse-3 class="m-1">Toggle Collapse</b-button>
+  <b-collapse visible id="collapse-3">
+    <b-card>I should start open!</b-card>
+  </b-collapse>
+</div>
+
+
 		<div >
 			<b-card   title="用户登录"
 				tag="article"
@@ -117,7 +127,7 @@ export default {
 										if (response.data.err_code==GLOBAL.SUCC){
 												setStore(GLOBAL.UID_TOKEN,response.data.token)
 												console.log("======>",response.data.nick_name)
-												that.$router.push({name:'Home',params:{nick_name: response.data.nick_name}});
+												that.$router.push({name:'Home',params:{nickn_name: response.data.nick_name}});
 												return;
 										}else {
 												that.makeToast(response.data.err_msg);

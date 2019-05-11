@@ -1,6 +1,11 @@
 <template>
  
 	<div>
+		
+		<!-- <svg class="icon">
+		  <use xlink:href="open-iconic.svg#account-login"  class="icon-account-login"></use>
+		</svg>
+		 -->
 		<div style="margin-left: 5px;margin-right: 5px;" >
 				
 					<b-navbar toggleable="lg" type="dark" variant="info" >
@@ -43,6 +48,11 @@
 										</b-nav-item>
 								</b-navbar-nav>
 						
+								<b-navbar-nav >
+										<b-img class="rounded-circle" style="width: 40px; height:40px"  src="https://picsum.photos/125/125/?image=58" alt="Center image"></b-img>
+								</b-navbar-nav>
+						
+					
 								<b-nav-item-dropdown right>
 									<template slot="button-content">
 										<em>
@@ -53,7 +63,14 @@
 									<b-dropdown-item href="#">账户信息</b-dropdown-item>
 									<b-dropdown-item href="#">退出</b-dropdown-item>
 								</b-nav-item-dropdown>
+						
+						
+						
+						
+					
 							</b-navbar-nav>
+							
+						
 						</b-collapse>
 					</b-navbar>
 	</div>
@@ -112,6 +129,13 @@ a {
 .addclass{
 	 border-bottom: 2px solid red;
 }
-
+.icon {
+  width: 16px;
+  height: 16px;
+	
+}
+.icon-account-login {
+  fill: #f00;
+}
 
 </style>

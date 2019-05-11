@@ -1,17 +1,204 @@
+
 <template>
-  <div >
+	<div>
+		
+
+	<div>
+		<div id="allmap"  class="map"></div>
+	</div>
 	
-		<div id="allmap" style="margin-left: 5px;margin-right: 5px;" class="map"></div>
+	
+		
+<div class=" searchbox "  >
+
+	<div class="m-1">
+	
+	<b-navbar toggleable type="light"  sticky variant="info" style="opacity: 0.8; " class="d-flex align-items-center">
+		
+	<b-navbar-toggle target="collapse-1" ></b-navbar-toggle>
+	<b-collapse id="collapse-1" class="mt-2 ">	
+	  <b-form inline class="d-flex align-items-center">
+		<label class="mr-sm-2" for="inline-form-custom-select-pref">国家</label>
+		<b-form-select v-model="country_selected"  :options="country_options"
+		>
+		</b-form-select>
+
+		<label class="mr-lg-2 ml-3" for="inline-form-custom-select-pref">地区</label>
+		<b-form-select v-model="area_selected"  :options="area_options"
+		@change="onAreaChange">
+		</b-form-select>
+	
+		<label class="mr-lg-2 ml-3" for="inline-form-custom-select-pref">设备类型</label>
+		<b-form-select v-model="device_selected"  :options="device_options"
+		>
+		</b-form-select>
+			
+		<label class="mr-lg-2 ml-3" for="inline-form-custom-select-pref">设备状态</label>
+		<b-form-select v-model="status_selected"  :options="status_options"
+		>
+		</b-form-select>
+	  </b-form>
+	
+	  </b-collapse>
+	</b-navbar>
+	
+   </div>
+ 
+<!-- <div>
+  <b-dropdown id="dropdown-offset" offset="25" text="Offset Dropdown" class="m-2">
+    <b-dropdown-item href="#">Action</b-dropdown-item>
+    <b-dropdown-item href="#">Another action</b-dropdown-item>
+    <b-dropdown-item href="#">Something else here</b-dropdown-item>
+  </b-dropdown>
+</div> -->
+
+
+</div>
+		
+	<!-- 
+<div class="card searchbox w-50 shadow-lg p-1">
+	
+	
+		<form>
+		  <div class="form-row">
+			<div class="col">
+			   <select id="inputState" class="form-control">
+				<option selected>国家</option>
+				<option>...</option>
+				</select>
+			</div>
+			<div class="col">
+			   <select id="inputState1" class="form-control">
+				<option selected>地区</option>
+				<option>...</option>
+			  </select>
+			</div>
+		 <div class="col">
+		 	<select id="inputState2" class="form-control">
+		 	<option selected>设备类型</option>
+		 	<option>...</option>
+		 	</select>
+		 </div>
+		 
+		 <div class="col">
+		 	<select id="inputState" class="form-control">
+		 	<option selected>设备状态</option>
+		 	<option>...</option>
+		 	</select>
+		 </div>
+		 
+		 </div>
+		</form>
+
+
+	</div> -->
+
+
+	
+	<div class="card legend-device-box rounded border-primary shadow-lg" shadow-lg header="设备类型图标">
+		 <b-card
+			header="设备图例"
+			header-text-variant="white"
+			header-tag="header"
+			header-bg-variant="info"
+			style="max-width: 50rem;"
+		>
+		<b-card-text>
+			<div class="d-flex justify-content-between align-items-center">
+				<b-img class="rounded-circle" style="width: 25px; height:25px"  src="https://picsum.photos/125/125/?image=58" alt="Center image"></b-img>
+				<span class="w-50" style="text-align: left;">mLabs</span>
+			</div>
+			<div class="d-flex justify-content-between align-items-center mt-1" >
+					<b-img class="rounded-circle" style="width: 25px; height:25px"  src="https://picsum.photos/125/125/?image=58" alt="Center image"></b-img>
+				<span class="w-50" style="text-align: left;">qLabs</span>
+			</div>
+			
+		</b-card-text>
+		</b-card>
+	</div>
+	
+	<div class="card legend-status-box rounded border-primary shadow-lg" header="运行状态图标">
+		<b-card
+			header="运行状态图标"
+			header-text-variant="white"
+			header-tag="header"
+			header-bg-variant="info"
+			style="max-width: 20rem;"
+		>
+		<b-card-text>
+			
+			<div class="d-flex justify-content-between align-items-center">
+				<span class="legend-status-item w-25" style="background: green;" ></span> 
+				<span class="w-50" style="text-align: left;">运行良好</span>
+			</div>
+			
+			<div class="d-flex justify-content-between align-items-center">
+				<span class="legend-status-item  w-25" style="background:lightgreen;" ></span> 
+				<span class=" w-50" style="text-align: left;">使用不足</span>
+			</div>
+			
+			<div class="d-flex justify-content-between align-items-center">
+				<span class="legend-status-item  w-25" style="background: yellow;" ></span> 
+				<span class=" w-50" style="text-align: left;">警告</span>
+			</div>
+			
+			<div class="d-flex justify-content-between align-items-center">
+				<span class="legend-status-item  w-25" style="background: red;" ></span> 
+				<span class=" w-50" style="text-align: left;">紧急</span>
+			</div>
+			
+			<div class="d-flex justify-content-between align-items-center">
+				<span class="legend-status-item  w-25" style="background: grey;" ></span> 
+				<span class=" w-50" style="text-align: left;">闲置</span>
+			</div>
+		</b-card-text>
+
+		</b-card>
+	</div>
+	
+	
 	
 	</div>
 </template>
-<script>	
 
+
+<script>	
 export default {
   name: 'Map', 
   data () {
    return {
-   
+		currCountry:'中国',
+		currArea:'',
+		country_selected: null,
+        country_options: [
+          { value: null, text: '中国' },
+		  { value: null, text: '日本' },
+        
+        ],
+		area_selected: null,
+		area_options: [
+		{ value: null, text: '北京' },
+		{ value: null, text: '天津市' },
+		{ value: null, text: '上海市' },
+		{ value: null, text: '重庆市' },
+		
+		],
+		device_selected: null,
+		device_options: [
+		{ value: null, text: '全部' },
+		{ value: null, text: 'mLabs' },
+		{ value: null, text: 'qLabs' },
+	
+		
+		],
+		status_selected: null,
+		status_options: [
+		{ value: null, text: '运行良好' },
+		{ value: null, text: '运行不足' },
+		{ value: null, text: '预警' },
+		{ value: null, text: '紧急' },
+		
+		]
    	}
   },
   
@@ -75,8 +262,8 @@ export default {
 				that.addMarker(point,new BMap.Label(cityArr[i].city+10,{offset:new BMap.Size(-3,-20)}))			
 			}		
 			
-			this.getBoundary();
-			map.centerAndZoom(point, 8);
+			//this.getBoundary();
+			map.centerAndZoom(point, 5);
 			
 		
 		},
@@ -104,7 +291,17 @@ export default {
 		           // map.setViewport(ply.getPath());    //调整视野         
 		        }                
 		    });   
+		},
+		selectCountry(){       
+			alert("hi")
+		},
+		selectArea(){       
+		},
+		
+		onAreaChange(){
+			alert(this.area_selected)
 		}
+		
 	}
 }
 
@@ -128,8 +325,43 @@ a {
 .map{
 	height: 650px;
 	width:auto;
-	
 	border: 1px solid red;
+}
+.legend-device-box{
+	background:lavender;
+	right: 50px;
+	bottom: 100px;
+	width: 200px;
+	position: absolute;
+	z-index: 999; 
+}
 
+.legend-device-item{
+	width: 30px;
+	height: 30px;
+}
+
+
+.legend-status-box{
+	background:lavender;
+	right: 50px;
+	width: 200px;
+	bottom: 250px;
+	position: absolute;
+	z-index: 999; 
+}
+
+
+.legend-status-item{
+	display: inline-block;
+	width:40px;height:10px;
+}
+
+.searchbox{
+	top: 80px;
+	left: 60px;
+	position: absolute;
+	z-index: 999; 
+	
 }
 </style>
