@@ -5,6 +5,11 @@ export default {
 	URL_SIGNIN: 'http://localhost:8080/jc/api/signin',
 	URL_SIGNOUT: 'http://localhost:8080/jc/api/signout',
 	URL_DEVICELIST: 'http://localhost:8080/jc/api/devicelist',
+	URL_GETACTLIST: 'http://localhost:8080/jc/api/getactlist',
+	URL_DELACCOUNT: 'http://localhost:8080/jc/api/delaccount',
+	URL_SETACCOUNT: 'http://localhost:8080/jc/api/setaccount',
+	URL_ADDACCOUNT: 'http://localhost:8080/jc/api/addaccount',
+	URL_GETACCOUNT: 'http://localhost:8080/jc/api/getaccount',
 	
 	UID_TOKEN: 'uid_token',
 	SUCC:'0000',

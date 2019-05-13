@@ -7,7 +7,7 @@
 
 <div class="d-flex justify-content-center">
     <b-modal
-      id="modal-1"
+      id="manage-modal-1"
       ref="modal"
 		  title="新增用户"
 			scrollable
@@ -39,6 +39,8 @@
 					v-model="form.login_name"
 					:state="nameState"
 					required
+					
+					disabled
 				></b-form-input>
 			 </b-form-group>
 
@@ -52,7 +54,7 @@
         >
 				<b-form-input
 					id="realNameState"
-					v-model="form.real_name"
+					v-model="form.nick_name"
 					:state="realNameState"
 					required
 				></b-form-input>
@@ -66,15 +68,18 @@
       	invalid-feedback="登录密码不能为空"
 				valid-feedback="密码输入通过"
 				class="text-left"
+		
 	    >
       	<b-form-input
       		id="pwd1-input"
 					type="password"
-      		v-model="form.pwd1"
+      		v-model="form.login_pass"
       		:state="pwdState1"
       		required
+	
       	></b-form-input>
       </b-form-group>
+		
 		
 			<b-form-group
 				:state="pwdState2"
@@ -82,14 +87,16 @@
 				label-for="pwd2-input"
 				invalid-feedback="确认密码不能为空"
 				valid-feedback="确认密码输入通过"
-					class=" text-left"
-			>
+				class=" text-left"
+				>
+				
 				<b-form-input
 					id="pwd2-input"
 					type="password"
-					v-model="form.pwd2"
+					v-model="form.login_pass2"
 					:state="pwdState2"
 					required
+						
 				></b-form-input>
 			</b-form-group>
 			
@@ -100,19 +107,20 @@
 				invalid-feedback="账户到期日不能为空"
 				valid-feedback="账户到期日通过"
 				class=" text-left"
+				
 			>
 				<b-form-input
 					id="expire-input"
 					type="date"
-					v-model="form.expire"
+					v-model="form.expire_date"
 					:state="expireState"
 					required
+				
 				></b-form-input>
 			</b-form-group>
 			
 			
 			<b-form-group
-				:state="statusState"
 				label="账户状态"
 				label-for="btn-radios-2"
 				invalid-feedback="账户状态"
@@ -155,192 +163,78 @@
 	
 <div>
 	
-	<div class="d-flex justify-content-center mt-2 mb-2">
+	<div class="d-flex justify-content-around mt-2 mb-2">
 		<b-input-group class="w-25">
       <b-input-group-text slot="prepend">登录名称</b-input-group-text>
 				<b-form-input type="text" min="0.00"></b-form-input>
 			<b-input-group-append>
-				<b-button variant="outline-secondary">查询</b-button>
+				<b-button variant="outline-secondary" @click="getActList">查询</b-button>
 			</b-input-group-append>
+			
 		</b-input-group>
+		<b-button v-b-modal.manage-modal-1 variant="outline-primary" class="ml-6">
+			<img  src="../assets/icon_addperson.png" alt="Image 1" width="30" height="30" class=""></img>
+		</b-button>
 	</div>		
 				
   <div>
-    <b-card-group deck class="m-2">
+    <b-card-group deck class="m-2 ">
+			<div 	v-for="account in accounts">
       <b-card
-        border-variant="primary"
-        header="李晓明"
-        header-bg-variant="primary"
+			  border-variant="primary"
+        :header="account.nick_name"
+        header-bg-variant="success"
         header-text-variant="white"
         align="center"
+				class="mt-2"
+				
 	    >
 				<b-card-text>
-				<div class="d-flex justify-content-between">
-					<span><h6>登录账号:</h6></span><span>admin</span>
-				</div>
+					
+					<div class="d-flex justify-content-between">
+						<span><h6>登录账号:</h6></span><span>{{ account.login_name }}</span>
+					</div>
 					<div class="d-flex justify-content-between">
 						<span><h6>上次登录时间:</h6></span><span>2018-12-12 12:12:12</span>
 					</div>
 					<div class="d-flex justify-content-between">
-						<span><h6>有效期至:</h6></span><span>2018-12-12</span>
+						<span><h6>有效期至:</h6></span><span>{{ account.expire_date }}--{{ account.user_id }}</span>
 					</div>
 					<div class="d-flex justify-content-between">
-						<span><h6>用户状态:</h6></span><span>正常</span>
+						<span><h6>用户状态:</h6></span><span>{{ account.status=='e'?'正常': account.status=='f'?'冻结':'禁用'}}</span>
 					</div>
 					<div class="d-flex justify-content-between">
-						<span><h6>权限:</h6></span><span>设备地图、设备分析</span>
+						<span><h6>权限:</h6></span><span>{{ getRights(account.rights)}}</span>
 					</div>
 					<div class="d-flex justify-content-end">
 						<b-button-group size="sm"  class="mt-2" >
-						<b-button variant="outline-primary" class="mr-3">
-							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="30" height="30" class=""></img>
+						<b-button variant="outline-primary" @click="delAccount(account.user_id,account.login_name)" class="mr-3">
+							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="20" height="20" class=""></img>
 						</b-button>
-					
-						<b-button variant="outline-primary">
-							<img  src="../assets/icon_dispose.png" alt="Image 1" width="30" height="30" class=""></img>
+						<b-button variant="outline-primary" @click="getAccount(account.user_id)">
+							<img  src="../assets/icon_dispose.png" alt="Image 1" width="20" height="20" class=""></img>
 						</b-button>
 						</b-button-group>
 					</div>
 				</b-card-text>
 			</b-card>
-			
-			<b-card
-				border-variant="primary"
-				header="李晓明"
-				header-bg-variant="primary"
-				header-text-variant="white"
-				align="center"
-			>
-				<b-card-text>
-				<div class="d-flex justify-content-between">
-					<span><h6>登录账号:</h6></span><span>admin</span>
-				</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>上次登录时间:</h6></span><span>2018-12-12 12:12:12</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>有效期至:</h6></span><span>2018-12-12</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>用户状态:</h6></span><span>正常</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>权限:</h6></span><span>设备地图、设备分析</span>
-					</div>
-					<div class="d-flex justify-content-end">
-						<b-button-group size="sm"  class="mt-2" >
-						<b-button variant="outline-primary" class="mr-3">
-							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="30" height="30" class=""></img>
-						</b-button>
-					
-						<b-button variant="outline-primary">
-							<img  src="../assets/icon_dispose.png" alt="Image 1" width="30" height="30" class=""></img>
-						</b-button>
-						</b-button-group>
-					</div>
-				</b-card-text>
-			</b-card>
-			
-			
-			
-			<b-card
-				border-variant="primary"
-				header="李晓明"
-				header-bg-variant="primary"
-				header-text-variant="white"
-				align="center"
-			>
-				<b-card-text>
-				<div class="d-flex justify-content-between">
-					<span><h6>登录账号:</h6></span><span>admin</span>
-				</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>上次登录时间:</h6></span><span>2018-12-12 12:12:12</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>有效期至:</h6></span><span>2018-12-12</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>用户状态:</h6></span><span>正常</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>权限:</h6></span><span>设备地图、设备分析</span>
-					</div>
-					<div class="d-flex justify-content-end">
-						<b-button-group size="sm"  class="mt-2" >
-						<b-button variant="outline-primary" class="mr-3">
-							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="30" height="30" class=""></img>
-						</b-button>
-					
-						<b-button variant="outline-primary">
-							<img  src="../assets/icon_dispose.png" alt="Image 1" width="30" height="30" class=""></img>
-						</b-button>
-						</b-button-group>
-					</div>
-				</b-card-text>
-			</b-card>
-			<b-card
-				border-variant="primary"
-				header="李晓明"
-				header-bg-variant="primary"
-				header-text-variant="white"
-				align="center"
-			>
-				<b-card-text>
-				<div class="d-flex justify-content-between">
-					<span><h6>登录账号:</h6></span><span>admin</span>
-				</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>上次登录时间:</h6></span><span>2018-12-12 12:12:12</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>有效期至:</h6></span><span>2018-12-12</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>用户状态:</h6></span><span>正常</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>权限:</h6></span><span>设备地图、设备分析</span>
-					</div>
-					<div class="d-flex justify-content-end">
-						<b-button-group size="sm"  class="mt-2" >
-						<b-button variant="outline-primary" class="mr-3">
-							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="30" height="30" class=""></img>
-						</b-button>
-					
-						<b-button variant="outline-primary">
-							<img  src="../assets/icon_dispose.png" alt="Image 1" width="30" height="30" class=""></img>
-						</b-button>
-						</b-button-group>
-					</div>
-				</b-card-text>
-			</b-card>
-	
+			</div>
+		
     </b-card-group>
   </div>
-  
-	<div>
-	    <b-card-group deck class="m-2 w-25">
-	      <b-card
-	        align="center"
-		   >
-	      <b-card-text></b-card-text>
-					<b-button v-b-modal.modal-1 variant="outline-primary">
-						<img  src="../assets/icon_addperson.png" alt="Image 1" width="30" height="30" class=""></img>
-					</b-button>
-		
-				</b-card>
-	    </b-card-group>
-	  </div>
+
   </div>
 	</div>
 	
 </template>
 
 <script>
+	import GLOBAL from './Global.js'
   export default {
     data() {
       return {
+				test:'22222',
+				isAdd:true,
 				options: [
           { text: '设备地图', value: 'm' },
           { text: '设备列表', value: 'l' },
@@ -350,17 +244,21 @@
 				status_options: [
           { text: '正常', value: 'e' },
           { text: '禁用', value: 'd' },
+					{ text: '冻结', value: 'f' },
         ],
-     
- 			 form: {
+			 login_name:'',
+ 		
+			 form: {
+					 user_id:0,
            login_name: '',
 					 rights:[],
-					 pwd1:'',
-					 pwd2:'',
-					 expire:'',
-					 real_name:'',
+					 login_pass:'',
+					 login_pass2:'',
+					 expire_date:'',
+					 nick_name:'',
 					 status:'',
          },
+			 accounts:[],
       }
     },
     computed: {
@@ -368,21 +266,21 @@
 		    return this.form.login_name.length > 4 && this.form.login_name.length < 13
       },
 			realNameState() {
-				return this.form.real_name.length > 4 && this.form.real_name.length < 20
+				return this.form.nick_name.length > 2 && this.form.nick_name.length < 20
 			},
 			pwdState1() {
-				return this.form.pwd1.length > 4 && this.form.pwd1.length < 13
+				return this.form.login_pass.length > 4 && this.form.login_pass.length < 13
 			},
 			pwdState2() {
-				return this.form.pwd2.length > 4 && this.form.pwd2.length < 13
+				return this.form.login_pass2.length > 4 && this.form.login_pass2.length < 13
 			},
 			rightsState() {
 				return this.form.rights.length>0?true:false;
-			}			,
+			},
 			expireState() {
-				return this.form.expire.length>6?true:false;
-			}
-    },
+				return this.form.expire_date.length>6?true:false;
+			},
+	  },
 
     mounted() {
      
@@ -390,10 +288,24 @@
 
     methods: {
 			
+			getRights(rights) {
+				let text=""
+				let r=rights.split(",")
+				console.log("======>----",r.length)
+				for ( var j = 0; j <r.length; j++){
+						for ( var i = 0; i <this.options.length; i++){
+							if (this.options[i].value==r[j]){
+								text=text+this.options[i].text+" "
+								break
+							}
+						}
+				}
+				return text
+			},
+				
 			checkFormValidity() {
         const valid = this.$refs.form.checkValidity()
-		    //this.nameState = valid ? 'valid' : 'invalid'
-        return valid
+		    return valid
       },
 			
 			
@@ -412,19 +324,16 @@
 				
 				
       },
+			openModal(){
+				this.$refs.modal.show()
+			},
       showModal(evt) {
 			  // evt.preventDefault()
          // Reset our form values
-         this.form.login_name = '11111'
-         this.form.real_name = '11111'
-         this.form.pwd1 = '11111'
-         this.form.pwd2 = '11111'
-				 this.form.status='e'
-				 this.form.rights=['d','m','a','l']
-				 this.form.expire='2019-12-12'
+
 	    },
 			
-			 toast(toaster, append = false) {
+			toast(toaster, append = false) {
         this.$bvToast.toast(`新增用户成功!`, {
           title: `执行结果`,
           toaster: 'b-toaster-top-center',
@@ -437,8 +346,107 @@
 			
 			hiddenModal(evt) {
 				showModal(evt)
-			}
+			},
+			/* 用户列表*/
+			getActList() {
+				var that=this;
+				this.$axios.post(GLOBAL.URL_GETACTLIST, 
+									JSON.stringify(this.form))
+									.then(function (response) {
+										console.log("========>",response.data)
+										that.accounts=response.data.List
+										console.log("====>",that.accounts)
+									})
+									.catch(function (error) {
+										
+										console.log("=========>",error);
+						}); 		
+			},
+			/* 新增用户*/
+			addAccount() {
+				var that=this;
+				this.$axios.post(GLOBAL.URL_GETACTLIST, 
+									JSON.stringify(this.form))
+									.then(function (response) {
+										console.log("========>",response.data)
+										that.accounts=response.data.List
+										console.log("====>",that.accounts)
+									})
+									.catch(function (error) {
+										console.log("=========>",error);
+						}); 		
+			},
+			/* 修改用户提交*/
+			setAccount() {
+				var that=this;
+				this.$axios.post(GLOBAL.URL_GETACTLIST, 
+									JSON.stringify(this.form))
+									.then(function (response) {
+										console.log("========>",response.data)
+										that.accounts=response.data.List
+										console.log("====>",that.accounts)
+									})
+									.catch(function (error) {
+										console.log("=========>",error);
+						}); 		
+			},
 			
+			/* 得到用户信息*/
+			getAccount(user_id) {
+				var that=this;
+				this.isAdd=false
+				this.form.user_id=user_id
+				this.$axios.post(GLOBAL.URL_GETACCOUNT, 
+									JSON.stringify(this.form))
+									.then(function (response) {
+										that.form.nick_name=response.data.nick_name
+										that.form.login_name=response.data.login_name
+										that.form.expire_date=response.data.expire_date
+										that.form.status=response.data.status
+										that.form.rights=response.data.rights.split(",")
+										that.form.login_pass=response.data.login_pass
+										that.form.login_pass2=response.data.login_pass
+										that.openModal()
+									
+									})
+									.catch(function (error) {
+										console.log("=========>",error);
+						}); 		
+			},
+			
+			/* 删除用户信息*/
+			delAccount(user_id,login_name) {
+				var that=this;
+				let tip='你确认要删除 '+login_name+" 吗?"
+			  this.$bvModal.msgBoxConfirm(tip, {
+          title: '删除确认',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: '确定',
+          cancelTitle: '取消',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        }) 
+					.then(value => {
+							if (value){
+								this.form.user_id=user_id
+								this.$axios.post(GLOBAL.URL_DELACCOUNT, 
+													JSON.stringify(this.form))
+													.then(function (response) {
+													
+														that.form.user_id=0
+													})
+													.catch(function (error) {
+														console.log("=========>",error);
+									}); 		
+							}
+					})
+					.catch(err => {
+						// An error occurred
+				})
+			},
     }
   }
 </script>
