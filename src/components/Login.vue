@@ -1,24 +1,12 @@
 <template>
-  <div class="login">
+  <div class="backimg">
    <!-- <h2>健康链医疗设备数据监测系统</h2>
 	 -->	
-	 
-	 
-<div>
-  <b-button v-b-toggle.collapse-3 class="m-1">Toggle Collapse</b-button>
-  <b-collapse visible id="collapse-3">
-    <b-card>I should start open!</b-card>
-  </b-collapse>
-</div>
-
-
 		<div >
 			<b-card   title="用户登录"
 				tag="article"
-				style="max-width: 25rem; margin-top: 5rem;"  class="mx-auto loginbox">
-			
+				style="max-width: 26rem;"  class="mx-auto loginbox">
 				<b-card-text>
-					
 					 <b-form @submit="onSubmit" @reset="onReset" >
 
 						<b-form-group id="input-group-1"  label-for="input-1">
@@ -86,8 +74,8 @@
 
 			</b-card>
 		</div>
-		<h4 style="margin-top: 10rem;">Copyright © 2019 HealthDataChain All Rights Reserved. 深圳健康链 版权所有</h4>
-
+<!-- 		<h4 style="margin-top: 20rem;">Copyright © 2019 HealthDataChain All Rights Reserved. 深圳健康链 版权所有</h4>
+ -->
  	</div>
 	
 </template>
@@ -140,6 +128,8 @@ export default {
 		  },
     
 			onReset(evt) {
+				
+				alert(window.screen.availHeight) 
 
        evt.preventDefault()
 			 this.form.mct_no = ''
@@ -170,10 +160,18 @@ li {
 a {
   color: #42b983;
 }
-.login{
-	 margin-top: 5rem;
-}
+
 .loginbox{
+	top: 10rem;
 	box-shadow:black 0px 0px 30px
 }
+
+.backimg{
+		background-image: url(../assets/login-back.jpeg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+		height: 765px;
+}
+
 </style>

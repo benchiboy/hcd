@@ -5,6 +5,8 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Map from '@/components/Map'
 import Analysis from '@/components/Analysis'
+import AnalysisA from '@/components/Analysis_A'
+
 import Decision from '@/components/Decision'
 import Manage from '@/components/Manage'
 
@@ -52,6 +54,16 @@ export default new Router({
 					meta: {
 						requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
 					},
+					children: [
+						{
+							path: 'AnalysisA',
+							name: 'AnalysisA',
+							component: AnalysisA,
+							meta: {
+								requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+							}
+						}
+					]
         },
 				{
 					path: 'Decision',

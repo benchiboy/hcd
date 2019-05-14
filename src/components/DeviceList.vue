@@ -114,38 +114,38 @@
     data() {
       return {
         items: [
-          { isActive: true, age: 40, name: { first: 'Dickerson', last: 'Macdonald' } },
-          { isActive: false, age: 21, name: { first: 'Larsen', last: 'Shaw' } },
-          {
-            isActive: false,
-            age: 9,
-            name: { first: 'Mini', last: 'Navarro' },
-            _rowVariant: 'success'
-          },
-          { isActive: false, age: 89, name: { first: 'Geneva', last: 'Wilson' } },
-          { isActive: true, age: 38, name: { first: 'Jami', last: 'Carney' } },
-          { isActive: false, age: 27, name: { first: 'Essie', last: 'Dunlap' } },
-          { isActive: true, age: 40, name: { first: 'Thor', last: 'Macdonald' } },
-          {
-            isActive: true,
-            age: 87,
-            name: { first: 'Larsen', last: 'Shaw' },
-            _cellVariants: { age: 'danger', isActive: 'warning' }
-          },
-          { isActive: false, age: 26, name: { first: 'Mitzi', last: 'Navarro' } },
-          { isActive: false, age: 22, name: { first: 'Genevieve', last: 'Wilson' } },
-          { isActive: true, age: 38, name: { first: 'John', last: 'Carney' } },
-          { isActive: false, age: 29, name: { first: 'Dick', last: 'Dunlap' } }
+ 
+					{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+																							
         ],
         fields: [
-          { key: 'name', label: 'Person Full name', sortable: true, sortDirection: 'desc' },
-          { key: 'age', label: 'Person age', sortable: true, class: 'text-center' },
-          { key: 'isActive', label: 'is Active' },
-          { key: 'actions', label: 'Actions' }
+					{ key: 'd_type_na', 	label: '设备类型' },
+					{ key: 'device_id', 	label: '设备序列号', sortable: true, sortDirection: 'desc' },
+          { key: 'province_na',	label:'所在地区', sortable: true, class: 'text-center' },
+       		{ key: 'hospital', 		label: '所在医院' },
+					{ key: 'd_status_na', label: '设备状态' },
+    			{ key: 'd_strategy', 	label: '决策' },
+					{ key: 'd_person', 		label: '责任人' }
+					
         ],
         totalRows: 1,
         currentPage: 1,
-        perPage: 5,
+        perPage: 10,
         pageOptions: [5, 10, 15],
         sortBy: null,
         sortDesc: false,

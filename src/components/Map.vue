@@ -106,11 +106,11 @@
 		<b-card-text>
 			<div class="d-flex justify-content-between align-items-center">
 				<b-img class="rounded-circle" style="width: 25px; height:25px"  src="https://picsum.photos/125/125/?image=58" alt="Center image"></b-img>
-				<span class="w-50" style="text-align: left;">mLabs</span>
+				<span class="w-50" style="text-align: left;">mLabs</span><b-badge variant="danger">4</b-badge>
 			</div>
 			<div class="d-flex justify-content-between align-items-center mt-1" >
 					<b-img class="rounded-circle" style="width: 25px; height:25px"  src="https://picsum.photos/125/125/?image=58" alt="Center image"></b-img>
-				<span class="w-50" style="text-align: left;">qLabs</span>
+				<span class="w-50" style="text-align: left;">qLabs</span><b-badge variant="danger">4</b-badge>
 			</div>
 			
 		</b-card-text>
@@ -129,27 +129,27 @@
 			
 			<div class="d-flex justify-content-between align-items-center">
 				<span class="legend-status-item w-25" style="background: green;" ></span> 
-				<span class="w-50" style="text-align: left;">运行良好</span>
+				<span class="w-50" style="text-align: left;">运行良好</span><b-badge  pill variant="danger">4</b-badge>
 			</div>
 			
 			<div class="d-flex justify-content-between align-items-center">
 				<span class="legend-status-item  w-25" style="background:lightgreen;" ></span> 
-				<span class=" w-50" style="text-align: left;">使用不足</span>
+				<span class=" w-50" style="text-align: left;">使用不足</span><b-badge pill  variant="danger">4</b-badge>
 			</div>
 			
 			<div class="d-flex justify-content-between align-items-center">
 				<span class="legend-status-item  w-25" style="background: yellow;" ></span> 
-				<span class=" w-50" style="text-align: left;">警告</span>
+				<span class=" w-50" style="text-align: left;">警告</span><b-badge  pill variant="danger">4</b-badge>
 			</div>
 			
 			<div class="d-flex justify-content-between align-items-center">
 				<span class="legend-status-item  w-25" style="background: red;" ></span> 
-				<span class=" w-50" style="text-align: left;">紧急</span>
+				<span class=" w-50" style="text-align: left;">紧急</span><b-badge  pill variant="danger">4</b-badge>
 			</div>
 			
 			<div class="d-flex justify-content-between align-items-center">
 				<span class="legend-status-item  w-25" style="background: grey;" ></span> 
-				<span class=" w-50" style="text-align: left;">闲置</span>
+				<span class=" w-50" style="text-align: left;">闲置</span><b-badge pill variant="danger">4</b-badge>
 			</div>
 		</b-card-text>
 

@@ -1,13 +1,9 @@
 <template>
 	
-
-	
-	
-<div class=" " >
-
+<div >
 <div class="d-flex justify-content-center">
     <b-modal
-      id="manage-modal-1"
+      id="manage-modal-add"
       ref="modal"
 		  title="新增用户"
 			scrollable
@@ -16,10 +12,10 @@
       @ok="handleOk"
     >
 		 <template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
-      <b-button size="sm" variant="success" @click="ok()">
+      <b-button size="md" variant="success" @click="ok()">
 				确定
       </b-button>
-      <b-button size="sm" variant="danger" @click="cancel()">
+      <b-button size="md" variant="danger" @click="cancel()">
         取消
       </b-button>
     </template>
@@ -39,7 +35,6 @@
 					v-model="form.login_name"
 					:state="nameState"
 					required
-					
 					disabled
 				></b-form-input>
 			 </b-form-group>
@@ -158,6 +153,119 @@
 			</form>
 			</div >
     </b-modal>
+	
+		<b-modal
+		      id="manage-modal-edit"
+		      ref="modal-edit"
+				  title="修改用户信息"
+					scrollable
+		      @show="showModal"
+		      @hidden="hiddenModal"
+		      @ok="handleOk"
+		    >
+				 <template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
+		      <b-button size="md" variant="success" @click="ok()">
+						确定
+		      </b-button>
+		      <b-button size="md" variant="danger" @click="cancel()">
+		        取消
+		      </b-button>
+		    </template>
+		
+				<div class="m-3" >
+		      <form ref="form" @submit.stop.prevent="handleOk" >
+						<b-form-group
+		          :state="nameState"
+		          label="登录账号"
+		          label-for="name-input"
+		          invalid-feedback="登录账号必须为5-12个英文字母组合"
+							valid-feedback="输入通过校验"
+							class="text-left w-100 "
+		        >
+						<b-form-input
+							id="name-input"
+							v-model="form.login_name"
+							:state="nameState"
+							required
+							
+							disabled
+						></b-form-input>
+					 </b-form-group>
+		
+						<b-form-group
+		          :state="realNameState"
+		          label="用户姓名"
+		          label-for="realNameState"
+		          invalid-feedback="用户姓名必须4-20个英文字母组合"
+							valid-feedback="输入通过校验"
+							class="text-left w-100 "
+		        >
+						<b-form-input
+							id="realNameState"
+							v-model="form.nick_name"
+							:state="realNameState"
+							required
+						></b-form-input>
+					 </b-form-group>
+					
+					<b-form-group
+						:state="expireState"
+						label="账户到期日-默认1年"
+						label-for="expire-input"
+						invalid-feedback="账户到期日不能为空"
+						valid-feedback="账户到期日通过"
+						class=" text-left"
+						
+					>
+						<b-form-input
+							id="expire-input"
+							type="date"
+							v-model="form.expire_date"
+							:state="expireState"
+							required
+						
+						></b-form-input>
+					</b-form-group>
+					
+					
+					<b-form-group
+						label="账户状态"
+						label-for="btn-radios-2"
+						invalid-feedback="账户状态"
+						class="text-left"
+					>
+						 <b-form-radio-group
+		        id="btn-radios-2"
+		        v-model="form.status"
+		        :options="status_options"
+		        buttons
+		        button-variant="outline-primary"
+		        size="sm"
+		        name="radio-btn-outline"
+						></b-form-radio-group>
+					
+						</b-form-group>
+			
+						<b-form-group
+							:state="rightsState"
+							label="选择用户权限"
+							label-for="rights-input"
+							invalid-feedback="用户权限不能为空"
+							valid-feedback="权限校验通过"
+							class="text-left"
+						>
+						<b-form-checkbox-group
+							id="rights-input"
+							v-model="form.rights"
+							:options="options"
+							switches
+						></b-form-checkbox-group>
+		 
+					 </b-form-group>
+					 
+					</form>
+					</div >
+		    </b-modal>
   </div>
 	
 	
@@ -172,7 +280,7 @@
 			</b-input-group-append>
 			
 		</b-input-group>
-		<b-button v-b-modal.manage-modal-1 variant="outline-primary" class="ml-6">
+		<b-button v-b-modal.manage-modal-add variant="outline-primary" class="ml-6">
 			<img  src="../assets/icon_addperson.png" alt="Image 1" width="30" height="30" class=""></img>
 		</b-button>
 	</div>		
@@ -187,10 +295,8 @@
         header-text-variant="white"
         align="center"
 				class="mt-2"
-				
 	    >
 				<b-card-text>
-					
 					<div class="d-flex justify-content-between">
 						<span><h6>登录账号:</h6></span><span>{{ account.login_name }}</span>
 					</div>
@@ -211,7 +317,7 @@
 						<b-button variant="outline-primary" @click="delAccount(account.user_id,account.login_name)" class="mr-3">
 							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="20" height="20" class=""></img>
 						</b-button>
-						<b-button variant="outline-primary" @click="getAccount(account.user_id)">
+						<b-button variant="outline-primary" v-b-modal.manage-modal-edit @click="getAccount(account.user_id)">
 							<img  src="../assets/icon_dispose.png" alt="Image 1" width="20" height="20" class=""></img>
 						</b-button>
 						</b-button-group>
@@ -233,8 +339,6 @@
   export default {
     data() {
       return {
-				test:'22222',
-				isAdd:true,
 				options: [
           { text: '设备地图', value: 'm' },
           { text: '设备列表', value: 'l' },
@@ -247,8 +351,7 @@
 					{ text: '冻结', value: 'f' },
         ],
 			 login_name:'',
- 		
-			 form: {
+ 			 form: {
 					 user_id:0,
            login_name: '',
 					 rights:[],
@@ -324,13 +427,13 @@
 				
 				
       },
-			openModal(){
-				this.$refs.modal.show()
-			},
+// 			openModal(){
+// 				this.$refs.modal.show()
+// 			},
+// 			
       showModal(evt) {
 			  // evt.preventDefault()
-         // Reset our form values
-
+        // Reset our form values
 	    },
 			
 			toast(toaster, append = false) {
@@ -345,7 +448,7 @@
       },
 			
 			hiddenModal(evt) {
-				showModal(evt)
+				//showModal(evt)
 			},
 			/* 用户列表*/
 			getActList() {
@@ -358,8 +461,6 @@
 										console.log("====>",that.accounts)
 									})
 									.catch(function (error) {
-										
-										console.log("=========>",error);
 						}); 		
 			},
 			/* 新增用户*/
@@ -368,12 +469,9 @@
 				this.$axios.post(GLOBAL.URL_GETACTLIST, 
 									JSON.stringify(this.form))
 									.then(function (response) {
-										console.log("========>",response.data)
 										that.accounts=response.data.List
-										console.log("====>",that.accounts)
 									})
 									.catch(function (error) {
-										console.log("=========>",error);
 						}); 		
 			},
 			/* 修改用户提交*/
@@ -382,9 +480,7 @@
 				this.$axios.post(GLOBAL.URL_GETACTLIST, 
 									JSON.stringify(this.form))
 									.then(function (response) {
-										console.log("========>",response.data)
 										that.accounts=response.data.List
-										console.log("====>",that.accounts)
 									})
 									.catch(function (error) {
 										console.log("=========>",error);
@@ -394,7 +490,6 @@
 			/* 得到用户信息*/
 			getAccount(user_id) {
 				var that=this;
-				this.isAdd=false
 				this.form.user_id=user_id
 				this.$axios.post(GLOBAL.URL_GETACCOUNT, 
 									JSON.stringify(this.form))
@@ -406,7 +501,7 @@
 										that.form.rights=response.data.rights.split(",")
 										that.form.login_pass=response.data.login_pass
 										that.form.login_pass2=response.data.login_pass
-										that.openModal()
+										//that.openModal()
 									
 									})
 									.catch(function (error) {
