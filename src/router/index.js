@@ -4,8 +4,13 @@ import DeviceList from '@/components/DeviceList'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Map from '@/components/Map'
+
 import Analysis from '@/components/Analysis'
-import AnalysisA from '@/components/Analysis_A'
+import AnalysisID from '@/components/Analysis_ID'
+import AnalysisConfig from '@/components/Analysis_Config'
+import AnalysisMonitor from '@/components/Analysis_Monitor'
+import AnalysisStatus from '@/components/Analysis_Status'
+import AnalysisFact from '@/components/Analysis_Fact'
 
 import Decision from '@/components/Decision'
 import Manage from '@/components/Manage'
@@ -56,11 +61,43 @@ export default new Router({
 					},
 					children: [
 						{
-							path: 'AnalysisA',
-							name: 'AnalysisA',
-							component: AnalysisA,
+							path: 'AnalysisID',
+							name: 'AnalysisID',
+							component: AnalysisID,
 							meta: {
-								requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+								requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+							}
+						},
+						{
+							path: 'AnalysisConfig',
+							name: 'AnalysisConfig',
+							component: AnalysisConfig,
+							meta: {
+								requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+							}
+						},
+						{
+							path: 'AnalysisMonitor',
+							name: 'AnalysisMonitor',
+							component: AnalysisMonitor,
+							meta: {
+								requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+							}
+						},
+						{
+							path: 'AnalysisStatus',
+							name: 'AnalysisStatus',
+							component: AnalysisStatus,
+							meta: {
+								requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+							}
+						},
+						{
+							path: 'AnalysisFact',
+							name: 'AnalysisFact',
+							component: AnalysisFact,
+							meta: {
+								requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
 							}
 						}
 					]

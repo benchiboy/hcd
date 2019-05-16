@@ -1,53 +1,76 @@
 <template>
+	
   <div >
-		
-		 <b-container fluid>
+		<b-container fluid class="mt-2">
     <!-- User Interface controls -->
     <b-row>
-      <b-col md="6" class="my-1">
-        <b-form-group label-cols-sm="3" label="Filter" class="mb-0">
-          <b-input-group>
-            <b-form-input v-model="filter" placeholder="Type to Search"></b-form-input>
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+      <b-col md="3" class="my-1">
+        <b-form-group label-cols-sm="2" label="国家" class="mb-0">
+           <b-input-group>
+           	<b-form-select v-model="countrySelected" :options="countryOptions">
+           		<option slot="first" :value="null">-- 全部 --</option>
+           	</b-form-select>
+           	
+						<b-input-group-append>
+              <b-button  @click="filter = ''">清空</b-button>
             </b-input-group-append>
-          </b-input-group>
+           
+					 </b-input-group>
         </b-form-group>
       </b-col>
 
-      <b-col md="6" class="my-1">
-        <b-form-group label-cols-sm="3" label="Sort" class="mb-0">
+			<b-col md="3" class="my-1">
+        <b-form-group label-cols-sm="2" label="地区" class="mb-0">
+        
+				 <b-input-group>
+         	<b-form-select v-model="areaSelected" :options="areaOptions">
+         		<option slot="first" :value="null">-- 全部 --</option>
+         	</b-form-select>
+					<b-input-group-append>
+						<b-button  @click="filter = ''">清空</b-button>
+					</b-input-group-append>
+					 
+				 
+         </b-input-group>
+				 
+        </b-form-group>
+      </b-col>
+
+      <b-col md="3" class="my-1">
+        <b-form-group label-cols-sm="3" label="设备类型" class="mb-0">
           <b-input-group>
-            <b-form-select v-model="sortBy" :options="sortOptions">
-              <option slot="first" :value="null">-- none --</option>
+            <b-form-select v-model="deviceTypeSelected" :options="deviceTypeOptions">
+              <option slot="first" :value="null">-- 全部 --</option>
             </b-form-select>
-            <b-form-select v-model="sortDesc" :disabled="!sortBy" slot="append">
-              <option :value="false">Asc</option> <option :value="true">Desc</option>
-            </b-form-select>
+						<b-input-group-append>
+              <b-button  @click="filter = ''">清空</b-button>
+            </b-input-group-append>
+          
           </b-input-group>
         </b-form-group>
       </b-col>
+			
+			<b-col md="3" class="my-1">
+				<b-form-group label-cols-sm="3" label="设备状态" class="mb-0">
+					<b-input-group>
+						<b-form-select v-model="deviceStatusSelected" :options="deviceStatusOptions">
+							<option slot="first" :value="null">-- 全部 --</option>
+						</b-form-select>
+		
+						<b-input-group-append>
+							<b-button  @click="filter = ''">清空</b-button>
+						</b-input-group-append>
+						
+					</b-input-group>
+				</b-form-group>
+			</b-col>
 
-      <b-col md="6" class="my-1">
-        <b-form-group label-cols-sm="3" label="Sort direction" class="mb-0">
-          <b-input-group>
-            <b-form-select v-model="sortDirection" slot="append">
-              <option value="asc">Asc</option> <option value="desc">Desc</option>
-              <option value="last">Last</option>
-            </b-form-select>
-          </b-input-group>
-        </b-form-group>
-      </b-col>
-
-      <b-col md="6" class="my-1">
-        <b-form-group label-cols-sm="3" label="Per page" class="mb-0">
-          <b-form-select v-model="perPage" :options="pageOptions"></b-form-select>
-        </b-form-group>
-      </b-col>
     </b-row>
 
     <!-- Main table element -->
     <b-table
+			class="mt-2"
+			striped hover
       show-empty
       stacked="md"
       :items="items"
@@ -55,10 +78,12 @@
       :current-page="currentPage"
       :per-page="perPage"
       :filter="filter"
+			head-variant="info"
       :sort-by.sync="sortBy"
       :sort-desc.sync="sortDesc"
       :sort-direction="sortDirection"
       @filtered="onFiltered"
+			@row-dblclicked="onDbClicked"
     >
       <template slot="name" slot-scope="row">
         {{ row.value.first }} {{ row.value.last }}
@@ -115,7 +140,7 @@
       return {
         items: [
  
-					{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
+			{ isActive: false, d_type_na:"qLab", device_id:"00000001" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
 			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
 			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
 			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
@@ -148,6 +173,11 @@
         perPage: 10,
         pageOptions: [5, 10, 15],
         sortBy: null,
+				countrySelected:'',
+				areaSelected:'',
+				deviceTypeSelected:'',
+				deviceStatusSelected:'',
+			
         sortDesc: false,
         sortDirection: 'asc',
         filter: null,
@@ -166,7 +196,43 @@
           .map(f => {
             return { text: f.label, value: f.key }
           })
-      }
+      },
+			countryOptions() {
+				// Create an options list from our fields
+				return  [
+          { text: '中国', value: 'e' },
+          { text: '日本', value: 'd' },
+					{ text: '美国', value: 'f' },
+        ]
+			},
+			areaOptions() {
+				// Create an options list from our fields
+				return  [
+					{ text: '北京', value: 'a' },
+					{ text: '上海', value: 'b' },
+					{ text: '重庆', value: 'c' },
+				]
+			},deviceTypeOptions() {
+				// Create an options list from our fields
+				return  [
+          { text: 'mLabs', value: 'a' },
+          { text: 'qLabs', value: 'b' },
+					{ text: 'uLabs', value: 'c' },
+        ]
+			},
+			deviceStatusOptions() {
+				// Create an options list from our fields
+				return  [
+					{ text: '运行良好', value: 'a' },
+					{ text: '使用不足', value: 'b' },
+					{ text: '警告', value: 'c' },
+					{ text: '紧急', value: 'd' },
+					{ text: '闲置', value: 'e' },
+					
+				]
+			}
+			
+			
     },
     mounted() {
 		  // Set the initial number of items
@@ -198,6 +264,11 @@
         this.totalRows = filteredItems.length
         this.currentPage = 1
       }
+			,
+			onDbClicked(filteredItems) {
+				console.log(filteredItems)
+				alert(filteredItems.device_id)
+			}
     }
   }
 </script>
