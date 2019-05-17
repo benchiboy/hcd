@@ -97,6 +97,7 @@
 			 
 				mounted(){		
 					this.onTabId()
+					
 				},
 	
         methods:{

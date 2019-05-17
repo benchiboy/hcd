@@ -67,6 +67,7 @@
 					
 						<b-button type="submit" variant="primary" style="margin-right: 5rem;">确定</b-button>
 						<b-button type="reset" variant="danger">重置</b-button>
+						<b-button   @click="start" >test</b-button>
 		
 					</b-form>
 		
@@ -98,6 +99,13 @@ export default {
 			}
   },
 	 methods: {
+		 
+		 start(){
+			 
+			  setTimeout(function(){ alert("hello")},1000)
+		 },
+		 
+		 
 		 makeToast(tip) {
         this.$bvToast.toast(tip, {
           title: `登录结果`,
@@ -129,7 +137,7 @@ export default {
     
 			onReset(evt) {
 				
-				alert(window.screen.availHeight) 
+			alert(window.screen.availHeight) 
 
        evt.preventDefault()
 			 this.form.mct_no = ''

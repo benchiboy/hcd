@@ -2,14 +2,14 @@
  * 定义全局变量
  */
 export default {	
-	URL_SIGNIN: 'http://localhost:8080/jc/api/signin',
-	URL_SIGNOUT: 'http://localhost:8080/jc/api/signout',
-	URL_DEVICELIST: 'http://localhost:8080/jc/api/devicelist',
-	URL_GETACTLIST: 'http://localhost:8080/jc/api/getactlist',
-	URL_DELACCOUNT: 'http://localhost:8080/jc/api/delaccount',
-	URL_SETACCOUNT: 'http://localhost:8080/jc/api/setaccount',
-	URL_ADDACCOUNT: 'http://localhost:8080/jc/api/addaccount',
-	URL_GETACCOUNT: 'http://localhost:8080/jc/api/getaccount',
+	URL_SIGNIN: 	'/jc/api/signin',
+	URL_SIGNOUT: 	'/jc/api/signout',
+	URL_DEVICELIST: '/jc/api/devicelist',
+	URL_GETACTLIST: '/jc/api/getactlist',
+	URL_DELACCOUNT: '/jc/api/delaccount',
+	URL_SETACCOUNT: '/jc/api/setaccount',
+	URL_ADDACCOUNT: '/jc/api/addaccount',
+	URL_GETACCOUNT: '/jc/api/getaccount',
 	
 	UID_TOKEN: 'uid_token',
 	SUCC:'0000',

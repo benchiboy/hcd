@@ -6,9 +6,6 @@
 		  <use xlink:href="open-iconic.svg#account-login"  class="icon-account-login"></use>
 		</svg>
 		 -->
-		 
-		
-			
 				
 		  <b-modal
 		       id="modal-1"
