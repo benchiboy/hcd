@@ -7,9 +7,9 @@
       ref="modal"
 		  title="新增用户"
 			scrollable
-      @show="showModal"
+      @show="showModalAdd"
       @hidden="hiddenModal"
-      @ok="handleOk"
+      @ok="handleAddOk"
     >
 		 <template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
       <b-button size="md" variant="success" @click="ok()">
@@ -35,7 +35,6 @@
 					v-model="form.login_name"
 					:state="nameState"
 					required
-					disabled
 				></b-form-input>
 			 </b-form-group>
 
@@ -156,12 +155,12 @@
 	
 		<b-modal
 		      id="manage-modal-edit"
-		      ref="modal-edit"
+		      ref="modal2"
 				  title="修改用户信息"
 					scrollable
-		      @show="showModal"
+		      @show="showModalEdit"
 		      @hidden="hiddenModal"
-		      @ok="handleOk"
+		      @ok="handleEditOk"
 		    >
 				 <template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
 		      <b-button size="md" variant="success" @click="ok()">
@@ -384,13 +383,10 @@
 				return this.form.expire_date.length>6?true:false;
 			},
 	  },
-
     mounted() {
-     
+				this.getActList()
     },
-
     methods: {
-			
 			getRights(rights) {
 				let text=""
 				let r=rights.split(",")
@@ -411,39 +407,51 @@
 		    return valid
       },
 			
-			
-   		handleOk(evt) {
+   		handleAddOk(evt) {
         evt.preventDefault()      
-				  // Hide the modal manually
-			  // Exit when the form isn't valid
-        if (!this.checkFormValidity()) {
+	      if (!this.checkFormValidity()) {
           return
         }
-					
-        this.$nextTick(() => {
+	      this.$nextTick(() => {
           this.$refs.modal.hide()
-					this.toast()
+					this.addAccount()
+					this.toast("新增成功")
         })
-				
-				
-      },
-// 			openModal(){
-// 				this.$refs.modal.show()
-// 			},
-// 			
-      showModal(evt) {
-			  // evt.preventDefault()
-        // Reset our form values
 	    },
 			
-			toast(toaster, append = false) {
-        this.$bvToast.toast(`新增用户成功!`, {
+			handleEditOk(evt) {
+				evt.preventDefault()      
+ 				if (!this.checkFormValidity()) {
+ 					return
+ 				}
+				this.$nextTick(() => {
+					this.$refs.modal2.hide()
+					this.setAccount()
+					this.toast("修改成功")
+				})
+			},
+
+      showModalAdd(evt) {
+				this.form.nick_name='';
+				this.form.login_name=''
+				this.form.login_pass=''
+				this.form.rights=[]
+				this.form.expire_date=''
+				this.form.login_pass2=''
+				this.form.status='e'
+		  },
+			showModalEdit(evt) {
+			
+			},
+			
+			toast(tip) {
+        this.$bvToast.toast(tip, {
           title: `执行结果`,
           toaster: 'b-toaster-top-center',
           solid: true,
 					variant: 'info',
 					autoHideDelay:1000,
-          appendToast: append
+          appendToast: false
         })
       },
 			
@@ -453,12 +461,11 @@
 			/* 用户列表*/
 			getActList() {
 				var that=this;
+				this.form.user_id=0;
 				this.$axios.post(GLOBAL.URL_GETACTLIST, 
 									JSON.stringify(this.form))
 									.then(function (response) {
-										console.log("========>",response.data)
 										that.accounts=response.data.List
-										console.log("====>",that.accounts)
 									})
 									.catch(function (error) {
 						}); 		
@@ -466,10 +473,11 @@
 			/* 新增用户*/
 			addAccount() {
 				var that=this;
-				this.$axios.post(GLOBAL.URL_GETACTLIST, 
+				alert(JSON.stringify(this.form))
+				this.$axios.post(GLOBAL.URL_ADDACCOUNT, 
 									JSON.stringify(this.form))
 									.then(function (response) {
-										that.accounts=response.data.List
+											that.getActList();
 									})
 									.catch(function (error) {
 						}); 		
@@ -477,10 +485,9 @@
 			/* 修改用户提交*/
 			setAccount() {
 				var that=this;
-				this.$axios.post(GLOBAL.URL_GETACTLIST, 
+				this.$axios.post(GLOBAL.URL_SETACCOUNT, 
 									JSON.stringify(this.form))
 									.then(function (response) {
-										that.accounts=response.data.List
 									})
 									.catch(function (error) {
 										console.log("=========>",error);
@@ -501,8 +508,6 @@
 										that.form.rights=response.data.rights.split(",")
 										that.form.login_pass=response.data.login_pass
 										that.form.login_pass2=response.data.login_pass
-										//that.openModal()
-									
 									})
 									.catch(function (error) {
 										console.log("=========>",error);
@@ -530,8 +535,7 @@
 								this.$axios.post(GLOBAL.URL_DELACCOUNT, 
 													JSON.stringify(this.form))
 													.then(function (response) {
-													
-														that.form.user_id=0
+														that.getActList();
 													})
 													.catch(function (error) {
 														console.log("=========>",error);
@@ -542,6 +546,9 @@
 						// An error occurred
 				})
 			},
+			
+			
+			
     }
   }
 </script>

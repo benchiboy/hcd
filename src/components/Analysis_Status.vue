@@ -5,13 +5,13 @@
     
 		<b-button @click="makeData">MakeData</b-button>
 		<b-button @click="DrawData">DrawData</b-button>
-		<b-button @click="DrawDataTest">Test</b-button>
-	
+		<b-button @click="Test">Test</b-button>
+		
 		<div>{{factLen1}}</div>
 		
-		<!-- <div class="card legend-status-box rounded border-primary shadow-lg" header="运行状态图标">
+		<div class="card legend-status-box rounded border-primary shadow-lg" header="运行状态图标">
 				<b-card
-					header="运行状态图标"
+					header="测量指标实时监测统计"
 					header-text-variant="white"
 					header-tag="header"
 					header-bg-variant="info"
@@ -20,33 +20,38 @@
 				<b-card-text>
 					
 					<div class="d-flex justify-content-between align-items-center">
-						<span class="legend-status-item w-25" style="background: green;" ></span> 
-						<span class="w-50" style="text-align: left;">运行良好</span><b-badge  pill variant="danger">4</b-badge>
+						<div  class="d-flex justify-content-start align-items-center">
+							<span class="legend-status-item  rounded-circle mr-3" style="background: green" ></span> 
+							<span  style="text-align: left;">血压指标</span>
+						</div>
+					
+						<b-badge  pill variant="danger">{{Total}}</b-badge>
 					</div>
 					
 					<div class="d-flex justify-content-between align-items-center">
-						<span class="legend-status-item  w-25" style="background:lightgreen;" ></span> 
-						<span class=" w-50" style="text-align: left;">使用不足</span><b-badge pill  variant="danger">4</b-badge>
+					<div class="d-flex justify-content-start align-items-center">
+					
+						<span class="legend-status-item rounded-circle mr-3" style="background:lightgreen;" ></span> 
+						<span  style="text-align: left;">脉搏次数</span>
+				</div>
+				
+						<b-badge pill  variant="danger">4</b-badge>
+					
 					</div>
 					
 					<div class="d-flex justify-content-between align-items-center">
-						<span class="legend-status-item  w-25" style="background: yellow;" ></span> 
-						<span class=" w-50" style="text-align: left;">警告</span><b-badge  pill variant="danger">4</b-badge>
+					<div class="d-flex justify-content-start align-items-center">
+						<span class="legend-status-item rounded-circle mr-3" style="background: yellow;" ></span> 
+						<span  style="text-align: left; 9px;">血小板指数</span>
 					</div>
 					
-					<div class="d-flex justify-content-between align-items-center">
-						<span class="legend-status-item  w-25" style="background: red;" ></span> 
-						<span class=" w-50" style="text-align: left;">紧急</span><b-badge  pill variant="danger">4</b-badge>
+						<b-badge  pill variant="danger">4</b-badge>
 					</div>
 					
-					<div class="d-flex justify-content-between align-items-center">
-						<span class="legend-status-item  w-25" style="background: grey;" ></span> 
-						<span class=" w-50" style="text-align: left;">闲置</span><b-badge pill variant="danger">4</b-badge>
-					</div>
 				</b-card-text>
 		
 				</b-card>
-		</div> -->
+		</div>
 			
 			
 		<div :style="{height:'530px',width:'90%'}" ref="myEchart"></div>
@@ -309,10 +314,11 @@
         chart: null,
 				myChart:null,
 				timer: null,
-				factList1:[],
-				MakeDataInternal:4*1000,
-				MakeDataLen:47,
+				factList:[],
+				MakeDataInternal:20*1000,
+				MakeDataLen:67,
 				DefaultDelay:400,
+				Total:0,
 			
 	    };
     },
@@ -333,11 +339,11 @@
 		
 		computed:{
 				factLen1(){
-						return this.factList1.length
+						return this.factList.length
 				},
-			
 		},
-    methods: {
+  
+		methods: {
 			/*
 				从微点获取数据
 			*/
@@ -349,45 +355,34 @@
 						let lng=this.geoCoordMap[areaName][0]
 						let lat=this.geoCoordMap[areaName][1]
 						if (i%3==0){
-							this.factList1.push([0,lng,lat,areaVale])
+							this.factList.push([0,lng,lat,areaVale])
 						}
 						if (i%3==1){
-							this.factList1.push([1,lng,lat,areaVale])
+							this.factList.push([1,lng,lat,areaVale])
 						}
 						if (i%3==2){
-							this.factList1.push([2,lng,lat,areaVale])
+							this.factList.push([2,lng,lat,areaVale])
 						}
 				 }
 			},
-		
+			
+			Test() {
+				var chart=this.myChart;
+				var option = this.myChart.getOption();
+				option.legend.data =['血压指标','脉搏次数','血小板指数']
+			
+			},
+			
 			Sleep(ms) {
 					return new Promise(resolve => setTimeout(resolve, ms))
 			},
-			
-			DrawDataTest() {
-				let tLen=this.factList1.length
-				let perCnt=parseInt(tLen*this.DefaultDelay/this.MakeDataInternal)
-				let modTime=(tLen*this.DefaultDelay)%this.MakeDataInternal
-				let modCnt
-				if (modTime>0){
-					modCnt=modTime/this.DefaultDelay
-				}
-				for (var i = 0; i <tLen;i++) {
-						console.log("====>",i)
-						i=i+1
-				}
-				console.log("====>",modCnt,perCnt)
-				
-				
-			},
-			
 			/*	
 				在ECHART画出数据
 				没2分钟取数一次 时间： 2*60*1000MS
 				DELAY= 60*1000   /300
 			*/
 			async DrawData() {
-				let tLen=this.factList1.length
+				let tLen=this.factList.length
 				var perCnt=parseInt(tLen*this.DefaultDelay/this.MakeDataInternal)
 				var timesCnt=parseInt(this.MakeDataInternal/this.DefaultDelay)
 				var modTime=(tLen*this.DefaultDelay)%this.MakeDataInternal
@@ -405,15 +400,17 @@
 					var chart=this.myChart;
 					var option = this.myChart.getOption();
 					for (var j=0;j<perCnt;j++){
-							let e=this.factList1.pop()
-							option.series[e[0]].data =[{name:"上海", value:[e[1],e[2],e[3]]}]
+							let e=this.factList.pop()
+							option.series[e[0]].data =[{name:"上海", value:[e[1],e[2],e[3]]}],
+							this.Total++
 					}
 					i=i+perCnt
 					if (modCnt>0){
- 						let e=this.factList1.pop()
+ 						let e=this.factList.pop()
  						option.series[e[0]].data =[{name:"上海", value:[e[1],e[2],e[3]]}],
  						modCnt=modCnt-1
 						i=i+1
+						this.Total++
 					}
 					console.log("index======>",i,totalCnt++)
 					this.myChart.setOption(option);  
@@ -421,6 +418,7 @@
 					this.ClearData()
 				}
 			},
+			
 			/*
 				清理ECHART数据
 			*/
@@ -482,6 +480,7 @@
 									saveAsImage : {show: true}
 							}
 						},
+						/*
 						legend: {
 							orient: 'vertical',
 							left: 'right',
@@ -491,6 +490,7 @@
 							borderColor:'red',
 							backgroundColor:'#ddd',
 							itemWidth: 100,
+						
 							shadowColor: 'rgba(0, 0, 0, 0.5)',
 							shadowBlur: 40,
 							data:['血压指标','脉搏次数','血小板指数'],
@@ -501,16 +501,17 @@
 							formatter: function(name) {
 								var index = 0;
 								var clientlabels = ['血压指标', '脉搏次数'];
-								var clientcounts = ['2323','自定义56'];//后台计算总数量
+								var clientcounts = ['',''];//后台计算总数量
 								clientlabels.forEach(function(value,i){
 										if(value == name){
 												index = i;
 										}
 								});
-								return name + "(" + clientcounts[index]+"件)";
+								return name  + clientcounts[index];
               }
 							
 						},
+						*/
 // 					
 // 					visualMap: {
 //           		left: 'left',
@@ -648,15 +649,16 @@ a {
 
 .legend-status-box{
 	background:lavender;
-	right: 100px;
-	width: 200px;
+	right: 60px;
+	width: 250px;
 	bottom: 250px;
 	position: absolute;
 	z-index: 999; 
 }
 
 .legend-status-item{
+	border: 1px solid black;
 	display: inline-block;
-	width:40px;height:10px;
+	width:20px;height:20px;
 }
 </style>
