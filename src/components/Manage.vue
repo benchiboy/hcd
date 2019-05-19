@@ -270,19 +270,26 @@
 	
 <div>
 	
-	<div class="d-flex justify-content-around mt-2 mb-2">
-		<b-input-group class="w-25">
-      <b-input-group-text slot="prepend">登录名称</b-input-group-text>
-				<b-form-input type="text" min="0.00"></b-form-input>
-			<b-input-group-append>
-				<b-button variant="outline-secondary" @click="getActList">查询</b-button>
-			</b-input-group-append>
-			
-		</b-input-group>
-		<b-button v-b-modal.manage-modal-add variant="outline-primary" class="ml-6">
+	<div class="d-flex justify-content-around  mt-2 border-bottom" >
+
+		<b-form-group label-cols-sm="3" label="用户名称" class="mb-0">
+			<b-input-group>
+				<b-form-input type="text" ></b-form-input>
+				<b-input-group-append>
+					<b-button  @click="searchData">查询</b-button>
+				</b-input-group-append>
+				
+			</b-input-group>
+		</b-form-group>
+					
+	
+
+		<b-button v-b-modal.manage-modal-add  class=" btn-sm">
 			<img  src="../assets/icon_addperson.png" alt="Image 1" width="30" height="30" class=""></img>
 		</b-button>
+		
 	</div>		
+				
 				
   <div>
     <b-card-group deck class="m-2 ">
@@ -299,11 +306,11 @@
 					<div class="d-flex justify-content-between">
 						<span><h6>登录账号:</h6></span><span>{{ account.login_name }}</span>
 					</div>
-					<div class="d-flex justify-content-between">
+			<!-- 		<div class="d-flex justify-content-between">
 						<span><h6>上次登录时间:</h6></span><span>2018-12-12 12:12:12</span>
 					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>有效期至:</h6></span><span>{{ account.expire_date }}--{{ account.user_id }}</span>
+				 -->	<div class="d-flex justify-content-between">
+						<span><h6>有效期至:</h6></span><span>{{ account.expire_date }}</span>
 					</div>
 					<div class="d-flex justify-content-between">
 						<span><h6>用户状态:</h6></span><span>{{ account.status=='e'?'正常': account.status=='f'?'冻结':'禁用'}}</span>
@@ -326,9 +333,25 @@
 			</div>
 		
     </b-card-group>
+		
+		
   </div>
 
   </div>
+	
+	<div>
+	<nav >
+		<ul class="pagination ">
+			<li class="page-item"><a class="page-link" @click="prevPage">上一页</a></li>
+			<li  v-for="n in totalPage"   class="page-item" >
+				<a class="page-link" :class="currPageNo==n?'bg-danger':''"   @click="goPage(n)">{{n}}</a>
+			</li>			
+			<li class="page-item"><a class="page-link" @click="nextPage">下一页</a></li>
+		</ul>
+	</nav>
+	</div>
+	
+	
 	</div>
 	
 </template>
@@ -350,7 +373,11 @@
 					{ text: '冻结', value: 'f' },
         ],
 			 login_name:'',
+			 currPageNo:1,
+			 totalPage:0,
  			 form: {
+					 page_no:1,
+					 page_size:2,
 					 user_id:0,
            login_name: '',
 					 rights:[],
@@ -458,14 +485,51 @@
 			hiddenModal(evt) {
 				//showModal(evt)
 			},
+			
+			prevPage() {
+				if (this.form.page_no>1){
+					this.form.page_no--
+					this.currPageNo=this.form.page_no
+					this.getActList()
+				}
+			},
+			
+			goPage(pageNo) {
+					this.form.page_no=pageNo
+					this.currPageNo=pageNo
+					this.getActList()
+			},
+			nextPage() {
+				console.log("this.totalPage",this.totalPage,this.form.page_no)
+				if (this.form.page_no<this.totalPage){
+					this.form.page_no++
+					this.currPageNo=this.form.page_no
+					this.getActList()
+				}
+			},
+				
+			searchData() {
+				this.form.page_no=1
+				this.currPageNo=this.form.page_no
+				this.getActList()
+			},
 			/* 用户列表*/
 			getActList() {
 				var that=this;
-				this.form.user_id=0;
 				this.$axios.post(GLOBAL.URL_GETACTLIST, 
 									JSON.stringify(this.form))
 									.then(function (response) {
 										that.accounts=response.data.List
+										let t=parseInt(response.data.total/that.form.page_size)
+										console.log("total======>",response,t)
+										let m=response.data.total%that.form.page_size
+										if (m>0){
+											that.totalPage=t+1
+										}else{
+											that.totalPage=t
+										}
+										console.log("total-Page======>",that.totalPage)
+										
 									})
 									.catch(function (error) {
 						}); 		
