@@ -145,20 +145,17 @@
 								</b-popover> -->
 						
 								<b-nav-item-dropdown right>
-								
-									
 									<template slot="button-content">
 										<em>
 												<span class="text-danger font-weight-bold">
 												{{nick_name}}
 												</span>
 										</em></template>
-									<b-dropdown-item  id="popover-3">账户信息</b-dropdown-item>
+							
 									<b-dropdown-item v-b-modal.modal-1  href="#">密码修改</b-dropdown-item>
-									
-									<b-dropdown-item  href="#">退出</b-dropdown-item>
+									<b-dropdown-item  @click="onQuit">退出</b-dropdown-item>
+							
 								</b-nav-item-dropdown>
-						
 							</b-navbar-nav>
 						</b-collapse>
 					</b-navbar>
@@ -174,6 +171,8 @@
 
 </template>
 <script>	
+import {getStore,setStore,removeStore} from './Global.js'
+import GLOBAL from './Global.js'
 
 export default {
   name: 'Home',
@@ -253,9 +252,13 @@ export default {
 		
 		hiddenModal(evt) {
 			showModal(evt)
+		},
+		
+		onQuit(evt) {
+			setStore(GLOBAL.UID_TOKEN,'')
+			this.$router.push({name:'Login',params:{}});
+			
 		}
-		
-		
 	}
 }
 

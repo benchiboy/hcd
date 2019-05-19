@@ -333,10 +333,9 @@
 		</b-container
  
  </div>
-	
 	</div>
-</div>
 
+</div>
 		<div class="mt-3">
 				<nav >
 					<ul class="pagination ">

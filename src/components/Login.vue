@@ -100,8 +100,9 @@ export default {
   },
 	 methods: {
 		 
+		
+	
 		 start(){
-			 
 			  setTimeout(function(){ alert("hello")},1000)
 		 },
 		 
@@ -136,10 +137,7 @@ export default {
 		  },
     
 			onReset(evt) {
-				
-			alert(window.screen.availHeight) 
-
-       evt.preventDefault()
+		   evt.preventDefault()
 			 this.form.mct_no = ''
        this.form.user_name = ''
        this.form.pass_word = ''       
