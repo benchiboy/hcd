@@ -281,9 +281,7 @@
 				
 			</b-input-group>
 		</b-form-group>
-					
 	
-
 		<b-button v-b-modal.manage-modal-add  class=" btn-sm">
 			<img  src="../assets/icon_addperson.png" alt="Image 1" width="30" height="30" class=""></img>
 		</b-button>
@@ -292,64 +290,64 @@
 				
 				
   <div>
-    <b-card-group deck class="m-2 ">
-			<div 	v-for="account in accounts">
-      <b-card
-			  border-variant="primary"
-        :header="account.nick_name"
-        header-bg-variant="success"
-        header-text-variant="white"
-        align="center"
-				class="mt-2"
-	    >
-				<b-card-text>
-					<div class="d-flex justify-content-between">
-						<span><h6>登录账号:</h6></span><span>{{ account.login_name }}</span>
-					</div>
-			<!-- 		<div class="d-flex justify-content-between">
-						<span><h6>上次登录时间:</h6></span><span>2018-12-12 12:12:12</span>
-					</div>
-				 -->	<div class="d-flex justify-content-between">
-						<span><h6>有效期至:</h6></span><span>{{ account.expire_date }}</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>用户状态:</h6></span><span>{{ account.status=='e'?'正常': account.status=='f'?'冻结':'禁用'}}</span>
-					</div>
-					<div class="d-flex justify-content-between">
-						<span><h6>权限:</h6></span><span>{{ getRights(account.rights)}}</span>
-					</div>
-					<div class="d-flex justify-content-end">
-						<b-button-group size="sm"  class="mt-2" >
-						<b-button variant="outline-primary" @click="delAccount(account.user_id,account.login_name)" class="mr-3">
-							<img  src="../assets/icon_trashcan.png" alt="Image 1" width="20" height="20" class=""></img>
-						</b-button>
-						<b-button variant="outline-primary" v-b-modal.manage-modal-edit @click="getAccount(account.user_id)">
-							<img  src="../assets/icon_dispose.png" alt="Image 1" width="20" height="20" class=""></img>
-						</b-button>
-						</b-button-group>
-					</div>
-				</b-card-text>
-			</b-card>
-			</div>
-		
-    </b-card-group>
-		
-		
-  </div>
-
-  </div>
+		<b-container fluid class="mt-2">
+		<!-- User Interface controls -->
+		<b-row >
+			<b-col md="3" v-for="account in accounts" >
+				<b-card
+					border-variant="primary"
+					:header="account.nick_name"
+					header-bg-variant="success"
+					header-text-variant="white"
+					align="center"
+					class="mt-2"
+				>
+					<b-card-text>
+						<div class="d-flex justify-content-between">
+							<span><h6>登录账号:</h6></span><span>{{ account.login_name }}</span>
+						</div>
+						
+						<div class="d-flex justify-content-between">
+							<span><h6>有效期至:</h6></span><span>{{ account.expire_date }}</span>
+						</div>
+						<div class="d-flex justify-content-between">
+							<span><h6>用户状态:</h6></span><span>{{ account.status=='e'?'正常': account.status=='f'?'冻结':'禁用'}}</span>
+						</div>
+						<div class="d-flex justify-content-between">
+							<span><h6>权限:</h6></span><span>{{ getRights(account.rights)}}</span>
+						</div>
+						<div class="d-flex justify-content-end">
+							<b-button-group size="sm"  class="mt-2" >
+							<b-button variant="outline-primary" @click="delAccount(account.user_id,account.login_name)" class="mr-3">
+								<img  src="../assets/icon_trashcan.png" alt="Image 1" width="20" height="20" class=""></img>
+							</b-button>
+							<b-button variant="outline-primary" v-b-modal.manage-modal-edit @click="getAccount(account.user_id)">
+								<img  src="../assets/icon_dispose.png" alt="Image 1" width="20" height="20" class=""></img>
+							</b-button>
+							</b-button-group>
+						</div>
+					</b-card-text>
+				</b-card>
+			</b-col >	
+		</b-row>		
+		</b-container
+ 
+ </div>
 	
-	<div>
-	<nav >
-		<ul class="pagination ">
-			<li class="page-item"><a class="page-link" @click="prevPage">上一页</a></li>
-			<li  v-for="n in totalPage"   class="page-item" >
-				<a class="page-link" :class="currPageNo==n?'bg-danger':''"   @click="goPage(n)">{{n}}</a>
-			</li>			
-			<li class="page-item"><a class="page-link" @click="nextPage">下一页</a></li>
-		</ul>
-	</nav>
 	</div>
+</div>
+
+		<div class="mt-3">
+				<nav >
+					<ul class="pagination ">
+						<li class="page-item"><a class="page-link" @click="prevPage">上一页</a></li>
+						<li  v-for="n in totalPage"   class="page-item" >
+							<a class="page-link" :class="currPageNo==n?'bg-danger':''"   @click="goPage(n)">{{n}}</a>
+						</li>			
+						<li class="page-item"><a class="page-link" @click="nextPage">下一页</a></li>
+					</ul>
+				</nav>
+		</div>
 	
 	
 	</div>
@@ -377,7 +375,7 @@
 			 totalPage:0,
  			 form: {
 					 page_no:1,
-					 page_size:2,
+					 page_size:8,
 					 user_id:0,
            login_name: '',
 					 rights:[],
@@ -461,14 +459,23 @@
       showModalAdd(evt) {
 				this.form.nick_name='';
 				this.form.login_name=''
-				this.form.login_pass=''
-				this.form.rights=[]
-				this.form.expire_date=''
-				this.form.login_pass2=''
+				this.form.login_pass='123456'
+				this.form.login_pass2='123456'
+				this.form.rights=['m']
+				let dateNow
+				var now = new Date()
+				dateNow=now.getFullYear()+1
+				if (now.getMonth()+1 <10){
+					dateNow+="-0"+(now.getMonth()+ 1)
+				}else{
+					dateNow+="-"+(now.getMonth()+ 1)
+				}
+				dateNow+="-"+now.getDate()
+				this.form.expire_date=dateNow
 				this.form.status='e'
 		  },
+	
 			showModalEdit(evt) {
-			
 			},
 			
 			toast(tip) {
@@ -599,7 +606,7 @@
 								this.$axios.post(GLOBAL.URL_DELACCOUNT, 
 													JSON.stringify(this.form))
 													.then(function (response) {
-														that.getActList();
+														that.searchData();
 													})
 													.catch(function (error) {
 														console.log("=========>",error);
