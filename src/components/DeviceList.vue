@@ -11,10 +11,7 @@
            		<option slot="first" :value="null">-- 全部 --</option>
            	</b-form-select>
            	
-						<b-input-group-append>
-              <b-button  @click="filter = ''">清空</b-button>
-            </b-input-group-append>
-           
+					 
 					 </b-input-group>
         </b-form-group>
       </b-col>
@@ -26,10 +23,7 @@
          	<b-form-select v-model="areaSelected" :options="areaOptions">
          		<option slot="first" :value="null">-- 全部 --</option>
          	</b-form-select>
-					<b-input-group-append>
-						<b-button  @click="filter = ''">清空</b-button>
-					</b-input-group-append>
-					 
+				
 				 
          </b-input-group>
 				 
@@ -42,10 +36,7 @@
             <b-form-select v-model="deviceTypeSelected" :options="deviceTypeOptions">
               <option slot="first" :value="null">-- 全部 --</option>
             </b-form-select>
-						<b-input-group-append>
-              <b-button  @click="filter = ''">清空</b-button>
-            </b-input-group-append>
-          
+				  
           </b-input-group>
         </b-form-group>
       </b-col>
@@ -58,7 +49,7 @@
 						</b-form-select>
 		
 						<b-input-group-append>
-							<b-button  @click="filter = ''">清空</b-button>
+							<b-button  @click="filter = ''">查询</b-button>
 						</b-input-group-append>
 						
 					</b-input-group>
@@ -67,25 +58,30 @@
 
     </b-row>
 
-    <!-- Main table element -->
+    <!-- Main table element 
+			per-page=0 禁止内部分页功能
+		-->
     <b-table
+			ref="table"
 			class="mt-2"
 			striped hover
       show-empty
       stacked="md"
+			:busy.sync="isBusy"
       :items="items"
       :fields="fields"
       :current-page="currentPage"
-      :per-page="perPage"
+      :per-page=0
       :filter="filter"
 			head-variant="info"
-      :sort-by.sync="sortBy"
+		  :sort-by.sync="sortBy"
       :sort-desc.sync="sortDesc"
       :sort-direction="sortDirection"
       @filtered="onFiltered"
 			@row-dblclicked="onDbClicked"
+			@sort-changed="onSorted"
     >
-      <template slot="name" slot-scope="row">
+      <template slot="dname" slot-scope="row">
         {{ row.value.first }} {{ row.value.last }}
       </template>
 
@@ -93,14 +89,15 @@
         {{ row.value ? 'Yes :)' : 'No :(' }}
       </template>
 
-      <template slot="actions" slot-scope="row">
+      <template slot="oper" slot-scope="row">
         <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
-          Info modal
+          修改
         </b-button>
-        <b-button size="sm" @click="row.toggleDetails">
-          {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
-        </b-button>
-      </template>
+      
+				<b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
+					删除
+				</b-button>
+	    </template>
 
       <template slot="row-details" slot-scope="row">
         <b-card>
@@ -109,15 +106,21 @@
           </ul>
         </b-card>
       </template>
-    </b-table>
+			
+		
+			
+		</b-table>
+		
+			
 
-    <b-row>
+		<b-row>
       <b-col md="6" class="my-1">
         <b-pagination
           v-model="currentPage"
           :total-rows="totalRows"
           :per-page="perPage"
           class="my-0"
+					@change="onChange"
         ></b-pagination>
       </b-col>
     </b-row>
@@ -126,7 +129,15 @@
     <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
       <pre>{{ infoModal.content }}</pre>
     </b-modal>
+		
   </b-container>
+	
+	
+	<div  class="text-center text-danger  loading"  v-show="isBusy">
+		<b-spinner class="align-middle"  role="status" >
+		</b-spinner>
+		<strong>loading...</strong>
+	</div>
 	
 	
 	</div>
@@ -138,41 +149,40 @@
   export default {
     data() {
       return {
+				isBusy: false,
         items: [
- 
-			{ isActive: false, d_type_na:"qLab", device_id:"00000001" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-			{ isActive: false, d_type_na:"qLab", device_id:"12121212" ,province_na:"四川",hospital:"四川第一人民医院",d_status_na:"运行良好",d_strategy:"保持",	d_person:"王大成"},
-																							
-        ],
+				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
+				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
+				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
+				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成",_cellVariants: { status: 'danger' }},
+				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
+		
+				],
         fields: [
-					{ key: 'd_type_na', 	label: '设备类型' },
-					{ key: 'device_id', 	label: '设备序列号', sortable: true, sortDirection: 'desc' },
-          { key: 'province_na',	label:'所在地区', sortable: true, class: 'text-center' },
-       		{ key: 'hospital', 		label: '所在医院' },
-					{ key: 'd_status_na', label: '设备状态' },
-    			{ key: 'd_strategy', 	label: '决策' },
-					{ key: 'd_person', 		label: '责任人' }
-					
-        ],
+					{ key: 'id', 	label: '设备类型' },
+					{ key: 'no', 	label: '设备序列号', sortable: true, sortDirection: 'desc' },
+					{ key: 'device_name',label:'设备序列号111', sortable: true},
+   				{ key: 'type', 		label: '所在医院' },
+					{ key: 'status', label: '设备状态' },
+    			{ key: 'country', 	label: '决策' },
+					{ key: 'addr', 		label: '责任人' },
+					{ key: 'oper', 		label: '操作' }
+	      ],
+
+				form:{
+					user_id:100,
+					sort_fld: null,
+					sort_mode:null,
+					page_no: 1,
+					page_size: 5,
+				},
+
         totalRows: 1,
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         pageOptions: [5, 10, 15],
         sortBy: null,
+
 				countrySelected:'',
 				areaSelected:'',
 				deviceTypeSelected:'',
@@ -189,6 +199,7 @@
       }
     },
     computed: {
+			
       sortOptions() {
         // Create an options list from our fields
         return this.fields
@@ -231,43 +242,69 @@
 					
 				]
 			}
-			
-			
     },
     mounted() {
 		  // Set the initial number of items
-    
-				this.$axios.post(GLOBAL.URL_DEVICELIST)
+			this.getDataList("id","asc",this.currentPage,this.perPage)
+			
+	  },
+    methods: {
+			
+			getDataList(sortFld,sortMode,pageNo,pageSize){
+				var that=this;
+				this.form.sort_fld=sortFld
+				this.form.sort_mode=sortMode
+				this.form.page_no=pageNo
+				this.form.page_size=pageSize
+				that.isBusy=true
+				this.$axios.post(GLOBAL.URL_DEVICELIST, 
+									JSON.stringify(this.form))
 							.then(function (response) {
-								
-								console.log("---->=========>OK");
+									that.items=response.data.List
+									that.totalRows = response.data.total
+// 									that.currentPage=pageNo
+									that.isBusy=false
+// 									that.perPage=pageSize
 							})
 							.catch(function (error) {
 								console.log("---->=========>",error);
 				}); 		
-					
-		//	this.totalRows = this.items.length
+			},
 			
-    },
-    methods: {
       info(item, index, button) {
         this.infoModal.title = `Row index: ${index}`
         this.infoModal.content = JSON.stringify(item, null, 2)
         this.$root.$emit('bv::show::modal', this.infoModal.id, button)
       },
+			
       resetInfoModal() {
         this.infoModal.title = ''
         this.infoModal.content = ''
       },
-      onFiltered(filteredItems) {
+   
+			onFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pages due to filtering
         this.totalRows = filteredItems.length
         this.currentPage = 1
-      }
-			,
+      },
+	
 			onDbClicked(filteredItems) {
 				console.log(filteredItems)
-				alert(filteredItems.device_id)
+				alert(filteredItems.no)
+			},
+			
+			onSorted(ctx) {
+				console.log("=======>",ctx)
+				if (ctx.sortDesc){				
+						this.getDataList(ctx.sortBy,"desc",ctx.currentPage,ctx.perPage)
+				}else{
+						this.getDataList(ctx.sortBy,"asc",ctx.currentPage,ctx.perPage)
+				}
+			},
+			
+			onChange(page){
+				console.log("=======>",page)
+				this.getDataList("id","desc",page,5)
 			}
     }
   }
@@ -292,8 +329,14 @@ a {
 .map{
 	height: 650px;
 	width:auto;
-	
 	border: 1px solid red;
-
+}
+.loading{
+		position: absolute;
+		z-index: 1999;
+		top: 300px;
+		left: 400px;
+		width: 20%;
+	
 }
 </style>

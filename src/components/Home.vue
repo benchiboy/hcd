@@ -93,29 +93,29 @@
 							<!-- Right aligned nav items -->
 							
 							<b-navbar-nav class="ml-auto">
-								<b-navbar-nav  :class="active_id=='map'?'addclass':''" @click="menuclick('map')">
+								<b-navbar-nav  id="map" :class="active_id=='map'?'addclass':''" @click="menuclick('map')">
 										<b-nav-item href="#/Home/Map" >
 											<b-span class="text-white font-weight-bold text-decoration-none">设备地图 </b-span>
 										</b-nav-item>
 								</b-navbar-nav >
-								<b-navbar-nav :class="active_id=='devicelist'?'addclass':''"  @click="menuclick('devicelist')">
-										<b-nav-item href="#/Home/DeviceList" id="devicelist">
+								<b-navbar-nav  id="devicelist"  :class="active_id=='devicelist'?'addclass':''"  @click="menuclick('devicelist')">
+										<b-nav-item href="#/Home/DeviceList" >
 											<b-span class="text-white font-weight-bold">设备列表 </b-span>
 										</b-nav-item>
 								</b-navbar-nav>
-								<b-navbar-nav :class="active_id=='analysis'?'addclass':''" @click="menuclick('analysis')">
+								<b-navbar-nav id="analysis" :class="active_id=='analysis'?'addclass':''" @click="menuclick('analysis')">
 										<b-nav-item href="#/Home/Analysis">
 											<b-span class="text-white font-weight-bold">设备分析 </b-span>
 										</b-nav-item>
 								</b-navbar-nav>
 						
-								<b-navbar-nav :class="active_id=='decision'?'addclass':''"  @click="menuclick('decision')">
+								<b-navbar-nav id="decision" :class="active_id=='decision'?'addclass':''"  @click="menuclick('decision')">
 										<b-nav-item href="#/Home/Decision">
 											<b-span class="text-white font-weight-bold">设备决策</b-span>
 										</b-nav-item>
 								</b-navbar-nav>
 						
-								<b-navbar-nav :class="active_id=='manage'?'addclass':''"  @click="menuclick('manage')">
+								<b-navbar-nav id="manage" :class="active_id=='manage'?'addclass':''"  @click="menuclick('manage')">
 										<b-nav-item href="#/Home/Manage">
 											<span class="text-white font-weight-bold">账户管理</span>
 										</b-nav-item>
@@ -296,5 +296,26 @@ a {
 .icon-account-login {
   fill: #f00;
 }
+
+#devicelist:hover{
+	background: blueviolet;
+}
+
+#map:hover{
+	background: blueviolet;
+}
+
+#analysis:hover{
+	background: blueviolet;
+}
+
+#decision:hover{
+	background: blueviolet;
+}
+
+#manage:hover{
+	background: blueviolet;
+}
+
 
 </style>
