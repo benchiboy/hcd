@@ -4,52 +4,37 @@
 		<b-container fluid class="mt-2">
     <!-- User Interface controls -->
     <b-row>
-      <b-col md="3" class="my-1">
-        <b-form-group label-cols-sm="2" label="国家" class="mb-0">
+      <b-col md="4" class="my-1">
+        <b-form-group label-cols-sm="4" label="设备类型" class="mb-0">
            <b-input-group>
-           	<b-form-select v-model="countrySelected" :options="countryOptions">
+           	<b-form-select v-model="deviceTypeSelected" :options="deviceTypeOptions" change="onDeviceTypeChange">
            		<option slot="first" :value="null">-- 全部 --</option>
            	</b-form-select>
-           	
-					 
-					 </b-input-group>
+    			 </b-input-group>
         </b-form-group>
       </b-col>
 
-			<b-col md="3" class="my-1">
-        <b-form-group label-cols-sm="2" label="地区" class="mb-0">
+			<b-col md="4" class="my-1">
+        <b-form-group label-cols-sm="4" label="设备序列号" class="mb-0">
         
 				 <b-input-group>
-         	<b-form-select v-model="areaSelected" :options="areaOptions">
-         		<option slot="first" :value="null">-- 全部 --</option>
-         	</b-form-select>
-				
-				 
-         </b-input-group>
-				 
-        </b-form-group>
+						<b-form-input v-model="deviceNo" placeholder="设备序列号"></b-form-input>
+				 </b-input-group>
+		    
+				</b-form-group>
       </b-col>
 
-      <b-col md="3" class="my-1">
-        <b-form-group label-cols-sm="3" label="设备类型" class="mb-0">
-          <b-input-group>
-            <b-form-select v-model="deviceTypeSelected" :options="deviceTypeOptions">
-              <option slot="first" :value="null">-- 全部 --</option>
-            </b-form-select>
-				  
-          </b-input-group>
-        </b-form-group>
-      </b-col>
+    
 			
 			<b-col md="3" class="my-1">
 				<b-form-group label-cols-sm="3" label="设备状态" class="mb-0">
 					<b-input-group>
-						<b-form-select v-model="deviceStatusSelected" :options="deviceStatusOptions">
+						<b-form-select v-model="deviceStatusSelected" :options="deviceStatusOptions" change="onDeviceStatusChange">
 							<option slot="first" :value="null">-- 全部 --</option>
 						</b-form-select>
 		
 						<b-input-group-append>
-							<b-button  @click="filter = ''">查询</b-button>
+							<b-button  @click="onSearchData">查询</b-button>
 						</b-input-group-append>
 						
 					</b-input-group>
@@ -107,12 +92,8 @@
         </b-card>
       </template>
 			
-		
-			
 		</b-table>
 		
-			
-
 		<b-row>
       <b-col md="6" class="my-1">
         <b-pagination
@@ -133,7 +114,7 @@
   </b-container>
 	
 	
-	<div  class="text-center text-danger  loading"  v-show="isBusy">
+	<div  class="text-center text-danger  loading"  v-show="is">
 		<b-spinner class="align-middle"  role="status" >
 		</b-spinner>
 		<strong>loading...</strong>
@@ -159,12 +140,12 @@
 		
 				],
         fields: [
-					{ key: 'id', 	label: '设备类型' },
-					{ key: 'no', 	label: '设备序列号', sortable: true, sortDirection: 'desc' },
-					{ key: 'device_name',label:'设备序列号111', sortable: true},
-   				{ key: 'type', 		label: '所在医院' },
-					{ key: 'status', label: '设备状态' },
-    			{ key: 'country', 	label: '决策' },
+					{ key: 'id', 				 label: 'ID值' },
+					{ key: 'no', 				 label: '设备序列号', sortable: true, sortDirection: 'desc' },
+					{ key: 'device_name',label:'设备名称', sortable: true},
+   				{ key: 'type', 		label: '设备类型' },
+					{ key: 'status', 	label: '设备状态' },
+    			{ key: 'country', label: '决策' },
 					{ key: 'addr', 		label: '责任人' },
 					{ key: 'oper', 		label: '操作' }
 	      ],
@@ -173,6 +154,9 @@
 					user_id:100,
 					sort_fld: null,
 					sort_mode:null,
+					no:'',
+					type:'',
+					status:'',
 					page_no: 1,
 					page_size: 5,
 				},
@@ -183,8 +167,7 @@
         pageOptions: [5, 10, 15],
         sortBy: null,
 
-				countrySelected:'',
-				areaSelected:'',
+				deviceNo:'',
 				deviceTypeSelected:'',
 				deviceStatusSelected:'',
 			
@@ -234,12 +217,9 @@
 			deviceStatusOptions() {
 				// Create an options list from our fields
 				return  [
-					{ text: '运行良好', value: 'a' },
-					{ text: '使用不足', value: 'b' },
-					{ text: '警告', value: 'c' },
-					{ text: '紧急', value: 'd' },
-					{ text: '闲置', value: 'e' },
-					
+					{ text: '运行良好', value: 'z' },
+					{ text: '使用不足', value: 'a' },
+					{ text: '警告', value: 'b' },
 				]
 			}
     },
@@ -256,15 +236,19 @@
 				this.form.sort_mode=sortMode
 				this.form.page_no=pageNo
 				this.form.page_size=pageSize
-				that.isBusy=true
+				this.form.no=this.deviceNo
+				
+				this.form.type=this.deviceTypeSelected
+				this.form.status=this.deviceStatusSelected
+				
+			//	that.isBusy=true
 				this.$axios.post(GLOBAL.URL_DEVICELIST, 
 									JSON.stringify(this.form))
 							.then(function (response) {
 									that.items=response.data.List
 									that.totalRows = response.data.total
-// 									that.currentPage=pageNo
-									that.isBusy=false
-// 									that.perPage=pageSize
+									//that.currentPage=pageNo
+							//		that.isBusy=false
 							})
 							.catch(function (error) {
 								console.log("---->=========>",error);
@@ -296,16 +280,27 @@
 			onSorted(ctx) {
 				console.log("=======>",ctx)
 				if (ctx.sortDesc){				
-						this.getDataList(ctx.sortBy,"desc",ctx.currentPage,ctx.perPage)
+						this.getDataList(ctx.sortBy,"desc",ctx.currentPage,5)
 				}else{
-						this.getDataList(ctx.sortBy,"asc",ctx.currentPage,ctx.perPage)
+						this.getDataList(ctx.sortBy,"asc",ctx.currentPage,5)
 				}
 			},
 			
 			onChange(page){
-				console.log("=======>",page)
 				this.getDataList("id","desc",page,5)
+			},
+			
+			onDeviceTypeChange(value){
+				alert(this.deviceStatusSelected)
+			},
+			
+			onDeviceStatusChange(value){
+		
+			},
+			onSearchData(){
+				this.getDataList("id","desc",this.currentPage,5)
 			}
+			
     }
   }
 </script>
