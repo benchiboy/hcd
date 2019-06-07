@@ -1,7 +1,7 @@
 <template>
 	
   <div >
-		<div style="" class="text-left ml-3 mt-2">
+		<div style="" class="text-left ml-3 m">
 			<strong class="text-danger ">查询条件</strong>
 		</div>
 		<b-container fluid class="mt-2">
@@ -94,14 +94,14 @@
       </template>
 
 		
-      <template slot="device_name" slot-scope="row">
+   <!--   <template slot="device_name" slot-scope="row">
         {{ row.value}}
-      </template>
+      </template> -->
 
 
-      <template slot="type" slot-scope="row">
+    <!--  <template slot="type" slot-scope="row">
 					{{ row.value}}
-      </template>
+      </template> -->
 
       <template slot="status" slot-scope="row">
 				<span  v-if="row.value=='z'" style="border: 1px solid red;">正常</span>
@@ -173,12 +173,7 @@
       return {
 				isBusy: false,
         items: [
-				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
-				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
-				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
-				{id:"qLab", _cellVariants: { status: 'danger' },no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
-				{id:"qLab", no:"00000001",device_name:"四2222川",type:"四川第一人民医院",status:"运行良好",country:"保持",	addr:"王大成",oper:"王大成"},
-		
+			
 				],
         fields: [
 					'index',
@@ -200,13 +195,13 @@
 					type:'',
 					status:'',
 					page_no: 1,
-					page_size: 5,
+					page_size: 8,
 				},
 
         totalRows: 1,
         currentPage: 1,
-        perPage: 5,
-        pageOptions: [5, 10, 15],
+        perPage: 8,
+        pageOptions: [8, 10, 15],
         sortBy: null,
 			
 				deviceNo:'',

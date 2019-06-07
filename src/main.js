@@ -35,15 +35,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => {
 		console.log("response......")
-		
- 		if (response.data.err_code=="1003"){
- 			console.log("TOKEN 过期，需要重新登录...")
- 			router.replace({
- 				path: '/',
- 				query: {redirect: router.currentRoute.fullPath}
- 			})
- 		}
-		
+	
         return response;
     },
     error => {

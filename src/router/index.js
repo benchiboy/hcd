@@ -14,20 +14,47 @@ import AnalysisFact from '@/components/Analysis_Fact'
 
 import Decision from '@/components/Decision'
 import Manage from '@/components/Manage'
+import Main from '@/components/Main'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      name: 'Login',
-      component: Login,
-			meta: {
-				requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
-			},
-    },
+		{
+		  path: '/',
+		  name: 'Login',
+		  component: Login,
+				meta: {
+					requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+				},
+		},
+		{
+		path: '/Main',
+		name: 'Main',
+		component: Main,
+				meta: {
+					requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+				},
 		
+		children: [
+		{
+			path: 'Map',
+			name: 'Map',
+			component: Map,
+					meta: {
+						requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+					},
+		},
+			{
+				path: 'DeviceList',
+				name: 'DeviceList',
+				component: DeviceList,
+				meta: {
+		requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+				},
+			},
+		],
+		},
 		{
 			path: '/Home',
 			name:'Home',
@@ -35,15 +62,15 @@ export default new Router({
 			meta: {
 				requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
 			},
-      children: [
-        {
-          path: 'Map',
-          name: 'Map',
-          component: Map,
-					meta: {
-						requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
-					},
-        },
+		  children: [
+			{
+			  path: 'Map',
+			  name: 'Map',
+			  component: Map,
+						meta: {
+							requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+						},
+			},
 				{
 					path: 'DeviceList',
 					name: 'DeviceList',

@@ -436,11 +436,11 @@
 				this.timer =setInterval(this.FreshData, 5000)
       },
 			
-			beforeDestroy() {
-				if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断
-						clearInterval(this.timer); //关闭
-					}
-			},
+		beforeDestroy() {
+			if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断
+					clearInterval(this.timer); //关闭
+				}
+		},
 			
       ChinaConfigure() {
         let myChart = echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置    
