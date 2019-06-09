@@ -12,6 +12,8 @@ export default {
 	URL_GETACCOUNT: '/jc/api/getaccount',
 	
 	UID_TOKEN: 'uid_token',
+	LAST_USER: 'lastUser',
+	CURR_INDEX:'curr_uindex',
 	SUCC:'0000',
 	RELOGIN:'8000',	
 }
