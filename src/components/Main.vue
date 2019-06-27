@@ -1,19 +1,95 @@
 <template>
  <div>
+	 
+	 	
+	 <b-modal
+	 			id="modal-1"
+	 			ref="modal"
+	 		title="密码修改"
+	 		scrollable
+	 			@show="showModal"
+	 			@hidden="hiddenModal"
+	 			@ok="handleOk"
+	 		>
+	 		<template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
+	 			<b-button size="sm" variant="success" @click="ok()">
+	 			确定
+	 			</b-button>
+	 			<b-button size="sm" variant="danger" @click="cancel()">
+	 				取消
+	 			</b-button>
+	 		</template>
+	 
+	 	<div class="m-3" >
+	 			<form ref="form" @submit.stop.prevent="handleOk" >
+	 			<b-form-group
+	 					:state="oldPwdState"
+	 					label="原密码"
+	 					type="password"
+	 					label-for="oldPwdState"
+	 					invalid-feedback="原密码不能为空"
+	 				valid-feedback="输入通过校验"
+	 				class="text-left w-100 "
+	 				>
+	 			<b-form-input
+	 				id="oldPwdState"
+	 				v-model="form.old_pwd"
+	 				required
+	 			></b-form-input>
+	 			</b-form-group>
+	 			<b-form-group
+	 			:state="newPwdState"
+	 			label="新密码"
+	 			label-for="newPwdState"
+	 			invalid-feedback="新密码不能为空"
+	 			valid-feedback="新密码输入通过"
+	 			class="text-left"
+	 		>
+	 			<b-form-input
+	 				id="newPwdState"
+	 				type="password"
+	 				v-model="form.new_pwd"
+	 				:state="newPwdState"
+	 				required
+	 			></b-form-input>
+	 			</b-form-group>
+	 	
+	 		<b-form-group
+	 			:state="newPwd2State"
+	 			label="确认密码"
+	 			label-for="oldPwd2State"
+	 			invalid-feedback="确认密码不能为空"
+	 			valid-feedback="确认密码输入通过"
+	 				class=" text-left"
+	 		>
+	 			<b-form-input
+	 				id="newPwd2State"
+	 				type="password"
+	 				v-model="form.new_pwd2"
+	 				:state="newPwd2State"
+	 				required
+	 			></b-form-input>
+	 		</b-form-group>
+	 		</form>
+	 		</div >
+	 </b-modal>
+	 
  	<div class="" >
-		<b-navbar toggleable="lg" type="dark" variant="dark" class="navbar-inverse" >
-			<b-navbar-brand href="#">深圳微点生物技术有限公司</b-navbar-brand>
+		<b-navbar toggleable="lg" type="dark" variant="secondary" class="navbar-inverse" >
+			<b-navbar-brand href="#">HCD技术有限公司</b-navbar-brand>
 			<b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 			<b-collapse id="nav-collapse" is-nav>
 				<b-navbar-nav>
 					<b-button   variant="dark" @click="onMenuCollapse">
-							<img  src="../assets/menu.png" alt="Image 1" width="25" height="25" class="">
-							</img>
+						<img  src="../assets/menu.png" alt="Image 1" 
+								width="25" height="25" class="">
+						</img>
 					</b-button>
 				</b-navbar-nav>
+				 
 				<b-navbar-nav class="ml-auto">
 					<b-navbar-nav  id="map" >
-							<b-nav-item href="#/Home/Map" >
+							<b-nav-item  v-b-modal.modal-1  href="#">
 								<b-span class="text-white font-weight-bold text-decoration-none">修改密码 </b-span>
 							</b-nav-item>
 					</b-navbar-nav >
@@ -35,36 +111,52 @@
  
  <b-container fluid >
 		<b-row class="menuBox">
-				<b-col :md="menuCols"  class=" bg-secondary ">
+				<b-col :md="menuCols"  style="background-color:steelblue">
 					<div v-show="isCollapse">
 							<div >
 								<span>
-								<b-button v-b-toggle.collapse-1 pill variant="primary" block 
+								<b-button v-b-toggle.collapse-1  variant="primary" block 
 								class="mt-2 d-flex justify-content-between " @click="onMenuClick(0)">
 								 <img  src="../assets/device.png" alt="Image 1" width="20" height="20" class="">
 								 </img>
-								 <span >设备管理</span>
+								 <span >设备信息管理</span>
 									<img  src="../assets/arrow_up.png" alt="Image 1" 
-											width="20" height="20" class="" v-show="isMenuUpClick[0]">
+										width="20" height="20" class="" v-show="isMenuUpClick[0]">
 									</img>
 									<img  src="../assets/arrow_down.png" alt="Image 1" 
-											width="20" height="20" class="" v-show="isMenuDownClick[0]">
+										width="20" height="20" class="" v-show="isMenuDownClick[0]">
 									</img>
 								</b-button>
 								</span>
 								 <b-collapse id="collapse-1"  accordion="my-accordion" class="m-2">
-										<b-button block  pill variant="success">设备档案</b-button>
-										<b-button block pill variant="info">设备升级</b-button>
-										<b-button block  pill variant="info">设备维护</b-button>
+										<div>
+											<a href="#/Main/DeviceMap" >
+											<b-button block pill :variant="currSelIndex==1?'success':'info'" @click="onSelected(1)">设备地图</b-button>
+											</a>
+										</div>
+										<div class="mt-2">
+											<a href="#/Main/DeviceList"  >
+											<b-button block pill :variant="currSelIndex==2?'success':'info'" @click="onSelected(2)" >设备列表</b-button>
+											</a >
+										</div>
+										<div class="mt-2">
+											<a href="#/Main/DeviceDetail"  >
+											<b-button block pill :variant="currSelIndex==3?'success':'info'" @click="onSelected(3)" >设备详情</b-button>
+											</a >
+										</div>
 								</b-collapse>
 							</div>
+						
 							<div>
 								<span>
-								<b-button v-b-toggle.collapse-2 pill variant="primary" block 
+								<b-button v-b-toggle.collapse-2  variant="primary" block 
 								class=" mt-2 d-flex justify-content-between " @click="onMenuClick(1)">
-									<img  src="../assets/icon_addperson.png" alt="Image 1" width="20" height="20" class="">
+									<img  src="../assets/icon_addperson.png" 
+												alt="Image 1" 
+												width="20" 
+												height="20">
 									</img>
-									<span >用户管理</span>
+									<span >设备资源管理</span>
 									<img  src="../assets/arrow_up.png" alt="Image 1" 
 												width="20" height="20" class="" v-show="isMenuUpClick[1]">
 									</img>
@@ -74,19 +166,19 @@
 								</b-button>
 								</span>
 								<b-collapse id="collapse-2"  accordion="my-accordion" class="m-2">
-										<b-button block pill variant="success">账户列表</b-button>
-										<b-button block pill variant="info">角色管理</b-button>
-										<b-button block pill variant="info">操作管理</b-button>
-										<b-button block pill variant="info">修改密码</b-button>
+										<b-button block pill variant="success">产品管理</b-button>
+										<b-button block pill variant="info">参数芯片</b-button>
+										<b-button block pill variant="info">设备配置</b-button>
 								</b-collapse>
 							</div>
-								<div >
+							
+							<div >
 									<span>
-									<b-button v-b-toggle.collapse-3 pill variant="primary" block 
+									<b-button v-b-toggle.collapse-3  variant="primary" block 
 									class=" mt-2 d-flex justify-content-between " @click="onMenuClick(2)">
 										<img  src="../assets/icon_addperson.png" alt="Image 1" width="20" height="20" class="">
 										</img>
-									<span >设备分析</span>
+									<span >设备辅助管理</span>
 										<img  src="../assets/arrow_up.png" alt="Image 1" 
 													width="20" height="20" class="" v-show="isMenuUpClick[2]">
 										</img>
@@ -96,12 +188,13 @@
 									</b-button>
 									</span>
 									<b-collapse id="collapse-3"  accordion="my-accordion" class="m-2">
-											<b-button block pill variant="success">个体分析</b-button>
-											<b-button block pill variant="info">整体分析</b-button>
-											<b-button block pill variant="info">设备分布统计</b-button>
-											<b-button block pill variant="info">设备决策分析</b-button>
+											<b-button block pill variant="success">角色定义</b-button>
+											<b-button block pill variant="info">用户管理</b-button>
+											<b-button block pill variant="info">系统日志</b-button>
+											<b-button block pill variant="info">修改密码</b-button>
 									</b-collapse>
-								</div>
+							</div>
+					
 					</div>
 				</b-col>
 				<b-col :md="contentCols">
@@ -115,7 +208,7 @@
 
 <script>
   import GLOBAL from './Global.js'
-
+	import {getStore,setStore,removeStore} from './Global.js'
   export default {
     data() {
       return {
@@ -124,10 +217,43 @@
 				isCollapse:true,
 				isMenuUpClick:[true,true,true],
 				isMenuDownClick:[false,false,false],
+				form: {
+					old_pwd: '',
+					new_pwd:'',
+					new_pwd2:'',
+				},
+				currSelIndex:0,
+				items: [
+          {
+            text: 'Admin',
+            href: '#'
+          },
+          {
+            text: 'Manage',
+            href: '#'
+          },
+          {
+            text: 'Library',
+            active: true
+          }
+        ]
 			}
     },
     mounted() {
-			this.$router.push({name:'DeviceList',params:{}});
+			//this.$router.push({name:'DeviceList',params:{}});
+			this.$router.push({name:'MainInfo',params:{}});
+		
+		},
+		computed:{
+			oldPwdState() {
+				return this.form.old_pwd.length > 4 && this.form.old_pwd.length < 20
+			},
+			newPwdState() {
+				return this.form.new_pwd.length > 4 && this.form.new_pwd.length < 13
+			},
+			newPwd2State() {
+				return this.form.new_pwd2.length > 4 && this.form.new_pwd2.length < 13
+			},
 		},
     methods: {
 			onMenuClick(i){
@@ -152,7 +278,18 @@
 						this.contentCols=10;
 				}
 				this.isCollapse=!this.isCollapse
+			},
+			
+			onQuit(evt) {
+				setStore(GLOBAL.UID_TOKEN,'')
+				this.$router.push({name:'Login',params:{}});
+			},
+			
+			onSelected(index) {
+				
+				this.currSelIndex=index;
 			}
+			
 			
 	
     }

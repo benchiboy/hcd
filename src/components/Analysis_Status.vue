@@ -434,7 +434,7 @@
 			*/
 			DataTimer() {
 				this.timer =setInterval(this.FreshData, 5000)
-      },
+		},
 			
 		beforeDestroy() {
 			if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断
@@ -442,15 +442,15 @@
 				}
 		},
 			
-      ChinaConfigure() {
-        let myChart = echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置    
+		ChinaConfigure() {
+				let myChart = echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置    
 				this.myChart=myChart
-        window.onresize = myChart.resize;
-				myChart.on('click', function(params){
-					alert(params.name);
+				window.onresize = myChart.resize;
+						myChart.on('click', function(params){
+							alert(params.name);
 				});
-		
-        myChart.setOption({ 
+				
+				myChart.setOption({ 
 					 title: {
 								text: '深圳微点生物设备测量指标监控',
 								subtext: 'data from 微点生物',
@@ -459,7 +459,7 @@
 								textStyle: {
 										color: 'black'
 								}
-            },
+						},
 	
 						tooltip : {
 							trigger: 'item',
@@ -523,28 +523,29 @@
 //           		text:['High','Low'],           // 文本，默认为数值文本
 //           		calculable: true
 //           },
-					geo: { // 这个是重点配置区
+			
+			geo: { // 这个是重点配置区
             map: 'china', // 表示中国地图
 						zoom: 1.1,
-            roam: true,
-            label: {
-              normal: {
-                show: true, // 是否显示对应地名
-                textStyle: {
-                  color: 'white'
-                }
-              }
-            },
-						itemStyle: {					// 定义样式
-										normal: {					// 普通状态下的样式
-												areaColor: 'black',
-												borderColor: 'white'
-										},
-										emphasis: {					// 高亮状态下的样式
-												areaColor: 'red'
-										}
-								}
-						},
+				roam: true,
+				label: {
+				  normal: {
+					show: true, // 是否显示对应地名
+					textStyle: {
+					  color: 'white'
+					}
+				  }
+				},
+			itemStyle: {					// 定义样式
+							normal: {					// 普通状态下的样式
+									areaColor: 'black',
+									borderColor: 'white'
+							},
+							emphasis: {					// 高亮状态下的样式
+									areaColor: 'red'
+							}
+					}
+			},
 			    series: [{
 							symbolSize: 15,
 				      type: 'effectScatter',

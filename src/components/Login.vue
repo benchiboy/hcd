@@ -1,6 +1,15 @@
 <template>
-  <div class="backimg d-flex justify-content-center ">
-		<div class="w-25" style="margin-top: 190px;">
+	
+ <div>
+
+  <div class="title d-flex justify-content-center">
+	<!-- 	 <h3 style="color: white;"> 微点云设备监控系统</h3>
+	--> 
+   	 <h3 style="color: white;"> CRF申请审批系统</h3>
+  </div>
+	
+  <div class=" backimg d-flex justify-content-center align-items-center ">
+		<div class="w-25" >
 			 <b-form @submit="onSubmit" @reset="onReset" >
 				<b-form-group id="input-group-1"  label-for="input-1">
 				<div class="d-flex justify-content-around" v-if="loginObj!=null &&loginObj.length>0">
@@ -75,6 +84,7 @@
 				<b-button type="submit" block variant="primary" ><span>确定</span></b-button>
 			</b-form>
 		</div>
+	</div>
 	</div>
 </template>
 <script>
@@ -215,7 +225,7 @@ export default {
 
 
 									console.log("======>",response.data)
-									that.$router.push({name:'Home',params:{nickn_name: response.data.nick_name}});
+									that.$router.push({name:'Main',params:{nickn_name: response.data.nick_name}});
 									return;
 								}else {
 									that.makeToast(response.data.err_msg);
@@ -268,7 +278,14 @@ a {
 		position: absolute;
 		z-index: 1999;
 		top: 300px;
-	
+}
+
+
+.title{
+	top: 10%;
+	left: 40%;
+	position: absolute;
+	z-index: 999;
 }
 
 

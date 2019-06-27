@@ -151,7 +151,6 @@
 												{{nick_name}}
 												</span>
 										</em></template>
-							
 									<b-dropdown-item v-b-modal.modal-1  href="#">密码修改</b-dropdown-item>
 									<b-dropdown-item  @click="onQuit">退出</b-dropdown-item>
 							

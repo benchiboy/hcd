@@ -5,6 +5,7 @@ export default {
 	URL_SIGNIN: 	'/jc/api/signin',
 	URL_SIGNOUT: 	'/jc/api/signout',
 	URL_DEVICELIST: '/jc/api/devicelist',
+	URL_DEVICEINFO: '/jc/api/deviceinfo',
 	URL_GETACTLIST: '/jc/api/getactlist',
 	URL_DELACCOUNT: '/jc/api/delaccount',
 	URL_SETACCOUNT: '/jc/api/setaccount',
