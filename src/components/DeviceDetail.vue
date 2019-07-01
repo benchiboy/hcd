@@ -3,17 +3,26 @@
    <div>
 	<!-- 	<div style="" class="text-left ml-3 m">
 			<strong class="text-primary border-left  border-success">查询条件</strong>
-		</div> -->
+	</div> -->
 	
-	<b-container fluid class="mt-2">
+	<b-container fluid class="mt-2 " style="border-bottom: 1px solid #ddd;">
 		<b-row>
-		   <b-col md="4" class="my-1">
+		   <b-col md="5" class="my-1 mb-3">
 			<b-form-group label-cols-sm="4" label="设备序列号" class="mb-0">
 					 <b-input-group>
-							<b-form-input v-model="deviceNo" placeholder="设备序列号"></b-form-input>
+					
+					<b-form-input v-model="sn" placeholder="设备序列号"></b-form-input>
+					
+					<b-input-group-append  >
+							<b-button   @click="onSearchData(sn)">
+								<span class="pl-2 pr-2">GO</span>
+							</b-button>
+					</b-input-group-append>
+					
 					 </b-input-group>
 					</b-form-group>
 			</b-col>
+			
 		</b-row>
 	</b-container>
 	<!-- <b-tabs content-class="mt-3" justified>
@@ -24,15 +33,21 @@
 		<b-tab title="设备日志" ></b-tab>
 	  </b-tabs> -->
 	  
-  <b-tabs>
+  <b-tabs class="mt-3">
     <!-- Add your b-tab components here -->
     <template slot="tabs">
-      <b-nav-item href="#" @click="onDeviceInfo">基本信息</b-nav-item>
-      <b-nav-item href="#" @click="onDeviceConfig">配置信息</b-nav-item>
-	   <b-nav-item href="#" @click="onDeviceVersion">版本信息</b-nav-item>
-	  <b-nav-item href="#" @click="onDeviceChip">参数芯片</b-nav-item>
-      <b-nav-item href="#" @click="onDeviceChkResult">检测结果</b-nav-item>
-      <b-nav-item href="#" @click="onDeviceRunLog">设备日志</b-nav-item>
+      <b-nav-item href="#" @click="onDeviceInfo(sn)" 
+	  :class="currIndex==1?'selectedItem':''">基本信息</b-nav-item>
+      <b-nav-item href="#" @click="onDeviceConfig"
+	  :class="currIndex==2?'selectedItem':''">配置信息</b-nav-item>
+	  <b-nav-item href="#" @click="onDeviceVersion"
+	  :class="currIndex==3?'selectedItem':''">版本信息</b-nav-item>
+	  <b-nav-item href="#" @click="onDeviceChip"
+	  :class="currIndex==4?'selectedItem':''">参数芯片</b-nav-item>
+      <b-nav-item href="#" @click="onDeviceChkResult"
+	  :class="currIndex==5?'selectedItem':''">检测结果</b-nav-item>
+      <b-nav-item href="#" @click="onDeviceRunLog"
+	  :class="currIndex==6?'selectedItem':''">设备日志</b-nav-item>
     </template>
   </b-tabs>
  	<div>  
@@ -44,37 +59,77 @@
 
 <script>
   import GLOBAL from './Global.js'
-
+  import Util from './Util.js';
   export default {
     data() {
       return {
+		  currIndex:1,
+		  sn:'11111111'
       }
     },
- 
-    methods: {
-			onDeviceInfo(){
-				this.$router.push({name:'DeviceDetail_Info',params:{nickn_name: ''}});
-			},
-			
-			onDeviceConfig(value){
-				this.$router.push({name:'DeviceDetail_Config',params:{nickn_name: ''}});
-			},
-			
-			onDeviceChkResult(value){
-				this.$router.push({name:'DeviceDetail_ChkResult',params:{nickn_name: ''}});
+	mounted() {
+		// Set the initial number of items
+		console.log("------>",this.$route.params.sn)
+		if (this.$route.params.sn!=null){
+			this.form.sn=this.$route.params.sn
+		}
 		
+		this.onDeviceInfo()
+	},
+    methods: {
+			onDeviceInfo(sn){
+				this.currIndex=1
+				this.$router.push({name:'DeviceDetail_Info',params:{sn: sn}});
 			},
 			
-			onDeviceVersion(value){
-				this.$router.push({name:'DeviceDetail_Version',params:{nickn_name: ''}});
+			onDeviceConfig(sn){
+				this.currIndex=2
+				this.$router.push({name:'DeviceDetail_Config',params:{sn: sn}});
+			},
+			
+			onDeviceVersion(sn){
+				this.currIndex=3
+				this.$router.push({name:'DeviceDetail_Version',params:{sn: sn}});
+			},
+			
+			onDeviceChkResult(sn){
+				this.currIndex=5
+				this.$router.push({name:'DeviceDetail_ChkResult',params:{sn: sn}});
+			},
+		
+			onDeviceRunLog(sn){
+				this.currIndex=6
+				this.$router.push({name:'DeviceDetail_RunLog',params:{sn: sn}});
+			},
+			onDeviceChip(sn){
+				this.currIndex=4
+				this.$router.push({name:'DeviceDetail_Chip',params:{nickn_name: sn}});
+			},
+			onSearchData(sn){
+				//Util.$emit('getDeviceSn',sn);
+			switch (this.currIndex) {
+				case 1:
+					this.$router.push({name:'DeviceDetail_Info',params:{sn: sn}});
 					
-			},
-			onDeviceRunLog(){
-				this.$router.push({name:'DeviceDetail_RunLog',params:{nickn_name: ''}});
-			},
-			onDeviceChip(){
-				this.$router.push({name:'DeviceDetail_Chip',params:{nickn_name: ''}});
+					break;
+				case 2:
+					this.$router.push({name:'DeviceDetail_Config',params:{sn: sn}});
+					break;
+				case 3:
+					this.$router.push({name:'DeviceDetail_Version',params:{sn: sn}});
+					break;
+				case 4:
+					this.$router.push({name:'DeviceDetail_Chip',params:{nickn_name: sn}});
+					break;
+				case 5:
+					this.$router.push({name:'DeviceDetail_ChkResult',params:{sn: sn}});
+					break;
+				case 6:
+					this.$router.push({name:'DeviceDetail_RunLog',params:{sn: sn}});
+					break;				
+				}
 			}
+			
 			
     }
   }
@@ -109,8 +164,7 @@ a {
 		width: 20%;
 }
 
-.statusColor{
-	background: red;
-	background-color: #42B983;
+.selectedItem{
+	background-color:lightblue
 }
 </style>

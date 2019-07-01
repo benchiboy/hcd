@@ -1,59 +1,70 @@
 <template>
  	<div class="echarts">
 		
-		<div class="mt-3 ml-4 d-flex justify-content-start">
-			<h5>数据更新：2019-06-25 12:12:12</h5>
-		</div>	
- 		<b-button @click="makeData">MakeData</b-button>
+ 		 <b-button @click="makeData">MakeData</b-button>
 		<b-button @click="DrawData">DrawData</b-button>
-		<b-button @click="Test">Test</b-button>
-		<div>{{factLen1}}</div>
-		<div class="card legend-status-box rounded border-primary shadow-lg" header="运行状态图标">
+		<b-button @click="getMapData">000001</b-button>
+	
+		<div class="card legend-status-box rounded border-primary shadow-sm" header="运行状态图标">
 			<b-card
-				header="云设备监测统计"
+				header="更新：2019-06-25 12:12:12"
 				header-text-variant="white"
 				header-tag="header"
 				header-bg-variant="info"
 				style="max-width: 20rem;"
 			>
-			<b-card-text>
-				<div class="d-flex justify-content-between align-items-center">
-					<div  class="d-flex justify-content-start align-items-center">
-						<span class="legend-status-item  rounded-circle mr-3" style="background: green" ></span> 
-						<span  style="text-align: left;">A类设备</span>
+				<span slot="header" class="ml-2" >
+					<img src='../assets/clock.png' width="25px" height="25px"></img>
+					<span><strong>2019-06-25 12:12:12</strong></span>
+				</span>
+    
+				<b-card-text>
+					<div class="d-flex justify-content-between align-items-center">
+						<div  class="d-flex justify-content-start align-items-center">
+							<span class="legend-status-item  rounded-circle mr-3" style="background: green" ></span> 
+							<span  style="text-align: left;">A类设备</span>
+						</div>
+						<b-badge  pill variant="danger">{{Total}}</b-badge>
 					</div>
-					<b-badge  pill variant="danger">{{Total}}</b-badge>
-				</div>
-				<div class="d-flex justify-content-between align-items-center">
-				<div class="d-flex justify-content-start align-items-center">
-					<span class="legend-status-item rounded-circle mr-3" style="background:lightgreen;" ></span> 
-					<span  style="text-align: left;">B类设备</span>
-				</div>
-					<b-badge pill  variant="danger">4</b-badge>
-				</div>
-				<div class="d-flex justify-content-between align-items-center">
-				<div class="d-flex justify-content-start align-items-center">
-					<span class="legend-status-item rounded-circle mr-3" style="background: yellow;" ></span> 
-					<span  style="text-align: left; 9px;">C类设备</span>
-				</div>
-					<b-badge  pill variant="danger">4</b-badge>
-				</div>
-			</b-card-text>
+					<!-- <div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex justify-content-start align-items-center">
+							<span class="legend-status-item rounded-circle mr-3" style="background:lightgreen;" ></span> 
+							<span  style="text-align: left;">B类设备</span>
+						</div>
+						<b-badge pill  variant="danger">4</b-badge>
+					</div> -->
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="d-flex justify-content-start align-items-center">
+							<span class="legend-status-item rounded-circle mr-3" style="background: yellow;" ></span> 
+							<span  style="text-align: left; 9px;">C类设备</span>
+						</div>
+						<b-badge  pill variant="danger">4</b-badge>
+					</div>
+				</b-card-text>
 			</b-card>
 		</div>
-		<div :style="{height:'530px',width:'90%'}" ref="myEchart"></div>
+		
+		<div class="mapCss">
+			<div :style="{height:'100%',width:'98%',}" ref="myEchart"></div>
+		</div>
+		
   </div>
 </template>	
 
 <script>
   import echarts from "echarts";
+  import GLOBAL from './Global.js'
+  
   //import '../../node_modules/echarts/map/js/world.js'
   import '../../node_modules/echarts/map/js/china.js' // 引入中国地图数据
   export default {
 					name: "echarts",
 					props: ["userJson"],
 					data() {
-						return {
+				return {
+					form:{
+						token:'123'
+					},
 					mapData:[
 					{name: '海门', value: 9},
 					{name: '鄂尔多斯', value: 12},
@@ -293,21 +304,28 @@
 					'宜宾':[104.56,29.77]
 					},
         chart: null,
-				myChart:null,
-				timer: null,
-				factList:[],
-				MakeDataInternal:20*1000,
-				MakeDataLen:10,
-				DefaultDelay:400,
-				Total:0,
+			myChart:null,
+			timer: null,
+			factList:[],
+			drawNode:[],
+			drawNode1:[],
+			MakeDataInternal:20*1000,
+			MakeDataLen:10,
+			DefaultDelay:400,
+			Total:0,
 	    };
+		
     },
-  
 	mounted() {
-	    this.ChinaConfigure();
+	   
+		this.ChinaConfigure();
 		this.ClearData()
-		//this.DataTimer()
+		this.getMapData()
+	
+		// //this.DataTimer()
 	},
+	
+
 	
     beforeDestroy() {
       if (!this.chart) {
@@ -324,6 +342,22 @@
 	},
   
 	methods: {
+		getMapData(){
+			var that=this;
+			console.log("===============>")
+			this.$axios.post(GLOBAL.URL_MAPDATA, 
+								JSON.stringify(this.form),
+								{headers: {'Content-Type': 'application/json'}}
+						)
+						.then(function (response) {
+							console.log("bbbbb======>",response.data.data.device_map)
+							that.DrawData(response.data.data.device_map)
+						})
+						.catch(function (error) {
+						console.log("---->=========>",error);
+			}); 		
+		},
+		
 			/*
 				从微点获取数据
 			*/
@@ -334,15 +368,7 @@
 					let areaVale=this.mapData[i].value
 					let lng=this.geoCoordMap[areaName][0]
 					let lat=this.geoCoordMap[areaName][1]
-					if (i%3==0){
-						this.factList.push([0,lng,lat,areaVale])
-					}
-					if (i%3==1){
-						this.factList.push([1,lng,lat,areaVale])
-					}
-					if (i%3==2){
-						this.factList.push([2,lng,lat,areaVale])
-					}
+					this.factList.push([1,lng,lat,areaVale])
 			 }
 		},
 			
@@ -360,42 +386,26 @@
 			没2分钟取数一次 时间： 2*60*1000MS
 			DELAY= 60*1000   /300
 		*/
-		async DrawData() {
+		 DrawData(dataList) {
 			let tLen=this.factList.length
-			var perCnt=parseInt(tLen*this.DefaultDelay/this.MakeDataInternal)
-			var timesCnt=parseInt(this.MakeDataInternal/this.DefaultDelay)
-			var modTime=(tLen*this.DefaultDelay)%this.MakeDataInternal
-			var modCnt=0
-			if (modTime>0){
-				 modCnt=modTime/this.DefaultDelay
-			}
-			console.log("tLen======>",tLen)
-			console.log("perCnt======>",perCnt)
-			console.log("modCnt======>",modCnt)
-			console.log("timesCnt======>",timesCnt)
-
 			var totalCnt=0
-			for (var i = 0; i <tLen;) {
-				var chart=this.myChart;
-				var option = this.myChart.getOption();
-				for (var j=0;j<perCnt;j++){
-						let e=this.factList.pop()
-						option.series[e[0]].data =[{name:"qq"+j, value:[e[1],e[2],e[3]]}],
-						this.Total++
+			var option = this.myChart.getOption();
+		
+			console.log("=========>",dataList.length)
+			for (var i = 0; i <dataList.length;i++) {
+				if (dataList[i].d_lat==''){
+					continue
 				}
-				i=i+perCnt
-				if (modCnt>0){
-					let e=this.factList.pop()
-					option.series[e[0]].data =[{name:"上海11111", value:[e[1],e[2],e[3]]}],
-					modCnt=modCnt-1
-					i=i+1
-					this.Total++
-				}
-				console.log("index======>",i,totalCnt++)
-				this.myChart.setOption(option);  
-				//await	this.Sleep(this.DefaultDelay)
-				//this.ClearData()
+				let d_lat=dataList[i].d_lat;
+				let d_long=dataList[i].d_long;
+				console.log("====>",d_lat,d_long)
+			 	//let e=this.factList.pop()
+				console.log("=====>",i)
+				this.drawNode1[i]={name:"qq"+i, value:[d_long,d_lat,i]}
 			}
+			option.series[0].data=this.drawNode1
+			// 	this.ClearData()
+			this.myChart.setOption(option); 
 		},
 		
 		/*
@@ -405,7 +415,6 @@
 			var option = this.myChart.getOption();
 			option.series[0].data = []; 
 			option.series[1].data = []; 
-			option.series[2].data = []; 
 			this.myChart.setOption(option);  
 		},
 		/*
@@ -428,15 +437,16 @@
 				window.onresize = myChart.resize;
 				
 				myChart.on('click', function(params){
-						//alert(params.name);
+					//alert(params.name);
+					that.$router.push({name:'DeviceList',params:{region: params.name}});
 				});
 				
 				
 				myChart.setOption({ 
 					 title: {
-							text: '深圳微点生物设备测量指标监控',
-							subtext: 'data from 微点生物',
-							sublink: 'http://www.zto.com/',
+							// text: '深圳微点生物设备测量指标监控',
+							// subtext: 'data from 微点生物',
+							// sublink: 'http://www.zto.com/',
 							x: 'center',
 							textStyle: {
 									color:'black'
@@ -446,23 +456,25 @@
 						tooltip : {
 							trigger: 'item',
 							//  formatter: function (params) {
-							// 		//alert(params.value + '');
+							// 		alert(params.value + '');
 							// 		return "ssssss"
 							// }
 							
 							formatter: function (params) {
+								alert(params)
 								if (params.componentType !== 'markPoint') {
 									return params.name;
 								} else {
 									return params;
 								}
 							},
-							    triggerOn: 'click',// 点击MarkPoint出发弹出tooltip
-							position: function (pos, params, dom, rect, size) {
-							//	alert("hello..."+params.componentType)
-                            if (params.componentType === 'series') {
+						     triggerOn: 'click',// 点击MarkPoint出发弹出tooltip
+							 position: function (pos, params, dom, rect, size) {
+							 	alert("hello..."+params.value)
+								if (params.componentType === 'series') {
+							 	
 								
-								that.$router.push({name:'DeviceList',params:{nickn_name: ''}});
+								that.$router.push({name:'DeviceDetail',params:{nickn_name: ''}});
 								
 								// alert("hello..."+params.data)
                                 // var obj = params.data;
@@ -482,8 +494,8 @@
                                 // sHtml.append(table);
                                 // $(dom).addClass('tooltip-style').html(sHtml);
                              
-                                return 'bottom';
-                            }
+                            //     return 'bottom';
+                             }
 						}
 
 						},
@@ -533,25 +545,25 @@
 							
 						},
 						*/
-// 					
-// 					visualMap: {
-//           		left: 'left',
-//           		min: 10,
-//           		max: 100,
-//           		inRange: {
-//           			//	color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
-//           		},
-//           		text:['High','Low'],           // 文本，默认为数值文本
-//           		calculable: true
-//           },
+			// 					
+			// 					visualMap: {
+			//           		left: 'left',
+			//           		min: 10,
+			//           		max: 100,
+			//           		inRange: {
+			//           			//	color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+			//           		},
+			//           		text:['High','Low'],           // 文本，默认为数值文本
+			//           		calculable: true
+			//           },
 			
 			geo: { // 这个是重点配置区
             map: 'china', // 表示中国地图
-				zoom: 1.2,
+				zoom: 1.0,
 				roam: true,
 				label: {
 				  normal: {
-					show: true, // 是否显示对应地名
+					show: false, // 是否显示对应地名
 					textStyle: {
 					  color: 'white'
 					}
@@ -572,7 +584,7 @@
 				symbolSize: 15,
 				type: 'effectScatter',
 				coordinateSystem: 'geo' ,// 对应上方配置
-				name: '血压指标', // 浮动框的标题
+				name: 'A类设备', // 浮动框的标题
 				data: [],
 				rippleEffect: {
 					brushType: 'stroke'
@@ -596,7 +608,7 @@
 					symbolSize: 15,
 				    type: 'effectScatter',
 					coordinateSystem: 'geo' ,// 对应上方配置
-					name: '脉搏次数', // 浮动框的标题
+					name: 'B类设备', // 浮动框的标题
 					data: [],
 						rippleEffect: {
 							brushType: 'stroke'
@@ -616,30 +628,6 @@
 								},
 						},
 				},
-				{
-					symbolSize: 15,
-				    type: 'effectScatter',
-					coordinateSystem: 'geo' ,// 对应上方配置
-					name: '血小板指数', // 浮动框的标题
-					data: [],
-						rippleEffect: {
-						brushType: 'stroke'
-						},
-					label: {
-					normal: {
-						formatter: '{b}',
-						position: 'left',
-						show: false
-					}
-					},
-					    hoverAnimation: true,
-							itemStyle: {
-							normal: {
-								color:'red',
-								shadowBlur:7,
-								},
-						},
-				}
 			]
         })
       }
@@ -664,19 +652,18 @@ li {
 a {
   color: #42b983;
 }
-.map{
-	height: 650px;
-	width:auto;
-	
-	border: 1px solid red;
-
+.mapCss{
+	padding: 0;
+	width: 85%;
+	height: 95%;
+	position: fixed;
 }
 
 .legend-status-box{
 	background:lavender;
-	right: 40px;
+	left: 40px;
 	width: 250px;
-	bottom: 100px;
+	top: 10px;
 	position: absolute;
 	z-index: 999; 
 }

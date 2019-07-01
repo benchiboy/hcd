@@ -79,15 +79,21 @@
 				<span>{{deviceInfo.is_online}}</span>
 			</b-col>
 		</b-row>
-		
 	  </b-col >
 	 
 	  <b-col md="7" class="my-1">
 		<img src="../assets/m-lab.png"></img>
 	  </b-col>	
-	 
 	
 	 </b-row>
+	  <b-row class="d-flex justify-content-center ">
+		  <div  class="mt-5">
+				<b-button >
+					<span class="pl-2 pr-2">编辑</span>
+				</b-button>
+			  </div>
+	  </b-row>
+	  
 	 
 		
 	</b-container>
@@ -101,23 +107,22 @@
   export default {
     data() {
       return {
-				isBusy: false,
-      
-				form:{
-					user_id:100,
-					sort_fld: null,
-					sort_mode:null,
-					no:'',
-					type:'',
-					status:'',
-					page_no: 1,
-					page_size: 8,
-				},
-				deviceInfo:{}
+			isBusy: false,
+			form:{
+				token:'123',
+				user_id:100,
+				sort_fld: null,
+				sort_mode:null,
+				sn:'014000I0700016',
+				type:'',
+				status:'',
+				page_no: 1,
+				page_size: 8,
+			},
+			deviceInfo:{}
       }
     },
     computed: {
-		
       sortOptions() {
         // Create an options list from our fields
         return this.fields
@@ -129,11 +134,16 @@
 		
     },
     mounted() {
-			this.getDataList("id","asc",this.currentPage,this.perPage)
-			
-	  },
+		console.log("==========>9999999")
+		if (this.$route.params.sn!=null){
+			alert(this.$route.params.sn)
+		}
+		//this.getDataList("id","asc",this.currentPage,this.perPage)
+	},
+	created() {
+		console.log("==========>1111119999999")
+	},
     methods: {
-			
 			getDataList(sortFld,sortMode,pageNo,pageSize){
 				var that=this;
 				this.form.sort_fld=sortFld
@@ -146,12 +156,11 @@
 				this.form.status=this.deviceStatusSelected
 				
 				//that.isBusy=true
-				this.$axios.post(GLOBAL.URL_DEVICEINFO, 
-									JSON.stringify(this.form))
+				this.$axios.post(GLOBAL.URL_DEVICE_BASEINFO, 
+									JSON.stringify(this.form),
+									{headers: {'Content-Type': 'application/json'}})
 							.then(function (response) {
-
-								that.deviceInfo=response.data
-			
+								that.deviceInfo=response.data.data
 							})
 							.catch(function (error) {
 								console.log("---->=========>",error);

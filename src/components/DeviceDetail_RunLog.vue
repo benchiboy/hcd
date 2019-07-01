@@ -1,31 +1,108 @@
 <template>
 
    <div>
-		<div style="" class="text-left ml-3 m">
-			<strong class="text-primary border-left  border-success">查询条件</strong>
-		</div>
+	   
 	
 	<b-container fluid class="mt-2">
-		<b-row>
-		   <b-col md="4" class="my-1">
-			<b-form-group label-cols-sm="4" label="设备序列号" class="mb-0">
-					 <b-input-group>
-							<b-form-input v-model="deviceNo" placeholder="设备序列号"></b-form-input>
-					 </b-input-group>
-					</b-form-group>
-			</b-col>
-		</b-row>
+	  <b-row>
+	<b-col md="4" class="my-1">
+	  <b-form-group label-cols-sm="4" label="开始日期" class="mb-0">
+			<b-input-group>
+	     		<b-form-input  v-model="form.begin_date" type="date"></b-form-input>
+			</b-input-group>
+	  </b-form-group>
+	 </b-col >
+		 
+	<b-col md="4" class="my-1">
+	  <b-form-group label-cols-sm="4" label="结束日期" class="mb-0">
+	     <b-input-group>
+			<b-form-input   v-model="form.end_date"  type="date"></b-form-input>
+	    </b-input-group>
+	  </b-form-group>
+	 </b-col >
+	<b-col md="2" class="my-1">
+		<b-button> 查询</b-button>
+	</b-col >
+	</b-row>
+	</b-container>
+	
+	<b-container fluid class="mt-2">
+	<b-row class="d-flex  align-items-center">
+		<b-col md="3" class="my-1">
+			<div>
+				<img src="../assets/log_folder.jpg" width="80px" height="80px">
+				</img>
+			</div>
+			<div>
+				2018-12-12 12:12:12.log
+			</div>
+		</b-col>	
+		<b-col md="3" class="my-1">
+			<div>
+				<img src="../assets/log_folder.jpg" width="80px" height="80px">
+				</img>
+			</div>
+			<div>
+				2018-12-12 12:12:12.log
+			</div>
+		</b-col>	
+			<b-col md="3" class="my-1">
+			<div>
+				<img src="../assets/log_folder.jpg" width="80px" height="80px">
+				</img>
+			</div>
+			<div>
+				2018-12-12 12:12:12.log
+			</div>
+		</b-col>	
+			<b-col md="3" class="my-1">
+			<div>
+				<img src="../assets/log_folder.jpg" width="80px" height="80px">
+				</img>
+			</div>
+			<div>
+				2018-12-12 12:12:12.log
+			</div>
+		</b-col>	
+	</b-row>
+	
+	
 	</b-container>
 
 	
+	<b-container fluid class="mt-2">
+	<b-row class="d-flex  align-items-center">
+		<b-col md="4" class="my-1">
+			<strong>
+				数据总共：{{totalRows}}条，每页{{perPage}}条，当前页：{{currentPage}}
+			</strong>
+		</b-col>
+		<b-col md="4" class="my-1">
+		  <b-pagination
+		    v-model="currentPage"
+		    :total-rows="totalRows"
+		    :per-page="perPage"
+		    class="my-0"
+			@change="onChange"
+		  ></b-pagination>
+		</b-col>
+		
+		<b-col md="4" class="my-1">
+			<b-button   v-b-modal.modal-getconfig_file ><span class="pl-2 pr-2">数据获取</span></b-button>
+			<b-button  ><span class=" pl-2 pr-2 ">推送文件</span></b-button>
+		</b-col>
+	</b-row>
+
+	</b-container>
   
 
    </div>
+   
 </template>
 
 <script>
   import GLOBAL from './Global.js'
-
+ import {getCurrDate} from './Global.js'
   export default {
     data() {
       return {
@@ -38,21 +115,23 @@
 					{ key: 'id', 			label: 'ID值',},
 					{ key: 'no', 			label: '设备序列号', sortable: true, sortDirection: 'desc' },
 					{ key: 'device_name',label:'设备名称', sortable: true},
-   				{ key: 'type', 		label: '设备类型' },
+					{ key: 'type', 		label: '设备类型' },
 					{ key: 'status', 	label: '设备状态' },
-    			{ key: 'country', label: '决策' },
+					{ key: 'country', label: '决策' },
 					{ key: 'addr', 		label: '责任人' },
 					{ key: 'oper', 		label: '操作'}
 	      ],
 
 				form:{
+					"token":'123',
 					user_id:100,
 					sort_fld: null,
 					sort_mode:null,
-					no:'',
-					type:'',
+					sn:'011401K0500031',
+					begin_date:'',
+					end_date:'',
 					status:'',
-					page_no: 1,
+					target_page: 1,
 					page_size: 8,
 				},
 
@@ -61,10 +140,10 @@
         perPage: 8,
         pageOptions: [8, 10, 15],
         sortBy: null,
-			
-				deviceNo:'',
-				deviceTypeSelected:'',
-				deviceStatusSelected:'',
+	
+		deviceNo:'',
+		deviceTypeSelected:'',
+		deviceStatusSelected:'',
 			
         sortDesc: false,
         sortDirection: 'asc',
@@ -120,18 +199,16 @@
     },
     mounted() {
 		  // Set the initial number of items
-			this.getDataList("id","asc",this.currentPage,this.perPage)
+		this.form.begin_date=getCurrDate()
+		this.form.end_date=getCurrDate()
+		  
+		this.getDataList("id","asc",this.currentPage,this.perPage)
 			
-	  },
+	},
     methods: {
-			
-			
 			statusColor(item) {
-			
 				return item.type
 			},
-			
-			
 			getDataList(sortFld,sortMode,pageNo,pageSize){
 				var that=this;
 				this.form.sort_fld=sortFld
@@ -144,8 +221,9 @@
 				this.form.status=this.deviceStatusSelected
 				
 				//that.isBusy=true
-				this.$axios.post(GLOBAL.URL_DEVICELIST, 
-									JSON.stringify(this.form))
+				this.$axios.post(GLOBAL.URL_DEVICE_LOGLIST, 
+									JSON.stringify(this.form),
+									{headers: {'Content-Type': 'application/json'}})
 							.then(function (response) {
 									that.items=response.data.List
 

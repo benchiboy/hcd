@@ -4,13 +4,21 @@
 export default {	
 	URL_SIGNIN: 	'/jc/api/signin',
 	URL_SIGNOUT: 	'/jc/api/signout',
-	URL_DEVICELIST: '/jc/api/devicelist',
 	URL_DEVICEINFO: '/jc/api/deviceinfo',
 	URL_GETACTLIST: '/jc/api/getactlist',
 	URL_DELACCOUNT: '/jc/api/delaccount',
 	URL_SETACCOUNT: '/jc/api/setaccount',
 	URL_ADDACCOUNT: '/jc/api/addaccount',
 	URL_GETACCOUNT: '/jc/api/getaccount',
+	
+	URL_MAPDATA: 				'/device/getOnlineDeviceMap',
+	URL_DEVICELIST: 			'/device/getDeviceList',
+	URL_DEVICE_BASEINFO: 		'/device/getDeviceBasicInfo',
+	URL_DEVICE_CHIPLIST: 		'/device/getChipList',
+	URL_DEVICE_LOGLIST: 		'/device/getLogList',
+	URL_DEVICE_RESULTLIST: 		'/device/getResultList',
+	URL_DEVICE_CONFIGINFO: 		'/device/getDeviceConfigInfo',
+	URL_DEVICE_VERINFO: 		'/device/getDeviceVerInfo',
 	
 	UID_TOKEN: 'uid_token',
 	LAST_USER: 'lastUser',
@@ -44,4 +52,24 @@ export const getStore = name => {
 export const removeStore = name => {
   if (!name) return;
   window.localStorage.removeItem(name);
+}
+
+/**
+ * 删除localStorage
+ */
+export const getCurrDate = name => {
+ 	var now = new Date();
+	 var year = now.getFullYear();       //年
+	 var month = now.getMonth() + 1;     //月
+	 var day = now.getDate();            //日
+			
+	 var clock = year + "-";
+	 if(month < 10)
+		clock += "0";
+	 clock += month + "-";
+	 if(day < 10)
+		clock += "0";
+	 clock += day;
+	 
+	 return clock; 
 }

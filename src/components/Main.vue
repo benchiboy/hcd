@@ -286,7 +286,6 @@
 			},
 			
 			onSelected(index) {
-				
 				this.currSelIndex=index;
 			}
 			

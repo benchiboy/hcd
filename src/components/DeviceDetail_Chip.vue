@@ -1,8 +1,33 @@
 <template>
-
    <div>
-
-<b-table
+	
+	<b-modal centered id="modal-getconfig_file" title="执行步骤">
+			<div class="d-flex justify-content-between">
+				<div>
+					<b-button  variant="danger" class="rounded-circle">
+						1
+					</b-button>
+					连接服务器
+				</div>
+				<div>
+					<b-button  variant="danger" class="rounded-circle">
+						2
+					</b-button>
+					提取数据
+				</div>
+				<div>
+					<b-button  variant="danger" class="rounded-circle">
+						3
+					</b-button>
+					完整确认
+				</div>
+			</div>
+			<b-progress :max="max" class="mt-4">
+				<b-progress-bar :value="value" :label="`${((value / max) * 100).toFixed(2)}%`"></b-progress-bar>
+			</b-progress>
+	</b-modal>
+  
+	<b-table
 		ref="table"
 		class="mt-1 "
 		striped hover
@@ -24,57 +49,38 @@
 		@row-dblclicked="onDbClicked"
 		@sort-changed="onSorted"
     >
-
-
 	<template slot="HEAD_index" slot-scope="data">
-			{{data.label}}
+		{{data.label}}
     </template>
-		
-		
 	<template slot="empty" slot-scope="scope">
-					<h4>没有发现数据！</h4>
+		<h4>没有发现数据！</h4>
 	</template>
-		
 	<template slot="index" slot-scope="data" >
         {{ data.index + 1 }}
-     </template>
-
-		
-	<!--   <template slot="device_name" slot-scope="row">
-        {{ row.value}}
-      </template> -->
-
-
-    <!--  <template slot="type" slot-scope="row">
-					{{ row.value}}
-      </template> -->
-
-      <template slot="status" slot-scope="row">
-				<span  v-if="row.value=='z'" style="border: 1px solid red;">正常</span>
-				<span  v-if="row.value!='z'"  calss="border-primary">故障</span>
-		  </template>
-
+    </template>
     
-
-      <template slot="row-details" slot-scope="row">
+	<template slot="status" slot-scope="row">
+		<span  v-if="row.value=='z'" style="border: 1px solid red;">正常</span>
+		<span  v-if="row.value!='z'"  calss="border-primary">故障</span>
+	</template>
+	
+	<template slot="row-details" slot-scope="row">
         <b-card>
           <ul>
             <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value }}</li>
           </ul>
         </b-card>
-      </template>
-
+    </template>
 	</b-table>
 	
 	<b-container fluid class="mt-2">
-	<b-row>
-			<b-col md="6" class="my-1">
-						<strong>
-							数据总共：{{totalRows}}条，每页{{perPage}}条，当前页：{{currentPage}}
-						</strong>
-					</b-col>
-		
-		<b-col md="6" class="my-1">
+	<b-row class="d-flex  align-items-center">
+		<b-col md="4" class="my-1">
+			<strong>
+				数据总共：{{totalRows}}条，每页{{perPage}}条，当前页：{{currentPage}}
+			</strong>
+		</b-col>
+		<b-col md="4" class="my-1">
 		  <b-pagination
 		    v-model="currentPage"
 		    :total-rows="totalRows"
@@ -83,16 +89,13 @@
 			@change="onChange"
 		  ></b-pagination>
 		</b-col>
+		
+		<b-col md="4" class="my-1">
+			<b-button  v-b-modal.modal-getconfig_file ><span class="pl-2 pr-2">数据获取</span></b-button>
+			<b-button   ><span class=" pl-2 pr-2 ">推送文件</span></b-button>
+		</b-col>
 	</b-row>
 
-	<b-row>
-		<b-col md="6" class="my-1">
-			<b-button  pill variant="success"><span class="pl-5 pr-5">数据获取</span></b-button>
-		</b-col>
-		<b-col md="6" class="my-1">
-			<b-button  pill variant="success"><span class="pl-5 pr-5">推送文件</span></b-button>
-		</b-col>
-	</b-row>
 	</b-container>
    </div>
 </template>
@@ -103,28 +106,79 @@
   export default {
     data() {
       return {
-			isBusy: false,
-        items: [
-			
+		
+		value: 33.333333333,
+        max: 50,
+		isBusy: false,
+        items: [{"chip_id":'00000001',
+				 "chip_lot":'00000002',
+				 "project_name":'PIC',
+				 "sample_type":'全血',
+				 "product_date":'2017-12-12',
+				 "active_date":'2018-12-12',
+				 "chip_install_date":'2012-12-12'}
+				,
+				{"chip_id":'00000001',
+				 "chip_lot":'00000002',
+				 "project_name":'PIC',
+				 "sample_type":'全血',
+				 "product_date":'2017-12-12',
+				 "active_date":'2018-12-12',
+				 "chip_install_date":'2012-12-12'}
+				,
+				{"chip_id":'00000001',
+				 "chip_lot":'00000002',
+				 "project_name":'PIC',
+				 "sample_type":'全血',
+				 "product_date":'2017-12-12',
+				 "active_date":'2018-12-12',
+				 "chip_install_date":'2012-12-12'}
+				,
+				{"chip_id":'00000001',
+				 "chip_lot":'00000002',
+				 "project_name":'PIC',
+				 "sample_type":'全血',
+				 "product_date":'2017-12-12',
+				 "active_date":'2018-12-12',
+				 "chip_install_date":'2012-12-12'},
+				 ,
+				 {"chip_id":'00000001',
+				  "chip_lot":'00000002',
+				  "project_name":'PIC',
+				  "sample_type":'全血',
+				  "product_date":'2017-12-12',
+				  "active_date":'2018-12-12',
+				  "chip_install_date":'2012-12-12'}
+				 ,
+				 {"chip_id":'00000001',
+				  "chip_lot":'00000002',
+				  "project_name":'PIC',
+				  "sample_type":'全血',
+				  "product_date":'2017-12-12',
+				  "active_date":'2018-12-12',
+				  "chip_install_date":'2012-12-12'}
 				],
-        fields: [
+        
+		fields: [
 					'index',
-					{ key: 'no', label: '批号', sortable: true, sortDirection: 'desc' },
-					{ key: 'device_name',label:'项目', sortable: true},
-					{ key: 'type', 		label: '样本类型' },
-					{ key: 'status', 	label: '生产日期' },
-					{ key: 'country', label: '有效日期' },
-					{ key: 'addr', 		label: '安装日期' },
+					{ key: 'chip_id', 		label: '芯片ID' },
+					{ key: 'chip_lot', 		label: '批号', sortable: true, sortDirection: 'desc' },
+					{ key: 'project_name',	label:'项目', sortable: true},
+					{ key: 'sample_type', 	label: '样本类型' },
+					{ key: 'product_date', 	label: '生产日期' },
+					{ key: 'active_date', 	label: '有效日期' },
+					{ key: 'chip_install_date', 		label: '安装日期' },
 				],
 
 				form:{
+					token:'123',
 					user_id:100,
 					sort_fld: null,
 					sort_mode:null,
-					no:'',
+					sn:'011401K0500031',
 					type:'',
 					status:'',
-					page_no: 1,
+					target_page: 1,
 					page_size: 8,
 				},
 				totalRows: 1,
@@ -190,9 +244,8 @@
 			}
     },
     mounted() {
-		  // Set the initial number of items
-			this.getDataList("id","asc",this.currentPage,this.perPage)
-			
+		// Set the initial number of items
+		this.getDataList("id","asc",this.currentPage,this.perPage)
 	  },
     methods: {
 			
@@ -213,12 +266,14 @@
 				
 				this.form.type=this.deviceTypeSelected
 				this.form.status=this.deviceStatusSelected
-				
 				//that.isBusy=true
-				this.$axios.post(GLOBAL.URL_DEVICELIST, 
-									JSON.stringify(this.form))
+				this.$axios.post(GLOBAL.URL_DEVICE_CHIPLIST, 
+									JSON.stringify(this.form),
+									{headers: {'Content-Type': 'application/json'}})
 							.then(function (response) {
-									that.items=response.data.List
+									that.items=response.data.data
+									
+									console.log("====>",that.items)
 
 									if (that.items[2].type=='a'){
 										that.items[2]._cellVariants={ type: 'primary'}

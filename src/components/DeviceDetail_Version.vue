@@ -1,22 +1,46 @@
 <template>
 
    <div>
-		<div style="" class="text-left ml-3 m">
-			<strong class="text-primary border-left  border-success">查询条件</strong>
+	<div class="d-flex justify-content-center mt-5" >
+		<div class="w-25 mt-4 p-4" style=" background: #ADD8E6;">
+			<div>整机版本</div>
+			<div>
+				<b-badge pill variant="primary"><span class="pl-4 pr-4">{{verInfo.device_ver}}</span></b-badge>
+			</div>
 		</div>
-	
-	<b-container fluid class="mt-2">
-		<b-row>
-		   <b-col md="4" class="my-1">
-			<b-form-group label-cols-sm="4" label="设备序列号" class="mb-0">
-					 <b-input-group>
-							<b-form-input v-model="deviceNo" placeholder="设备序列号"></b-form-input>
-					 </b-input-group>
-					</b-form-group>
-			</b-col>
-		</b-row>
-	</b-container>
+	</div>
 
+	<div class=" d-flex justify-content-center ">
+		<div  style="border: 1px solid #ADD8E6;background: #ADD8E6;height: 100px;">
+		</div>
+	</div>
+
+	<div class=" d-flex justify-content-center ">
+		<div  class="w-50  p-3" 
+				style="border-left: 2px solid #ADD8E6; 
+					   border-top:2px solid #ADD8E6; 
+					   border-right: 2px solid #ADD8E6;
+					   background:white;height: 100px;">
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-around ">
+		<div class="w-25  p-4 " style="background: #ADD8E6;">
+			<div>软件版本</div>
+			<div>
+				<b-badge pill variant="primary"><span class="pl-4 pr-4">{{verInfo.sw_ver}}</span></b-badge>
+			</div>
+		</div>
+		
+		<div class="w-25  p-4 " style="background: #ADD8E6;">
+			<div>硬件版本</div>
+			<div >
+				<b-badge pill variant="primary" >
+					<span class="pl-4 pr-4">{{verInfo.hw_ver}}</span>
+				</b-badge>
+			</div>
+		</div>
+	</div>
 	 
    </div>
 </template>
@@ -27,17 +51,43 @@
   export default {
     data() {
       return {
-				isBusy: false,
+		isBusy: false,
+		verInfo:{
+			sn:'',
+			device_ver:'',
+			sw_ver:'',
+			install_time:''
+		},
+		form:{
+			token:'123',
+			sn:'011401K0500031',
+		},
       }
     },
    
+    mounted() {
+		this.getDataList("id","asc",this.currentPage,this.perPage)
+	},
     methods: {
 			
+		getDataList(sortFld,sortMode,pageNo,pageSize){
+		var that=this;
 		
-			onSearchData(){
-				this.getDataList("id","desc",this.currentPage,5)
-			}
-			
+		
+		//that.isBusy=true
+		this.$axios.post(GLOBAL.URL_DEVICE_VERINFO, 
+							JSON.stringify(this.form),
+							{headers: {'Content-Type': 'application/json'}})
+					.then(function (response) {
+						that.verInfo=response.data.data
+						console.log("======>verinfo====>",that.verInfo)
+					})
+					.catch(function (error) {
+					console.log("---->=========>",error);
+		}); 		
+	},
+	
+	   
     }
   }
 </script>

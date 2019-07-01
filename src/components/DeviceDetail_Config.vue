@@ -1,45 +1,114 @@
 <template>
-
    <div>
-		<div style="" class="text-left ml-3 m">
-			<strong class="text-primary border-left  border-success">查询条件</strong>
-		</div>
+		 <div class="mt-3">
+				 <b-form-textarea
+					id="textarea"
+					placeholder="Enter something..."
+					rows="10"
+					max-rows="6"
+				></b-form-textarea>
+		 </div>
+		
+		 <div class="w-50 loading bg-info"  v-show="isShowLoading">
+					<b-spinner class="ml-auto" label="Loading..." ></b-spinner>
+						<b-progress :value="ipos" :max="imax"  class="mb-3"></b-progress>
+					<h6 style="color: blue;">
+							数据正在提取中......
+					</h6>
+		 </div>
+		
+		<div>
+			11111----{{form.newSn}}
+			</div>
+		 <div class="mt-3">
+				<b-button  @click="Test" ><span>TEST</span></b-button>
 	
-	<b-container fluid class="mt-2">
-		<b-row>
-		   <b-col md="4" class="my-1">
-			<b-form-group label-cols-sm="4" label="设备序列号" class="mb-0">
-					 <b-input-group>
-							<b-form-input v-model="deviceNo" placeholder="设备序列号"></b-form-input>
-					 </b-input-group>
-					</b-form-group>
-			</b-col>
-		</b-row>
-	</b-container>
-
-	 
+				<b-button  @click="getDataList" v-if="isGetData"><span>提取配置信息</span></b-button>
+				<b-button  @click="getDataList" disabled v-else><span>提取配置信息</span></b-button>
+	
+		 </div>
+		 
+			
    </div>
 </template>
 
 <script>
   import GLOBAL from './Global.js'
-
+	import Util from './Util.js';
   export default {
     data() {
       return {
 				isBusy: false,
+				form:{
+					token:'123',
+					sn:'123456',
+					newSn:'',
+				},
+				ipos:0,
+				imax:9,
+				isShowLoading:false,
+				isGetData:true,
       }
     },
-   
+  
+	 mounted() {
+		let  that=this;
+		 //	this.getDataList("id","asc",this.currentPage,this.perPage)
+			// Util.$on('getDeviceSn', function (user_id) {
+			// 		that.Test(user_id)
+		 // })
+		//alert("sdfdsfdsfsdfdsfsd")
+   },
+	 
     methods: {
+			 Test(user_id){
+				  this.form.newSn=user_id;
+			 },
+			 Sleep(ms) {
+			 	return new Promise(resolve => setTimeout(resolve, ms))
+			 },
+			 
+			 async CheckResult() {
+			 	console.log("........")
+			 	for (var i=0;i<10;i++){
+			 		await	this.Sleep(600)
+					this.ipos++
+					console.log("........",i)
+				}
+				this.isShowLoading=false;
+				this.isGetData=true
+				this.ipos=0;
+				
+			},
+						
 			
-		
-			onSearchData(){
-				this.getDataList("id","desc",this.currentPage,5)
-			}
-			
-    }
-  }
+			getDataList(sortFld,sortMode,pageNo,pageSize){
+				var that=this;
+				//	this.CheckResult()
+				that.isShowLoading=true;
+				that.isGetData=false
+				that.ipos=0;
+				
+				//that.CheckResult()
+				console.log("======end ====>")
+				this.$axios.post(GLOBAL.URL_DEVICE_CONFIGINFO, 
+									JSON.stringify(this.form),
+									{headers: {'Content-Type': 'application/json'}})
+							.then(function (response) {
+								console.log("======>verinfo====>")
+								//that.CheckResult()
+								console.log("======end ====>")
+								that.isGetData=true
+								that.isShowLoading=false;
+							})
+							.catch(function (error) {
+							console.log("---->=========>",error);
+				}); 		
+		}
+		}
+	}
+	
+  
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -58,21 +127,13 @@ li {
 a {
   color: #42b983;
 }
-.map{
-	height: 650px;
-	width:auto;
-	border: 1px solid red;
-}
+
 .loading{
 		position: absolute;
 		z-index: 1999;
-		top: 300px;
-		left: 400px;
+		top: 30%;
+		left: 25%;
 		width: 20%;
 }
 
-.statusColor{
-	background: red;
-	background-color: #42B983;
-}
 </style>

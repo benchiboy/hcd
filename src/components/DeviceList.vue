@@ -9,7 +9,7 @@
   		<b-row>
   
 	  <b-col md="2" class="my-1">
-        <b-form-group label-cols-sm="4" label="类型" class="mb-0">
+        <b-form-group label-cols-sm="3" label="类型" class="mb-0">
            <b-input-group>
            	<b-form-select v-model="form.product_type" :options="productTypeOptions" change="onProductTypeChange">
            		<option slot="first" :value="null">-- 全部 --</option>
@@ -19,7 +19,7 @@
       </b-col>
 
 	  <b-col md="2" class="my-1">
-        <b-form-group label-cols-sm="4" label="地区" class="mb-0">
+        <b-form-group label-cols-sm="3" label="地区" class="mb-0">
            <b-input-group>
            	<b-form-select v-model="form.region" :options="regionOptions" change="onRegionChange">
            		<option slot="first" :value="null">-- 全部 --</option>
@@ -29,7 +29,7 @@
       </b-col>
 		
 	 <b-col md="3" class="my-1">
-        <b-form-group label-cols-sm="4" label="序列号" class="mb-0">
+        <b-form-group label-cols-sm="3" label="序列号" class="mb-0">
 			 <b-input-group>
 					<b-form-input v-model="form.sn" placeholder="设备序列号"></b-form-input>
 			 </b-input-group>
@@ -37,7 +37,7 @@
 	</b-col>
 		
 	<b-col md="2" class="my-1">
-				<b-form-group label-cols-sm="4" label="医院" class="mb-0">
+				<b-form-group label-cols-sm="3" label="医院" class="mb-0">
 					<b-input-group>
 						<b-form-input v-model="form.hospital" placeholder="医院"></b-form-input>
 					</b-input-group>
@@ -45,7 +45,7 @@
 	</b-col>
     
 	<b-col md="2" class="my-1">
-				<b-form-group label-cols-sm="4" label="等级" class="mb-0">
+				<b-form-group label-cols-sm="3" label="等级" class="mb-0">
 					<b-input-group>
 						<b-form-select v-model="form.hcd_class" :options="hcdclassOptions" change="onHcdclassChange">
 							<option slot="first" :value="null">-- 全部 --</option>
@@ -87,10 +87,10 @@
     >
 
 	<template slot="HEAD_index" slot-scope="data">
-			{{data.label}}
+		{{data.label}}
     </template>
 	<template slot="empty" slot-scope="scope">
-			<h4>没有发现数据！</h4>
+		<h5>没有查询到设备数据！</h5>
 	</template>
 		
 	<template slot="index" slot-scope="data" >
@@ -101,9 +101,9 @@
 			<span>{{row.value}}</span>
 	 </template>
 	  
-      <template slot="status" slot-scope="row">
-     	<span  v-if="row.value=='0'" >在线</span>
-		<span  v-if="row.value=='1'"  calss="border-primary">下线</span>
+      <template slot="is_online" slot-scope="row">
+     	<span  v-if="row.value==true" >在线</span>
+		<span  v-if="row.value==false"  calss="border-primary">下线</span>
 	  </template>
 		
 	</b-table>
@@ -162,10 +162,11 @@
 					{ key: 'hospital', 		label: '所在医院' },
 					{ key: 'hcd_class',		label:'等级', sortable: true},
    					{ key: 'online_time', 	label: '最近在线时间' },
-					{ key: 'status', 		label: '在线状态' },
+					{ key: 'is_online', 		label: '在线状态' },
 				],
 
 				form:{
+					token:'123',
 					user_id:100,
 					sort_fld: null,
 					sort_mode:null,
@@ -174,7 +175,7 @@
 					hcd_class:'',
 					hospital:'',
 					region:'',
-					page_no: 1,
+					target_page: 1,
 					page_size: 5,
 				},
 
@@ -212,9 +213,9 @@
 		regionOptions() {
 				// Create an options list from our fields
 				return  [
-					{ text: '北京', value: 'a' },
-					{ text: '上海', value: 'b' },
-					{ text: '重庆', value: 'c' },
+					{ text: '北京', value: '北京' },
+					{ text: '上海', value: '上海' },
+					{ text: '重庆', value: '重庆' },
 				]
 			},
 		productTypeOptions() {
@@ -237,7 +238,12 @@
     },
     mounted() {
 		  // Set the initial number of items
-			this.getDataList("id","asc",this.currentPage,this.perPage)
+		console.log("------>",this.$route.params.region)
+		if (this.$route.params.region!=null){
+			this.form.region=this.$route.params.region
+		}
+		  
+		//this.getDataList("id","asc",this.currentPage,this.perPage)
 	},
     methods: {
 			statusColor(item) {
@@ -251,20 +257,21 @@
 				this.form.page_size=pageSize
 				//that.isBusy=true
 				this.$axios.post(GLOBAL.URL_DEVICELIST, 
-									JSON.stringify(this.form))
+									JSON.stringify(this.form),
+									{headers: {'Content-Type': 'application/json'}})
 							.then(function (response) {
-									that.items=response.data.List
-									console.log(that.items)
-	
-									for (var i=0;i<that.items.length;i++){
-										if (that.items[i].status=='0'){
-											that.items[i]._cellVariants={ status: 'danger'}
-										}else{
-											that.items[i]._cellVariants={ status: 'secondary'}
-										}
-									}
+								console.log("========>",response.data)
+								that.items=response.data.data.device_list
+								console.log(that.items)
 
-									that.totalRows = response.data.total
+								for (var i=0;i<that.items.length;i++){
+									if (that.items[i].is_online=='0'){
+										that.items[i]._cellVariants={ is_online: 'danger'}
+									}else{
+										that.items[i]._cellVariants={ is_online: 'secondary'}
+									}
+								}
+								that.totalRows = response.data.total
 									//that.currentPage=pageNo
 							})
 							.catch(function (error) {

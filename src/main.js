@@ -24,8 +24,9 @@ axios.interceptors.request.use(
 		let token=window.localStorage.getItem("uid_token")
 	    if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
             config.headers.Authorization = token;
+			
         }
-        return config;
+	    return config;
     },
     err => {
         return Promise.reject(err);
