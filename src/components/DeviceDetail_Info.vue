@@ -1,6 +1,7 @@
 <template>
 
    <div>
+	  
 	<b-container fluid class="mt-2">
 
 	<b-row>
@@ -103,7 +104,7 @@
 
 <script>
   import GLOBAL from './Global.js'
-
+  import Util from './Util.js';
   export default {
     data() {
       return {
@@ -113,7 +114,7 @@
 				user_id:100,
 				sort_fld: null,
 				sort_mode:null,
-				sn:'014000I0700016',
+				sn:'11111',
 				type:'',
 				status:'',
 				page_no: 1,
@@ -131,19 +132,22 @@
             return { text: f.label, value: f.key }
           })
       },
-		
     },
     mounted() {
-		console.log("==========>9999999")
+		let  that=this;
 		if (this.$route.params.sn!=null){
-			alert(this.$route.params.sn)
+			this.form.sn=this.$route.params.sn
 		}
+		Util.$on('setDeviceSn_Info', function (sn) {
+			that.setDeviceSn(sn)
+		})
 		//this.getDataList("id","asc",this.currentPage,this.perPage)
 	},
-	created() {
-		console.log("==========>1111119999999")
-	},
     methods: {
+			setDeviceSn(sn){
+				this.form.sn=sn;
+			},
+		
 			getDataList(sortFld,sortMode,pageNo,pageSize){
 				var that=this;
 				this.form.sort_fld=sortFld

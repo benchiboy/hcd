@@ -1,6 +1,6 @@
 <template>
    <div>
-	
+	<!-- 
 	<b-modal centered id="modal-getconfig_file" title="执行步骤">
 			<div class="d-flex justify-content-between">
 				<div>
@@ -25,7 +25,7 @@
 			<b-progress :max="max" class="mt-4">
 				<b-progress-bar :value="value" :label="`${((value / max) * 100).toFixed(2)}%`"></b-progress-bar>
 			</b-progress>
-	</b-modal>
+	</b-modal> -->
   
 	<b-table
 		ref="table"
@@ -102,11 +102,10 @@
 
 <script>
   import GLOBAL from './Global.js'
-
+  import Util from './Util.js';
   export default {
     data() {
       return {
-		
 		value: 33.333333333,
         max: 50,
 		isBusy: false,
@@ -186,7 +185,7 @@
 				perPage: 8,
 				pageOptions: [8, 10, 15],
 				sortBy: null,
-			
+	
 				deviceNo:'',
 				deviceTypeSelected:'',
 				deviceStatusSelected:'',
@@ -211,45 +210,26 @@
             return { text: f.label, value: f.key }
           })
       },
-			countryOptions() {
-				// Create an options list from our fields
-				return  [
-          { text: '中国', value: 'e' },
-          { text: '日本', value: 'd' },
-					{ text: '美国', value: 'f' },
-        ]
-			},
-			areaOptions() {
-				// Create an options list from our fields
-				return  [
-					{ text: '北京', value: 'a' },
-					{ text: '上海', value: 'b' },
-					{ text: '重庆', value: 'c' },
-				]
-			},deviceTypeOptions() {
-				// Create an options list from our fields
-				return  [
-          { text: 'mLabs', value: 'a' },
-          { text: 'qLabs', value: 'b' },
-					{ text: 'uLabs', value: 'c' },
-        ]
-			},
-			deviceStatusOptions() {
-				// Create an options list from our fields
-				return  [
-					{ text: '运行良好', value: 'z' },
-					{ text: '使用不足', value: 'a' },
-					{ text: '警告', value: 'b' },
-				]
-			}
+		
+		
     },
     mounted() {
 		// Set the initial number of items
+		let that=this;
+		if (this.$route.params.sn!=null){
+			this.form.sn=this.$route.params.sn
+		}
+		Util.$on('setDeviceSn_Chip', function (sn) {
+			that.setDeviceSn(sn)
+		})  
+	
 		this.getDataList("id","asc",this.currentPage,this.perPage)
 	  },
     methods: {
 			
-			
+			setDeviceSn(sn){
+				this.form.sn=sn;
+			},
 			statusColor(item) {
 			
 				return item.type

@@ -1,8 +1,6 @@
 <template>
 
    <div>
-	   
-	
 	<b-container fluid class="mt-2">
 	  <b-row>
 	<b-col md="3" class="my-1">
@@ -111,6 +109,7 @@
 <script>
   import GLOBAL from './Global.js'
   import {getCurrDate} from './Global.js'
+  import Util from './Util.js';
   export default {
     data() {
       return {
@@ -190,12 +189,21 @@
 		}
     },
     mounted() {
+		let that=this;
+		if (this.$route.params.sn!=null){
+				this.form.sn=this.$route.params.sn
+		}
+		Util.$on('setDeviceSn_ChkResult', function (sn) {
+			that.setDeviceSn(sn)
+		})  
 		this.form.result_date=getCurrDate()
 		this.getDataList("id","asc",this.currentPage,this.perPage)
 	},
     
 	methods: {
-		
+			setDeviceSn(sn){
+				this.form.sn=sn;
+			},
 			onSearchData(){
 				this.getDataList("id","desc",this.currentPage,5)
 			},

@@ -166,12 +166,18 @@
 								</b-button>
 								</span>
 								<b-collapse id="collapse-2"  accordion="my-accordion" class="m-2">
-										<b-button block pill variant="success">产品管理</b-button>
-										<b-button block pill variant="info">参数芯片</b-button>
-										<b-button block pill variant="info">设备配置</b-button>
+									
+									<b-button block pill :variant="currSelIndex==6?'success':'info'"
+									@click="onSelected(6)">产品管理</b-button>
+																			
+									<b-button block pill :variant="currSelIndex==7?'success':'info'"
+									@click="onSelected(7)">参数芯片</b-button>
+																		
+									<b-button block pill :variant="currSelIndex==8?'success':'info'"
+									@click="onSelected(8)">设备配置</b-button>
+								
 								</b-collapse>
 							</div>
-							
 							<div >
 									<span>
 									<b-button v-b-toggle.collapse-3  variant="primary" block 
@@ -188,10 +194,31 @@
 									</b-button>
 									</span>
 									<b-collapse id="collapse-3"  accordion="my-accordion" class="m-2">
-											<b-button block pill variant="success">角色定义</b-button>
-											<b-button block pill variant="info">用户管理</b-button>
-											<b-button block pill variant="info">系统日志</b-button>
-											<b-button block pill variant="info">修改密码</b-button>
+										<div>
+											<a href="#/Main/Manage"   >
+												<b-button block pill :variant="currSelIndex==10?'success':'info'"
+												@click="onSelected(10)">角色定义</b-button>
+											</a >	
+										</div>
+										<div class="mt-2">
+											<a href="#/Main/User"  class="mt-2" >
+												<b-button block pill :variant="currSelIndex==11?'success':'info'"
+												@click="onSelected(11)">用户管理</b-button>
+											</a >										
+										</div>
+										
+										<div class="mt-2">
+											<a href="#/Main/SystemLog"  class="mt-2" >
+											<b-button block pill :variant="currSelIndex==12?'success':'info'"
+											@click="onSelected(12)">系统日志</b-button>
+											</a >		
+										</div>
+										
+										<div class="mt-2">
+											<b-button block pill  v-b-modal.modal-1 :variant="currSelIndex==13?'success':'info'"
+											@click="onSelected(13)">修改密码</b-button>
+										</div>										
+																	
 									</b-collapse>
 							</div>
 					
@@ -208,7 +235,8 @@
 
 <script>
   import GLOBAL from './Global.js'
-	import {getStore,setStore,removeStore} from './Global.js'
+  import {getStore,setStore,removeStore} from './Global.js'
+  import Util from './Util.js';
   export default {
     data() {
       return {
@@ -239,12 +267,17 @@
         ]
 			}
     },
-    mounted() {
-			//this.$router.push({name:'DeviceList',params:{}});
-			this.$router.push({name:'MainInfo',params:{}});
-		
-		},
-		computed:{
+    
+	mounted() {
+		//this.$router.push({name:'DeviceList',params:{}});
+		let that=this;
+		Util.$on('setCurrIndex', function (index) {
+			that.setCurrIndex(index)
+		})
+		this.$router.push({name:'MainInfo',params:{}});
+	},
+
+	computed:{
 			oldPwdState() {
 				return this.form.old_pwd.length > 4 && this.form.old_pwd.length < 20
 			},
@@ -256,6 +289,9 @@
 			},
 		},
     methods: {
+			setCurrIndex(index){
+				this.currSelIndex=index;
+			},
 			onMenuClick(i){
 				//this.isMenuUpClick[0]=!(this.isMenuUpClick[0])
 				this.$set(this.isMenuUpClick, i, !(this.isMenuUpClick[i])); //

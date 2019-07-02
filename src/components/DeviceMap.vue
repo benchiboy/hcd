@@ -1,30 +1,26 @@
 <template>
  	<div class="echarts">
-		
- 		 <b-button @click="makeData">MakeData</b-button>
-		<b-button @click="DrawData">DrawData</b-button>
-		<b-button @click="getMapData">000001</b-button>
 	
-		<div class="card legend-status-box rounded border-primary shadow-sm" header="运行状态图标">
+		<div class="card legend-status-box rounded  shadow-sm" header="运行状态图标">
 			<b-card
 				header="更新：2019-06-25 12:12:12"
-				header-text-variant="white"
+				header-text-variant="black"
 				header-tag="header"
-				header-bg-variant="info"
+				header-bg-variant="light"
 				style="max-width: 20rem;"
 			>
 				<span slot="header" class="ml-2" >
 					<img src='../assets/clock.png' width="25px" height="25px"></img>
-					<span><strong>2019-06-25 12:12:12</strong></span>
+					<span><strong>{{currTime}}</strong></span>
 				</span>
     
 				<b-card-text>
 					<div class="d-flex justify-content-between align-items-center">
 						<div  class="d-flex justify-content-start align-items-center">
-							<span class="legend-status-item  rounded-circle mr-3" style="background: green" ></span> 
-							<span  style="text-align: left;">A类设备</span>
+							<span class="legend-status-item  rounded-circle mr-3" style="background: red" ></span> 
+							<span  style="text-align: left;">在线</span>
 						</div>
-						<b-badge  pill variant="danger">{{Total}}</b-badge>
+						<b-badge  pill variant="danger">{{onlineCount}}</b-badge>
 					</div>
 					<!-- <div class="d-flex justify-content-between align-items-center">
 						<div class="d-flex justify-content-start align-items-center">
@@ -35,10 +31,10 @@
 					</div> -->
 					<div class="d-flex justify-content-between align-items-center">
 						<div class="d-flex justify-content-start align-items-center">
-							<span class="legend-status-item rounded-circle mr-3" style="background: yellow;" ></span> 
-							<span  style="text-align: left; 9px;">C类设备</span>
+							<span class="legend-status-item rounded-circle mr-3" style="background: grey;" ></span> 
+							<span  style="text-align: left; 9px;">离线</span>
 						</div>
-						<b-badge  pill variant="danger">4</b-badge>
+						<b-badge  pill variant="danger">{{offlineCount}}</b-badge>
 					</div>
 				</b-card-text>
 			</b-card>
@@ -54,13 +50,15 @@
 <script>
   import echarts from "echarts";
   import GLOBAL from './Global.js'
+  import {getCurrDateTime} from './Global.js'
   
   //import '../../node_modules/echarts/map/js/world.js'
   import '../../node_modules/echarts/map/js/china.js' // 引入中国地图数据
   export default {
 					name: "echarts",
 					props: ["userJson"],
-					data() {
+					
+			data() {
 				return {
 					form:{
 						token:'123'
@@ -303,31 +301,29 @@
 					'西宁':[101.74,36.56],
 					'宜宾':[104.56,29.77]
 					},
-        chart: null,
+			
+			chart: null,
 			myChart:null,
 			timer: null,
-			factList:[],
-			drawNode:[],
-			drawNode1:[],
-			MakeDataInternal:20*1000,
-			MakeDataLen:10,
-			DefaultDelay:400,
-			Total:0,
+			onlineNode:[],
+			offlineNode:[],
+			totalNode:[],
+			MakeDataLen:5,
+			currTime:'',
 	    };
 		
     },
 	mounted() {
-	   
 		this.ChinaConfigure();
-		this.ClearData()
-		this.getMapData()
-	
-		// //this.DataTimer()
+		//this.getMapData()
+		this.DataTimer()
+		this.currTime=getCurrDateTime();
 	},
 	
-
-	
     beforeDestroy() {
+	  if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断
+		clearInterval(this.timer); //关闭
+	  }
       if (!this.chart) {
         return;
       }
@@ -336,9 +332,16 @@
     },
 		
 	computed:{
-		factLen1(){
-			return this.factList.length
+		onlineCount(){
+			return this.onlineNode.length;
 		},
+		offlineCount(){
+			return this.offlineNode.length
+		},
+		total(){
+			console.log("total=====")
+			return "10000"
+		}
 	},
   
 	methods: {
@@ -346,38 +349,30 @@
 			var that=this;
 			console.log("===============>")
 			this.$axios.post(GLOBAL.URL_MAPDATA, 
-								JSON.stringify(this.form),
-								{headers: {'Content-Type': 'application/json'}}
-						)
-						.then(function (response) {
-							console.log("bbbbb======>",response.data.data.device_map)
+					JSON.stringify(this.form),
+					{headers: {'Content-Type': 'application/json'}}
+				)
+				.then(function (response) {
 							that.DrawData(response.data.data.device_map)
-						})
-						.catch(function (error) {
+				})
+			.catch(function (error) {
 						console.log("---->=========>",error);
 			}); 		
 		},
-		
-			/*
-				从微点获取数据
-			*/
+		/*
+			从微点获取数据
+		*/
 		makeData(){
 			 for (var i = 0; i < this.MakeDataLen; i++) {
-					let i=Math.floor(Math.random()*100+1)
-					let areaName=this.mapData[i].name
-					let areaVale=this.mapData[i].value
-					let lng=this.geoCoordMap[areaName][0]
-					let lat=this.geoCoordMap[areaName][1]
-					this.factList.push([1,lng,lat,areaVale])
+				let i=Math.floor(Math.random()*100+1)
+				let areaName=this.mapData[i].name
+				let areaVale=this.mapData[i].value
+				let lng=this.geoCoordMap[areaName][0]
+				let lat=this.geoCoordMap[areaName][1]
+				this.totalNode.push({d_lat:lat,d_long:lng,sn:'sssdsdsdsdsd'})
 			 }
+			 this.DrawData(this.totalNode)
 		},
-			
-		Test() {
-			var chart=this.myChart;
-			var option = this.myChart.getOption();
-			option.legend.data =['血压指标','脉搏次数','血小板指数']
-		},
-		
 		Sleep(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms))
 		},
@@ -387,24 +382,22 @@
 			DELAY= 60*1000   /300
 		*/
 		 DrawData(dataList) {
-			let tLen=this.factList.length
-			var totalCnt=0
 			var option = this.myChart.getOption();
-		
-			console.log("=========>",dataList.length)
 			for (var i = 0; i <dataList.length;i++) {
 				if (dataList[i].d_lat==''){
 					continue
 				}
 				let d_lat=dataList[i].d_lat;
 				let d_long=dataList[i].d_long;
-				console.log("====>",d_lat,d_long)
-			 	//let e=this.factList.pop()
-				console.log("=====>",i)
-				this.drawNode1[i]={name:"qq"+i, value:[d_long,d_lat,i]}
+				let sn=dataList[i].sn;
+				if (i>2){
+					this.onlineNode.push({name:'设备', value:[d_long,d_lat,sn]})
+				}else{
+					this.offlineNode.push({name:'设备', value:[d_long,d_lat,sn]})
+				}
 			}
-			option.series[0].data=this.drawNode1
-			// 	this.ClearData()
+			option.series[0].data=this.onlineNode
+			option.series[1].data=this.offlineNode
 			this.myChart.setOption(option); 
 		},
 		
@@ -413,21 +406,25 @@
 		*/
 		ClearData() {
 			var option = this.myChart.getOption();
+			this.onlineNode=[];
+			this.offlineNode=[];
+			this.totalNode=[];
 			option.series[0].data = []; 
 			option.series[1].data = []; 
 			this.myChart.setOption(option);  
+			console.log("cleaer data============>")
 		},
 		/*
 			 定时获取监控数据函数
 		*/
 		DataTimer() {
-				this.timer =setInterval(this.FreshData, 5000)
+			this.timer =setInterval(this.FreshData, 6000)
 		},
-			
-		beforeDestroy() {
-			if(this.timer) { //如果定时器还在运行 或者直接关闭，不用判断
-					clearInterval(this.timer); //关闭
-				}
+		
+		FreshData(){
+			this.ClearData()
+			this.currTime=getCurrDateTime();
+			this.makeData();
 		},
 			
 		ChinaConfigure() {
@@ -435,21 +432,23 @@
 				let myChart = echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置    
 				this.myChart=myChart
 				window.onresize = myChart.resize;
-				
 				myChart.on('click', function(params){
 					//alert(params.name);
-					that.$router.push({name:'DeviceList',params:{region: params.name}});
+					if (params.name=='设备'){
+						let sn=params.value[2];
+						that.$router.push({name:'DeviceDetail',params:{sn: sn}});
+					}else{
+						that.$router.push({name:'DeviceList',params:{region: params.name}});
+					}
 				});
-				
-				
 				myChart.setOption({ 
 					 title: {
-							// text: '深圳微点生物设备测量指标监控',
+							// text: '深圳微点生物设备在线实时监测',
 							// subtext: 'data from 微点生物',
 							// sublink: 'http://www.zto.com/',
 							x: 'center',
 							textStyle: {
-									color:'black'
+								color:'blue',
 							}
 						},
 	
@@ -457,11 +456,9 @@
 							trigger: 'item',
 							//  formatter: function (params) {
 							// 		alert(params.value + '');
-							// 		return "ssssss"
 							// }
-							
 							formatter: function (params) {
-								alert(params)
+								console.log("==========param====>",params)
 								if (params.componentType !== 'markPoint') {
 									return params.name;
 								} else {
@@ -470,32 +467,9 @@
 							},
 						     triggerOn: 'click',// 点击MarkPoint出发弹出tooltip
 							 position: function (pos, params, dom, rect, size) {
-							 	alert("hello..."+params.value)
 								if (params.componentType === 'series') {
-							 	
-								
-								that.$router.push({name:'DeviceDetail',params:{nickn_name: ''}});
-								
-								// alert("hello..."+params.data)
-                                // var obj = params.data;
-                                // var sHtml = $('<div style="width: 549px;" class="tooltip-dom"></div>');// border: solid 1px darkgray;width: 425px;
-                                // var p = $('<p style="" class="tooltip-title">' + obj.title + '</p>');//background-color: darkgrey;
-                                // sHtml.append(p);
-                                // var span = $('<span>' + obj.name + '</span>');
-                                // sHtml.append(span);
-                                // var table = $('<table class="table"></table>');
-                                // var thead = $('<thead><tr><th>粮仓</th><th>行政区域</th><th>粮堆最高温度</th><th>仓内湿度</th></tr></thead>');
-                                // var tbody;
-                                // if (!obj.barnList || obj.barnList.length === 0) {
-                                //     tbody = $('<tbody><tr><td colspan="4" style="text-align: center">没有数据</td></tr></tbody>');
-                                // } 
-                                // table.append(thead);
-                                // table.append(tbody);
-                                // sHtml.append(table);
-                                // $(dom).addClass('tooltip-style').html(sHtml);
-                             
-                            //     return 'bottom';
-                             }
+								return;
+							}
 						}
 
 						},
@@ -599,7 +573,7 @@
 					hoverAnimation: true,
 							itemStyle: {
 							normal: {
-									color:'yellow',
+									color:'red',
 									shadowBlur:7,
 										},
 							},
@@ -623,7 +597,7 @@
 					    hoverAnimation: true,
 						itemStyle: {
 						normal: {
-								color:'blue',
+								color:'grey',
 								shadowBlur:7,
 								},
 						},

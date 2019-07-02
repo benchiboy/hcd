@@ -1,58 +1,7 @@
 <template>
  <div>
-	 
-	  
-		<b-card-group deck class="mt-2" >
-			<b-card  text-variant="dark" header="待处理客服问题" class="text-center">
-				<b-card-text>
-						<b-container fluid  >
-							<b-row >
-									<b-col md="1"  >
-											<span>1</span>
-									</b-col>
-									<b-col md="3"  >
-											<span>2018-12-12 12:12:12</span>
-									</b-col>
-									<b-col md="2"  >
-											<span>qlab</span>
-									</b-col>
-									<b-col md="2"  >
-											<span>北京协和医院</span>
-									</b-col>
-									<b-col md="3"  >
-											<strong><span style="color:red">设备无法启动...</span></strong>
-									</b-col>
-									<b-col md="1"  >
-											<span>查看</span>
-									</b-col>
-							</b-row>
-							
-							<b-row  class="mt-2">
-									<b-col md="1"  >
-											<span>1</span>
-									</b-col>
-									<b-col md="3"  >
-											<span>2018-12-12 12:12:12</span>
-									</b-col>
-									<b-col md="2"  >
-											<span>qlab</span>
-									</b-col>
-									<b-col md="2"  >
-											<span>北京协和医院</span>
-									</b-col>
-									<b-col md="3"  >
-											<strong><span style="color:red">设备无法启动...</span></strong>
-									</b-col>
-									<b-col md="1"  >
-											<span>查看</span>
-									</b-col>
-							</b-row>
-							
-						
-						</b-container>
-				</b-card-text>
-			</b-card>
-		</b-card-group>
+		
+		
 		
 		
 		
@@ -68,9 +17,21 @@
 											<span>2018-12-12 12:12:12</span>
 									</b-col>
 									<b-col md="6"  >
-											<span>北京协和医院-设备无法启动...</span>
+											<span>北京协和医院-0000K0099111-设备无法启动...</span>
 									</b-col>
 							</b-row>
+						
+						<b-row >
+								<b-col md="1"  >
+										<span>1</span>
+								</b-col>
+								<b-col md="5"  >
+										<span>2018-12-12 12:12:12</span>
+								</b-col>
+								<b-col md="6"  >
+										<span>北京协和医院-0000K0099111-设备无法启动...</span>
+								</b-col>
+						</b-row>
 						
 						</b-container>
 				</b-card-text>
@@ -78,18 +39,7 @@
 		</b-card-group>
 		
 	
-						<b-container fluid >
-						<b-row>
-							<b-col md="12" class="my-1">
-								<div 	  id="main1"   ref="chart1" style="height:380px; border: 1px solid red;"></div>
-							</b-col>
-						</b-row>
-						<b-row>
-								<b-col md="12" class="my-1">
-									<div id="main2" ref="chart2" style="height:180px; border: 1px solid red;"></div>
-								</b-col>
-						</b-row>
-					</b-container>
+				
 			
 
 	

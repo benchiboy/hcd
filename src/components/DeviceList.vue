@@ -146,7 +146,7 @@
 
 <script>
   import GLOBAL from './Global.js'
-
+  import Util from './Util.js';
   export default {
     data() {
       return {
@@ -237,12 +237,13 @@
 			}
     },
     mounted() {
-		  // Set the initial number of items
+		// Set the initial number of items
 		console.log("------>",this.$route.params.region)
 		if (this.$route.params.region!=null){
 			this.form.region=this.$route.params.region
 		}
-		  
+		
+		Util.$emit('setCurrIndex',2);
 		//this.getDataList("id","asc",this.currentPage,this.perPage)
 	},
     methods: {

@@ -1,9 +1,10 @@
 <template>
    <div>
+		 	
 		 <div class="mt-3">
 				 <b-form-textarea
 					id="textarea"
-					placeholder="Enter something..."
+					placeholder=""
 					rows="10"
 					max-rows="6"
 				></b-form-textarea>
@@ -18,11 +19,10 @@
 		 </div>
 		
 		<div>
-			11111----{{form.newSn}}
-			</div>
+		</div>
+
 		 <div class="mt-3">
 				<b-button  @click="Test" ><span>TEST</span></b-button>
-	
 				<b-button  @click="getDataList" v-if="isGetData"><span>提取配置信息</span></b-button>
 				<b-button  @click="getDataList" disabled v-else><span>提取配置信息</span></b-button>
 	
@@ -41,8 +41,8 @@
 				isBusy: false,
 				form:{
 					token:'123',
-					sn:'123456',
-					newSn:'',
+					sn:'',
+			
 				},
 				ipos:0,
 				imax:9,
@@ -52,17 +52,19 @@
     },
   
 	 mounted() {
-		let  that=this;
-		 //	this.getDataList("id","asc",this.currentPage,this.perPage)
-			// Util.$on('getDeviceSn', function (user_id) {
-			// 		that.Test(user_id)
-		 // })
-		//alert("sdfdsfdsfsdfdsfsd")
+			let  that=this;
+			if (this.$route.params.sn!=null){
+					this.form.sn=this.$route.params.sn
+			}
+			Util.$on('setDeviceSn_Config', function (sn) {
+			 		that.setDeviceSn(sn)
+			})
+		 	this.getDataList("id","asc",this.currentPage,this.perPage)
    },
 	 
     methods: {
-			 Test(user_id){
-				  this.form.newSn=user_id;
+			 setDeviceSn(sn){
+				  this.form.sn=sn;
 			 },
 			 Sleep(ms) {
 			 	return new Promise(resolve => setTimeout(resolve, ms))
@@ -88,7 +90,6 @@
 				that.isShowLoading=true;
 				that.isGetData=false
 				that.ipos=0;
-				
 				//that.CheckResult()
 				console.log("======end ====>")
 				this.$axios.post(GLOBAL.URL_DEVICE_CONFIGINFO, 
@@ -102,7 +103,8 @@
 								that.isShowLoading=false;
 							})
 							.catch(function (error) {
-							console.log("---->=========>",error);
+								console.log("---->=========>",error);
+								that.isShowLoading=false;
 				}); 		
 		}
 		}

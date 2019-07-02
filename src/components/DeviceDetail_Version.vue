@@ -1,6 +1,7 @@
 <template>
-
+	
    <div>
+	   {{form.sn}}
 	<div class="d-flex justify-content-center mt-5" >
 		<div class="w-25 mt-4 p-4" style=" background: #ADD8E6;">
 			<div>整机版本</div>
@@ -47,7 +48,7 @@
 
 <script>
   import GLOBAL from './Global.js'
-
+  import Util from './Util.js';
   export default {
     data() {
       return {
@@ -66,14 +67,22 @@
     },
    
     mounted() {
+		let that=this;
+		if (this.$route.params.sn!=null){
+			this.form.sn=this.$route.params.sn
+		}
+		Util.$on('setDeviceSn_Version', function (sn) {
+			that.setDeviceSn(sn)
+		})  
+		
 		this.getDataList("id","asc",this.currentPage,this.perPage)
 	},
     methods: {
-			
+		setDeviceSn(sn){
+			this.form.sn=sn;
+		},
 		getDataList(sortFld,sortMode,pageNo,pageSize){
 		var that=this;
-		
-		
 		//that.isBusy=true
 		this.$axios.post(GLOBAL.URL_DEVICE_VERINFO, 
 							JSON.stringify(this.form),

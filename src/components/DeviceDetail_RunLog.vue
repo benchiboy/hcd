@@ -1,8 +1,7 @@
 <template>
 
    <div>
-	   
-	
+
 	<b-container fluid class="mt-2">
 	  <b-row>
 	<b-col md="4" class="my-1">
@@ -89,7 +88,6 @@
 		
 		<b-col md="4" class="my-1">
 			<b-button   v-b-modal.modal-getconfig_file ><span class="pl-2 pr-2">数据获取</span></b-button>
-			<b-button  ><span class=" pl-2 pr-2 ">推送文件</span></b-button>
 		</b-col>
 	</b-row>
 
@@ -102,7 +100,9 @@
 
 <script>
   import GLOBAL from './Global.js'
- import {getCurrDate} from './Global.js'
+  import {getCurrDate} from './Global.js'
+  import Util from './Util.js';
+  
   export default {
     data() {
       return {
@@ -201,11 +201,20 @@
 		  // Set the initial number of items
 		this.form.begin_date=getCurrDate()
 		this.form.end_date=getCurrDate()
-		  
+		let that=this;
+		if (this.$route.params.sn!=null){
+			this.form.sn=this.$route.params.sn
+		}
+		Util.$on('setDeviceSn_RunLog', function (sn) {
+			that.setDeviceSn(sn)
+		})  
 		this.getDataList("id","asc",this.currentPage,this.perPage)
 			
 	},
     methods: {
+			setDeviceSn(sn){
+				this.form.sn=sn;
+			},
 			statusColor(item) {
 				return item.type
 			},

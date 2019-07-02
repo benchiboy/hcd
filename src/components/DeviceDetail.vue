@@ -1,5 +1,4 @@
 <template>
-
    <div>
 	<!-- 	<div style="" class="text-left ml-3 m">
 			<strong class="text-primary border-left  border-success">查询条件</strong>
@@ -10,9 +9,7 @@
 		   <b-col md="5" class="my-1 mb-3">
 			<b-form-group label-cols-sm="4" label="设备序列号" class="mb-0">
 					 <b-input-group>
-					
-					<b-form-input v-model="sn" placeholder="设备序列号"></b-form-input>
-					
+					<b-form-input v-model="form.sn" placeholder="设备序列号"></b-form-input>
 					<b-input-group-append  >
 							<b-button   @click="onSearchData(sn)">
 								<span class="pl-2 pr-2">GO</span>
@@ -25,28 +22,21 @@
 			
 		</b-row>
 	</b-container>
-	<!-- <b-tabs content-class="mt-3" justified>
-		<b-tab title="基本信息" active  > </b-tab>
-		<b-tab title="配置信息"></b-tab>
-		<b-tab title="参数芯片"></b-tab>
-		<b-tab title="检测结果" ></b-tab>
-		<b-tab title="设备日志" ></b-tab>
-	  </b-tabs> -->
 	  
   <b-tabs class="mt-3">
     <!-- Add your b-tab components here -->
     <template slot="tabs">
       <b-nav-item href="#" @click="onDeviceInfo(sn)" 
 	  :class="currIndex==1?'selectedItem':''">基本信息</b-nav-item>
-      <b-nav-item href="#" @click="onDeviceConfig"
+      <b-nav-item href="#" @click="onDeviceConfig(sn)"
 	  :class="currIndex==2?'selectedItem':''">配置信息</b-nav-item>
-	  <b-nav-item href="#" @click="onDeviceVersion"
+	  <b-nav-item href="#" @click="onDeviceVersion(sn)"
 	  :class="currIndex==3?'selectedItem':''">版本信息</b-nav-item>
-	  <b-nav-item href="#" @click="onDeviceChip"
+	  <b-nav-item href="#" @click="onDeviceChip(sn)"
 	  :class="currIndex==4?'selectedItem':''">参数芯片</b-nav-item>
-      <b-nav-item href="#" @click="onDeviceChkResult"
+      <b-nav-item href="#" @click="onDeviceChkResult(sn)"
 	  :class="currIndex==5?'selectedItem':''">检测结果</b-nav-item>
-      <b-nav-item href="#" @click="onDeviceRunLog"
+      <b-nav-item href="#" @click="onDeviceRunLog(sn)"
 	  :class="currIndex==6?'selectedItem':''">设备日志</b-nav-item>
     </template>
   </b-tabs>
@@ -64,17 +54,18 @@
     data() {
       return {
 		  currIndex:1,
-		  sn:'11111111'
+		 form:{
+		  sn:'',
+		 }
       }
     },
 	mounted() {
 		// Set the initial number of items
-		console.log("------>",this.$route.params.sn)
-		if (this.$route.params.sn!=null){
+		if (this.$route.params.sn!='undefined'){
 			this.form.sn=this.$route.params.sn
 		}
-		
-		this.onDeviceInfo()
+		Util.$emit('setCurrIndex',3);
+		this.onDeviceInfo(this.form.sn)
 	},
     methods: {
 			onDeviceInfo(sn){
@@ -83,48 +74,53 @@
 			},
 			
 			onDeviceConfig(sn){
-				this.currIndex=2
 				this.$router.push({name:'DeviceDetail_Config',params:{sn: sn}});
+				this.currIndex=2
 			},
 			
 			onDeviceVersion(sn){
-				this.currIndex=3
 				this.$router.push({name:'DeviceDetail_Version',params:{sn: sn}});
+				this.currIndex=3
+			},
+			
+			onDeviceChip(sn){
+				this.$router.push({name:'DeviceDetail_Chip',params:{sn: sn}});
+				this.currIndex=4
 			},
 			
 			onDeviceChkResult(sn){
-				this.currIndex=5
 				this.$router.push({name:'DeviceDetail_ChkResult',params:{sn: sn}});
+				this.currIndex=5
 			},
 		
 			onDeviceRunLog(sn){
-				this.currIndex=6
 				this.$router.push({name:'DeviceDetail_RunLog',params:{sn: sn}});
-			},
-			onDeviceChip(sn){
-				this.currIndex=4
-				this.$router.push({name:'DeviceDetail_Chip',params:{nickn_name: sn}});
+				this.currIndex=6
 			},
 			onSearchData(sn){
-				//Util.$emit('getDeviceSn',sn);
 			switch (this.currIndex) {
 				case 1:
+					Util.$emit('setDeviceSn_Info',sn);
 					this.$router.push({name:'DeviceDetail_Info',params:{sn: sn}});
-					
 					break;
 				case 2:
+					Util.$emit('setDeviceSn_Config',sn);
 					this.$router.push({name:'DeviceDetail_Config',params:{sn: sn}});
 					break;
 				case 3:
+					Util.$emit('setDeviceSn_Version',sn);
 					this.$router.push({name:'DeviceDetail_Version',params:{sn: sn}});
 					break;
 				case 4:
+					Util.$emit('setDeviceSn_Chip',sn);
 					this.$router.push({name:'DeviceDetail_Chip',params:{nickn_name: sn}});
 					break;
 				case 5:
+					Util.$emit('setDeviceSn_ChkResult',sn);
 					this.$router.push({name:'DeviceDetail_ChkResult',params:{sn: sn}});
 					break;
 				case 6:
+					Util.$emit('setDeviceSn_RunLog',sn);
 					this.$router.push({name:'DeviceDetail_RunLog',params:{sn: sn}});
 					break;				
 				}
