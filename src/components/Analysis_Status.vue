@@ -547,29 +547,30 @@
 					}
 			},
 			    series: [{
-							symbolSize: 15,
-				      type: 'effectScatter',
-              coordinateSystem: 'geo' ,// 对应上方配置
-              name: '血压指标', // 浮动框的标题
-              data: [],
-							rippleEffect: {
-                brushType: 'stroke'
+					symbolSize: 15,
+				    type: 'effectScatter',
+					coordinateSystem: 'geo' ,// 对应上方配置
+					name: '血压指标', // 浮动框的标题
+					data: [],
+					rippleEffect: {
+					brushType: 'stroke'
 							},
 							label: {
-                normal: {
-                    formatter: '{b}',
-                    position: 'left',
-                    show: false
-                }
+							normal: {
+							formatter: '{b}',
+							position: 'left',
+							show: false
+							}
 							},
-					    hoverAnimation: true,
+					 hoverAnimation: true,
 							itemStyle: {
 							normal: {
 									color:'yellow',
 									shadowBlur:7,
 										},
 							},
-						},{
+						},
+						{
 							symbolSize: 15,
 				      type: 'effectScatter',
               coordinateSystem: 'geo' ,// 对应上方配置

@@ -1,7 +1,5 @@
 <template>
- 
 	<div>
-		
 		<!-- <svg class="icon">
 		  <use xlink:href="open-iconic.svg#account-login"  class="icon-account-login"></use>
 		</svg>

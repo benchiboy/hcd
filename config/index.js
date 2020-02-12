@@ -10,8 +10,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-						'/device': {
-								target: 'http://192.168.168.17:9011/',//后端接口地址
+						'/': {
+								target: 'http://localhost:8087/',//后端接口地址
 								changeOrigin: true,//是否允许跨越
 								pathRewrite: {
 										'^/device': '/device',//重写,
@@ -21,7 +21,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8070, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

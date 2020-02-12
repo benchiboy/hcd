@@ -8,18 +8,16 @@ import DeviceDetail_Version from '@/components/DeviceDetail_Version'
 import DeviceDetail_Chip from '@/components/DeviceDetail_Chip'
 import DeviceDetail_ChkResult from '@/components/DeviceDetail_ChkResult'
 import DeviceDetail_RunLog from '@/components/DeviceDetail_RunLog'
-
 import DeviceMap from '@/components/DeviceMap'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Map from '@/components/Map'
-
 import SystemLog from '@/components/SystemLog'
-
-
-
 import Decision from '@/components/Decision'
 import User from '@/components/User'
+import Role from '@/components/Role'
+import Menu from '@/components/Menu'
+import Group from '@/components/Group'
 import Main from '@/components/Main'
 import MainInfo from '@/components/MainInfo'
 
@@ -134,11 +132,38 @@ export default new Router({
 						},
 					},
 					{
+						path: 'Role',
+						name: 'Role',
+						component: Role,
+						meta: {
+							requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+						},
+					},
+					
+					{
+						path: 'Group',
+						name: 'Group',
+						component: Group,
+						meta: {
+							requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+						},
+					},
+					
+					{
+						path: 'Menu',
+						name: 'Menu',
+						component: Menu,
+						meta: {
+							requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+						},
+					},
+					
+					{
 						path: 'User',
 						name: 'User',
 						component: User,
 						meta: {
-							requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+							requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
 						},
 					},
 					{
@@ -146,7 +171,7 @@ export default new Router({
 						name: 'SystemLog',
 						component: SystemLog,
 						meta: {
-							requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+							requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
 						},
 					}
 				],

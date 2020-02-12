@@ -150,12 +150,12 @@ export default {
 	methods: {
 		makeToast(tip) {
 			this.$bvToast.toast(tip, {
-          title: `登录结果`,
-          variant:"warning",
-          solid: true,
-		  toaster: "b-toaster-top-center",
-        })
-    },
+			  title: `登录结果`,
+			  variant:"warning",
+			  solid: true,
+			  toaster: "b-toaster-top-center",
+			})
+		},
 		/*
 		   点击其他用户登录
 		*/
@@ -205,9 +205,9 @@ export default {
 		},
 
 		onSubmit(evt) {
+			console.log("=========>")
 			  evt.preventDefault()
 				var that=this;
-				
 				this.checkUser(this.form.user_name)
 				this.isShowLoading=false
 				this.$axios.post(GLOBAL.URL_SIGNIN, 
@@ -215,15 +215,10 @@ export default {
 						.then(function (response) {
 								if (response.data.err_code==GLOBAL.SUCC){
 									setStore(GLOBAL.UID_TOKEN,response.data.token)
-	
 									that.addUser(that.form.user_name)
-									
 									console.log(JSON.stringify(that.loginUsers))
-									
 									setStore(GLOBAL.LAST_USER,JSON.stringify(that.loginUsers))
 									setStore(GLOBAL.CURR_INDEX,that.currUserIndex)
-
-
 									console.log("======>",response.data)
 									that.$router.push({name:'Main',params:{nickn_name: response.data.nick_name}});
 									return;
@@ -231,22 +226,21 @@ export default {
 									that.makeToast(response.data.err_msg);
 								}
  						})
-							.catch(function (error) {
-								console.log("=========>",error);
-								that.makeToast(error);
-								
+						.catch(function (error) {
+							console.log("=========>",error);
+							that.makeToast(error);
 						}); 		
 		  },
     
-			onReset(evt) {
-		   evt.preventDefault()
-			 this.form.mct_no = ''
-       this.form.user_name = ''
-       this.form.pass_word = ''       
-       this.$nextTick(() => {
-          this.show = true
-        })
-      }
+		onReset(evt) {
+			evt.preventDefault()
+			this.form.mct_no = ''
+			this.form.user_name = ''
+			this.form.pass_word = ''       
+			this.$nextTick(() => {
+				this.show = true
+			})
+		}
 			
     }
 }

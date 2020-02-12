@@ -29,11 +29,15 @@
 	<b-row class="d-flex  align-items-center">
 		<b-col md="3" class="my-1">
 			<div>
-				<img src="../assets/log_folder.jpg" width="80px" height="80px">
-				</img>
-			</div>
-			<div>
-				2018-12-12 12:12:12.log
+				<div>
+					<img src="../assets/log_folder.jpg" width="80px" height="80px">
+					</img>
+				</div>
+				<div>
+					<a href="#">
+					2018-12-12 12:12:12.log
+					</a>
+				</div>
 			</div>
 		</b-col>	
 		<b-col md="3" class="my-1">
@@ -42,7 +46,9 @@
 				</img>
 			</div>
 			<div>
-				2018-12-12 12:12:12.log
+				<a href="#">
+					2018-12-12 12:12:12.log
+				</a>
 			</div>
 		</b-col>	
 			<b-col md="3" class="my-1">
@@ -165,37 +171,7 @@
             return { text: f.label, value: f.key }
           })
       },
-			countryOptions() {
-				// Create an options list from our fields
-				return  [
-          { text: '中国', value: 'e' },
-          { text: '日本', value: 'd' },
-					{ text: '美国', value: 'f' },
-        ]
-			},
-			areaOptions() {
-				// Create an options list from our fields
-				return  [
-					{ text: '北京', value: 'a' },
-					{ text: '上海', value: 'b' },
-					{ text: '重庆', value: 'c' },
-				]
-			},deviceTypeOptions() {
-				// Create an options list from our fields
-				return  [
-          { text: 'mLabs', value: 'a' },
-          { text: 'qLabs', value: 'b' },
-					{ text: 'uLabs', value: 'c' },
-        ]
-			},
-			deviceStatusOptions() {
-				// Create an options list from our fields
-				return  [
-					{ text: '运行良好', value: 'z' },
-					{ text: '使用不足', value: 'a' },
-					{ text: '警告', value: 'b' },
-				]
-			}
+			
     },
     mounted() {
 		  // Set the initial number of items
@@ -336,6 +312,12 @@ a {
 		left: 400px;
 		width: 20%;
 }
+
+	#home-search-box:hover {
+		border: 1px solid green;
+		box-shadow: 5px 5px 5px #888888;
+	}
+	
 
 .statusColor{
 	background: red;

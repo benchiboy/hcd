@@ -1,4 +1,4 @@
-/**
+1/**
  * 定义全局变量
  */
 export default {	
@@ -10,6 +10,12 @@ export default {
 	URL_SETACCOUNT: '/jc/api/setaccount',
 	URL_ADDACCOUNT: '/jc/api/addaccount',
 	URL_GETACCOUNT: '/jc/api/getaccount',
+	/**/
+	URL_GETGROUP_LIST: '/jc/api/getgrplist',
+	URL_DELGROUP: '/jc/api/delgroup',
+	URL_SETGROPP: '/jc/api/setgroup',
+	URL_ADDGROUP: '/jc/api/addgroup',
+	URL_GETGROUP: '/jc/api/getgroup',
 	
 	URL_MAPDATA: 				'/device/getOnlineDeviceMap',
 	URL_DEVICELIST: 			'/device/getDeviceList',

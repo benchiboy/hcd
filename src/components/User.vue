@@ -1,5 +1,4 @@
-<template>
-	
+<template>	
 <div >
 <div class="d-flex justify-content-center">
     <b-modal
@@ -55,46 +54,7 @@
 					required
 				></b-form-input>
 			 </b-form-group>
-			 
-				
-      <b-form-group
-      	:state="pwdState1"
-      	label="登录密码"
-      	label-for="pwd1-input"
-      	invalid-feedback="登录密码不能为空"
-				valid-feedback="密码输入通过"
-				class="text-left"
-		
-	    >
-      	<b-form-input
-      		id="pwd1-input"
-					type="password"
-      		v-model="form.login_pass"
-      		:state="pwdState1"
-      		required
 	
-      	></b-form-input>
-      </b-form-group>
-	
-			<b-form-group
-				:state="pwdState2"
-				label="确认密码"
-				label-for="pwd2-input"
-				invalid-feedback="确认密码不能为空"
-				valid-feedback="确认密码输入通过"
-				class=" text-left"
-				>
-				
-				<b-form-input
-					id="pwd2-input"
-					type="password"
-					v-model="form.login_pass2"
-					:state="pwdState2"
-					required
-						
-				></b-form-input>
-			</b-form-group>
-			
 			<b-form-group
 				:state="expireState"
 				label="账户到期日-默认1年"
@@ -102,16 +62,16 @@
 				invalid-feedback="账户到期日不能为空"
 				valid-feedback="账户到期日通过"
 				class=" text-left"
-				
 			>
-				<b-form-input
+			<b-form-input
 					id="expire-input"
 					type="date"
 					v-model="form.expire_date"
 					:state="expireState"
 					required
 				
-				></b-form-input>
+			></b-form-input>
+			
 			</b-form-group>
 			
 			
@@ -122,13 +82,13 @@
 				class="text-left"
 			>
 				 <b-form-radio-group
-        id="btn-radios-2"
-        v-model="form.status"
-        :options="status_options"
-        buttons
-        button-variant="outline-primary"
-        size="sm"
-        name="radio-btn-outline"
+					id="btn-radios-2"
+					v-model="form.status"
+					:options="status_options"
+					buttons
+					button-variant="outline-primary"
+					size="sm"
+					name="radio-btn-outline"
 				></b-form-radio-group>
 			
 				</b-form-group>
@@ -163,7 +123,7 @@
 		      @hidden="hiddenModal"
 		      @ok="handleEditOk"
 		    >
-				 <template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
+			<template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
 		      <b-button size="md" variant="success" @click="ok()">
 						确定
 		      </b-button>
@@ -215,9 +175,8 @@
 						invalid-feedback="账户到期日不能为空"
 						valid-feedback="账户到期日通过"
 						class=" text-left"
-						
 					>
-						<b-form-input
+					<b-form-input
 							id="expire-input"
 							type="date"
 							v-model="form.expire_date"
@@ -347,95 +306,107 @@
 
 <script>
 	import GLOBAL from './Global.js'
+	import {getCurrDate} from './Global.js'
   export default {
     data() {
       return {
-				options: [
+		options: [
           { text: '设备地图', value: 'm' },
           { text: '设备列表', value: 'l' },
           { text: '设备分析', value: 'a' },
           { text: '设备决策', value: 'd' }
         ],
-				status_options: [
+		status_options: [
           { text: '正常', value: 'e' },
           { text: '禁用', value: 'd' },
-					{ text: '冻结', value: 'f' },
+		  { text: '冻结', value: 'f' },
         ],
-			 login_name:'',
-			 currPageNo:1,
-			 totalPage:0,
- 			 form: {
-					 page_no:1,
-					 page_size:8,
-					 user_id:0,
-           login_name: '',
-					 rights:[],
-					 login_pass:'',
-					 login_pass2:'',
-					 expire_date:'',
-					 nick_name:'',
-					 status:'',
-         },
-			 accounts:[],
+			 
+		 login_name:'',
+		 currPageNo:1,
+		 totalPage:0,
+		 form: {
+			 page_no:1,
+			 page_size:8,
+			 user_id:0,
+			 login_name: '',
+			 rights:[],
+			 login_pass:'',
+			 login_pass2:'',
+			 expire_date:'',
+			 nick_name:'',
+			 status:'',
+		},
+		accounts:[],
+		isSubmit:false,
       }
     },
     computed: {
-      nameState() {
-		    return this.form.login_name.length > 4 && this.form.login_name.length < 13
-      },
-			realNameState() {
-				return this.form.nick_name.length > 2 && this.form.nick_name.length < 20
-			},
-			pwdState1() {
-				return this.form.login_pass.length > 4 && this.form.login_pass.length < 13
-			},
-			pwdState2() {
-				return this.form.login_pass2.length > 4 && this.form.login_pass2.length < 13
-			},
-			rightsState() {
-				return this.form.rights.length>0?true:false;
-			},
-			expireState() {
-				return this.form.expire_date.length>6?true:false;
-			},
+		nameState() {
+			if  (!this.isSubmit){
+				return null;
+			}
+			return this.form.login_name.length > 4 && this.form.login_name.length < 13
+		},
+		realNameState() {
+			if  (!this.isSubmit){
+				return null;
+			}
+			return this.form.nick_name.length > 2 && this.form.nick_name.length < 20
+		},
+		
+		rightsState() {
+			if  (!this.isSubmit){
+				return null;
+			}
+			return this.form.rights.length>0?true:false;
+		},
+		expireState() {
+			if  (!this.isSubmit){
+				return null;
+			}
+			return this.form.expire_date.length>6?true:false;
+		},
 	  },
+	  
     mounted() {
-				this.getActList()
+		this.getActList()
     },
     methods: {
-			getRights(rights) {
-				let text=""
-				let r=rights.split(",")
-				console.log("======>----",r.length)
-				for ( var j = 0; j <r.length; j++){
-						for ( var i = 0; i <this.options.length; i++){
-							if (this.options[i].value==r[j]){
-								text=text+this.options[i].text+" "
-								break
-							}
-						}
+		getRights(rights) {
+			let text=""
+			let r=rights.split(",")
+			console.log("======>----",r.length)
+			for ( var j = 0; j <r.length; j++){
+				for ( var i = 0; i <this.options.length; i++){
+					if (this.options[i].value==r[j]){
+						text=text+this.options[i].text+" "
+						break
+					}
 				}
-				return text
-			},
-				
-			checkFormValidity() {
-        const valid = this.$refs.form.checkValidity()
-		    return valid
-      },
+			}
+			return text
+		},
+			
+		checkFormValidity() {
+			const valid = this.$refs.form.checkValidity()
+			return valid
+		},
 			
    		handleAddOk(evt) {
-        evt.preventDefault()      
-	      if (!this.checkFormValidity()) {
-          return
-        }
-	      this.$nextTick(() => {
-          this.$refs.modal.hide()
-					this.addAccount()
-					this.toast("新增成功")
-        })
-	    },
+			this.isSubmit=true;
+			evt.preventDefault()      
+				if (!this.checkFormValidity()) {
+				return
+			}
+			this.$nextTick(() => {
+			this.$refs.modal.hide()
+				this.addAccount()
+				this.toast("新增成功")
+			})
+		},
 			
-			handleEditOk(evt) {
+		handleEditOk(evt) {
 				evt.preventDefault()      
  				if (!this.checkFormValidity()) {
  					return
@@ -447,38 +418,29 @@
 				})
 			},
 
-      showModalAdd(evt) {
+			showModalAdd(evt) {
+				this.isSubmit=false;
 				this.form.nick_name='';
 				this.form.login_name=''
-				this.form.login_pass='123456'
-				this.form.login_pass2='123456'
 				this.form.rights=['m']
-				let dateNow
-				var now = new Date()
-				dateNow=now.getFullYear()+1
-				if (now.getMonth()+1 <10){
-					dateNow+="-0"+(now.getMonth()+ 1)
-				}else{
-					dateNow+="-"+(now.getMonth()+ 1)
-				}
-				dateNow+="-"+now.getDate()
-				this.form.expire_date=dateNow
+				this.form.expire_date=getCurrDate()
 				this.form.status='e'
-		  },
+			},
 	
 			showModalEdit(evt) {
+	
 			},
 			
 			toast(tip) {
-        this.$bvToast.toast(tip, {
-          title: `执行结果`,
-          toaster: 'b-toaster-top-center',
-          solid: true,
+      				this.$bvToast.toast(tip, {
+					title: `执行结果`,
+					toaster: 'b-toaster-top-center',
+					solid: true,
 					variant: 'info',
 					autoHideDelay:1000,
-          appendToast: false
-        })
-      },
+					appendToast: false
+				})
+			},
 			
 			hiddenModal(evt) {
 				//showModal(evt)

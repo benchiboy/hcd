@@ -5,8 +5,8 @@
 	 <b-modal
 	 			id="modal-1"
 	 			ref="modal"
-	 		title="密码修改"
-	 		scrollable
+				title="密码修改"
+				scrollable
 	 			@show="showModal"
 	 			@hidden="hiddenModal"
 	 			@ok="handleOk"
@@ -76,7 +76,7 @@
 	 
  	<div class="" >
 		<b-navbar toggleable="lg" type="dark" variant="secondary" class="navbar-inverse" >
-			<b-navbar-brand href="#">HCD技术有限公司</b-navbar-brand>
+			<b-navbar-brand href="#">深圳众游科技</b-navbar-brand>
 			<b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 			<b-collapse id="nav-collapse" is-nav>
 				<b-navbar-nav>
@@ -113,39 +113,7 @@
 		<b-row class="menuBox">
 				<b-col :md="menuCols"  style="background-color:steelblue">
 					<div v-show="isCollapse">
-							<div >
-								<span>
-								<b-button v-b-toggle.collapse-1  variant="primary" block 
-								class="mt-2 d-flex justify-content-between " @click="onMenuClick(0)">
-								 <img  src="../assets/device.png" alt="Image 1" width="20" height="20" class="">
-								 </img>
-								 <span >设备信息管理</span>
-									<img  src="../assets/arrow_up.png" alt="Image 1" 
-										width="20" height="20" class="" v-show="isMenuUpClick[0]">
-									</img>
-									<img  src="../assets/arrow_down.png" alt="Image 1" 
-										width="20" height="20" class="" v-show="isMenuDownClick[0]">
-									</img>
-								</b-button>
-								</span>
-								 <b-collapse id="collapse-1"  accordion="my-accordion" class="m-2">
-										<div>
-											<a href="#/Main/DeviceMap" >
-											<b-button block pill :variant="currSelIndex==1?'success':'info'" @click="onSelected(1)">设备地图</b-button>
-											</a>
-										</div>
-										<div class="mt-2">
-											<a href="#/Main/DeviceList"  >
-											<b-button block pill :variant="currSelIndex==2?'success':'info'" @click="onSelected(2)" >设备列表</b-button>
-											</a >
-										</div>
-										<div class="mt-2">
-											<a href="#/Main/DeviceDetail"  >
-											<b-button block pill :variant="currSelIndex==3?'success':'info'" @click="onSelected(3)" >设备详情</b-button>
-											</a >
-										</div>
-								</b-collapse>
-							</div>
+						
 						
 							<div>
 								<span>
@@ -156,7 +124,7 @@
 												width="20" 
 												height="20">
 									</img>
-									<span >设备资源管理</span>
+									<span >短信系统管理</span>
 									<img  src="../assets/arrow_up.png" alt="Image 1" 
 												width="20" height="20" class="" v-show="isMenuUpClick[1]">
 									</img>
@@ -168,13 +136,13 @@
 								<b-collapse id="collapse-2"  accordion="my-accordion" class="m-2">
 									
 									<b-button block pill :variant="currSelIndex==6?'success':'info'"
-									@click="onSelected(6)">产品管理</b-button>
+									@click="onSelected(6)">应用管理</b-button>
 																			
 									<b-button block pill :variant="currSelIndex==7?'success':'info'"
-									@click="onSelected(7)">参数芯片</b-button>
+									@click="onSelected(7)">模板管理</b-button>
 																		
 									<b-button block pill :variant="currSelIndex==8?'success':'info'"
-									@click="onSelected(8)">设备配置</b-button>
+									@click="onSelected(8)">发送日志</b-button>
 								
 								</b-collapse>
 							</div>
@@ -184,7 +152,7 @@
 									class=" mt-2 d-flex justify-content-between " @click="onMenuClick(2)">
 										<img  src="../assets/icon_addperson.png" alt="Image 1" width="20" height="20" class="">
 										</img>
-									<span >设备辅助管理</span>
+									<span >Portal管理</span>
 										<img  src="../assets/arrow_up.png" alt="Image 1" 
 													width="20" height="20" class="" v-show="isMenuUpClick[2]">
 										</img>
@@ -195,28 +163,44 @@
 									</span>
 									<b-collapse id="collapse-3"  accordion="my-accordion" class="m-2">
 										<div>
-											<a href="#/Main/Manage"   >
+											<a href="#/Main/Role"   >
 												<b-button block pill :variant="currSelIndex==10?'success':'info'"
 												@click="onSelected(10)">角色定义</b-button>
 											</a >	
 										</div>
+										
+										<div class="mt-2">
+											<a href="#/Main/Group"  class="mt-2" >
+												<b-button block pill :variant="currSelIndex==11?'success':'info'"
+												@click="onSelected(11)">系统管理</b-button>
+											</a >										
+										</div>
+										
+										
+										<div class="mt-2">
+											<a href="#/Main/Menu"  class="mt-2" >
+												<b-button block pill :variant="currSelIndex==12?'success':'info'"
+												@click="onSelected(12)">菜单管理</b-button>
+											</a >										
+										</div>
+										
 										<div class="mt-2">
 											<a href="#/Main/User"  class="mt-2" >
-												<b-button block pill :variant="currSelIndex==11?'success':'info'"
+												<b-button block pill :variant="currSelIndex==13?'success':'info'"
 												@click="onSelected(11)">用户管理</b-button>
 											</a >										
 										</div>
 										
 										<div class="mt-2">
 											<a href="#/Main/SystemLog"  class="mt-2" >
-											<b-button block pill :variant="currSelIndex==12?'success':'info'"
-											@click="onSelected(12)">系统日志</b-button>
+											<b-button block pill :variant="currSelIndex==14?'success':'info'"
+											@click="onSelected(14)">系统日志</b-button>
 											</a >		
 										</div>
 										
 										<div class="mt-2">
-											<b-button block pill  v-b-modal.modal-1 :variant="currSelIndex==13?'success':'info'"
-											@click="onSelected(13)">修改密码</b-button>
+											<b-button block pill  v-b-modal.modal-1 :variant="currSelIndex==15?'success':'info'"
+											@click="onSelected(15)">修改密码</b-button>
 										</div>										
 																	
 									</b-collapse>
@@ -224,6 +208,7 @@
 					
 					</div>
 				</b-col>
+				
 				<b-col :md="contentCols">
 					<router-view/>
 				</b-col>
@@ -251,20 +236,7 @@
 					new_pwd2:'',
 				},
 				currSelIndex:0,
-				items: [
-          {
-            text: 'Admin',
-            href: '#'
-          },
-          {
-            text: 'Manage',
-            href: '#'
-          },
-          {
-            text: 'Library',
-            active: true
-          }
-        ]
+				isSubmit:false,
 			}
     },
     
@@ -278,15 +250,24 @@
 	},
 
 	computed:{
-			oldPwdState() {
-				return this.form.old_pwd.length > 4 && this.form.old_pwd.length < 20
-			},
-			newPwdState() {
-				return this.form.new_pwd.length > 4 && this.form.new_pwd.length < 13
-			},
-			newPwd2State() {
-				return this.form.new_pwd2.length > 4 && this.form.new_pwd2.length < 13
-			},
+			// oldPwdState() {
+			// 	if(!isSubmit){
+			// 		return null;
+			// 	}
+			// 	return this.form.old_pwd.length > 4 && this.form.old_pwd.length < 20
+			// },
+			// newPwdState() {
+			// 	if(!isSubmit){
+			// 		return null;
+			// 	}
+			// 	return this.form.new_pwd.length > 4 && this.form.new_pwd.length < 13
+			// },
+			// newPwd2State() {
+			// 	if(!isSubmit){
+			// 		return null;
+			// 	}
+			// 	return this.form.new_pwd2.length > 4 && this.form.new_pwd2.length < 13
+			// },
 		},
     methods: {
 			setCurrIndex(index){
@@ -323,8 +304,24 @@
 			
 			onSelected(index) {
 				this.currSelIndex=index;
-			}
+			},
 			
+				
+			handleOk(evt) {
+				this.isSubmit=true;
+				evt.preventDefault()      
+					// Hide the modal manually
+				// Exit when the form isn't valid
+				if (!this.checkFormValidity()) {
+					return
+				}
+					
+				this.$nextTick(() => {
+					this.$refs.modal.hide()
+					this.toast()
+				})
+				
+			},
 			
 	
     }
