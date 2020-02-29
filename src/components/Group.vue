@@ -4,7 +4,7 @@
 	    <b-modal
 	  		id="manage-modal-add"
 	  		ref="modal"
-	  		title="新增系统"
+	  		title="新增组"
 	  		scrollable
 	  		@show="showModalAdd"
 	  		@hidden="hiddenModal"
@@ -38,36 +38,50 @@
 			<div class="mt-1 " >
 				<div class="d-flex justify-content-between">
 				 <label class="text-primary">系统模块包括的菜单：</label>
-				 <b-button size="sm" variant="outline-info"" class="mb-1" @click="addSubItem()">
+				 <b-button size="sm" variant="outline-info"  class="mb-1" @click="addSubItem()">
 					<b-icon font-scale="1.5" icon="plus" aria-hidden="true"></b-icon>
 					<span class="sr-only">Help</span>
 				 </b-button>
 				</div>
-				<b-form inline class="mt-1 d-flex justify-content-between" v-for="subItem in subList" >
-					<label class="sr-only" for="inline-form-input-username">菜单名称</label>
-					<b-input-group prepend="菜单名称" class="mb-2 mr-sm-2 mb-sm-0">
-					  <b-input id="inline-form-input-username" v-model="subItem.menu_name" placeholder="输入菜单名称"></b-input>
-					</b-input-group>
 
-					<label class="sr-only" for="inline-form-input-username">Username</label>
-					<b-input-group prepend="菜单地址" >
-					  <b-input id="inline-form-input-username" v-model="subItem.url" style="width: 300px;" placeholder="菜单的Url"></b-input>
+				<b-form  class="mt-1 d-flex justify-content-between"  v-for="(subItem,key) in subList">
+					<label class="sr-only" for="inline-form-input-menu_name">菜单名称</label>
+					<b-input-group prepend="菜单名称" class="mb-2 mr-sm-2 mb-sm-0">
+					  	<b-input id="inline-form-input-menu-name"  v-model="subItem.menu_name" 
+					   	 :state="subItem.check"	placeholder="输入菜单名称">
+						</b-input>
+						<b-form-invalid-feedback :state="subItem.check">
+							菜单名称不能为空,长度在4到30字符之间.
+						</b-form-invalid-feedback>
+						<b-form-valid-feedback :state="subItem.check">
+							校验通过
+						</b-form-valid-feedback>
 					</b-input-group>
-						
-					 <b-button size="sm" variant="outline-info"" class="ml-2" @click="delSubItem()">
+				
+					
+					<label class="sr-only" for="inline-form-input-menu-url">Username</label>
+					<b-input-group prepend="菜单地址" >
+					 	<b-input id="inline-form-input-menu-url"  v-model="subItem.menu_url"  
+						 style="width: 300px;" placeholder="菜单的Url">
+						</b-input>
+					</b-input-group>
+					
+		
+					<b-button size="sm" variant="outline-info"" class="ml-2" @click="delSubItem(subItem.id)">
 						<b-icon  font-scale="1.5" icon="trash" aria-hidden="true"></b-icon>
 						<span class="sr-only">Help</span>
 					</b-button>
 				</b-form>
-	  	</div >
+	  	 	</div >
+		 
 
 	    </b-modal>
 		
 		
 		  <b-modal
 			id="manage-modal-edit"
-			ref="modal"
-			title="新增系统"
+			ref="modal2"
+			title="修改组"
 			scrollable
 			@show="showModalEdit"
 			@hidden="hiddenModal"
@@ -117,7 +131,7 @@
 					  <b-input id="inline-form-input-username" v-model="subItem.url" style="width: 300px;" placeholder="菜单的Url"></b-input>
 					</b-input-group>
 						
-					 <b-button size="sm" variant="outline-info"" class="ml-2" @click="delSubItem()">
+					 <b-button size="sm" variant="outline-info"" class="ml-2" @click="delSubItem(subItem.id)">
 						<b-icon  font-scale="1.5" icon="trash" aria-hidden="true"></b-icon>
 						<span class="sr-only">Help</span>
 					</b-button>
@@ -264,11 +278,15 @@
 				status:'',
 				group_name:'',
 				group_memo:'',
+				group_no:0,
 				page_no: 1,
 				page_size: 5,
 		},
 		subList:[
-			{menu_name:'',url:''}
+			{
+				menu_name:'',
+				url:''
+			}
 		],
 	    totalRows: 1,
         pageOptions: [8, 10, 15],
@@ -277,7 +295,8 @@
         sortDirection: 'asc',
         filter: null,
 		isSubmit:false,
-        infoModal: {
+		menu_url:'',
+	    infoModal: {
           id: 'info-modal',
           title: '',
           content: ''
@@ -286,8 +305,7 @@
     },
     computed: {
 		sortOptions() {
-        // Create an options list from our fields
-			return this.fields
+  			return this.fields
 				.filter(f => f.sortable)
 				.map(f => {
 				return { text: f.label, value: f.key }
@@ -299,6 +317,21 @@
 			}
 			return this.form.group_name.length > 4 && this.form.group_name.length < 13
 		},
+	
+		menu_name_state() {
+			return function(value){
+				if  (!this.isSubmit){
+					return null
+				}
+				if (this.subList[value].menu_name==""){
+					console.log("check is not pass.....")
+					// this.$root.$emit('bv::show::modal', 'manage-modal-add', '#focusThisOnClose')
+					return false
+				}else{
+					return true
+				}
+			}
+		},
     },
     mounted() {
 		// console.log("------>",this.$route.params.region)
@@ -308,8 +341,32 @@
 		// Util.$emit('setCurrIndex',2);
 		this.getList()
 	},
+	watch: {
+		subList: {
+	　　　　handler(newValue, oldValue) {
+	　　　　　　for (let i = 0; i < newValue.length; i++) {
+				console.log(newValue[i].menu_name)
+				if (this.subList[i].check==null){
+					return
+				}else{
+						//校验在这边加
+						if (newValue[i].menu_name==""){
+							this.subList[i].check=false
+						}else{
+							this.subList[i].check=true
+						}
+				}
+	　　　　　　}
+	　　　　},
+	　　　　deep: true
+	　　}
+	
+　　},
 
     methods: {
+
+	
+
 		statusColor(item) {
 			return item.type
 		},
@@ -333,13 +390,26 @@
 					this.getList(ctx.sortBy,"asc",ctx.currentPage,5)
 			}
 		},
-		
 		addSubItem() {
-			this.subList.push({menu_name:'',url:''})
+			let maxNum=0;
+			if (this.subList.length>0){
+				maxNum=this.subList[0].id
+			}
+			for(let i = 1,len = this.subList.length;i<len;i++){
+            	if  (maxNum<this.subList[i].id){
+					maxNum = this.subList[i].id;
+				}
+			}
+			maxNum=maxNum+1
+			this.subList.push({menu_name:'',url:'',id:maxNum,check:null})
 		},
 		
-		delSubItem() {
-			this.subList.pop()
+		delSubItem(id) {
+			this.subList.forEach(function(x, index, arr){
+				if (id==x.id){
+					arr.splice(index,1)
+				}
+			});
 		},
 			
 		onHovered(ctx) {
@@ -360,13 +430,47 @@
 			console.log("checkFormValidity===",valid)
 			return valid
 		},
-	  
+		checkFormInput(){
+			let pass=true
+			if (!this.group_name_state){
+				pass=false
+			}
+			//
+			for(let i = 0,len = this.subList.length;i<len;i++){
+				if (this.subList[i].check=false){
+					pass=false
+					break;
+				}
+				console.log(this.subList[i].check)
+			}
+
+			return pass
+
+		},
+	
 		handleAddOk(evt) {
 			this.isSubmit=true
-			if (!this.group_name_state){
+			
+			if (!this.checkFormInput()){
 				evt.preventDefault()
-				return
+			 	return;
 			}
+			
+			//* 子表单的输入部分，采用数据校验。。。。
+			// let checkPass=true
+			// for(let i = 0,len = this.subList.length;i<len;i++){
+			// 	if (this.subList[i].menu_name==""){
+			// 		this.subList[i].check=false
+			// 		checkPass=false
+			// 	}else{
+			// 		this.subList[i].check=true
+			// 	}
+			// }
+			// if (!checkPass){
+			// 	evt.preventDefault()
+			// 	return;
+			// }
+			//////
 			if (!this.checkFormValidity()) {
 				return
 			}
@@ -376,13 +480,13 @@
 				this.toast("新增成功")
 			})
 		},
-			
+
 		handleEditOk(evt) {
 			this.isSubmit=true;
-			evt.preventDefault()      
-			if (!this.checkFormValidity()) {
+			if (!this.group_name_state){
+				evt.preventDefault()
 				return
-			}
+			}  
 			this.$nextTick(() => {
 				this.$refs.modal2.hide()
 				this.setInfo()
@@ -394,7 +498,7 @@
 			this.isSubmit=false;
 			this.form.group_name=""
 			this.form.group_memo=""
-			this.subList=[{menu_name:'',menu_url:''}]
+			this.subList=[]
 		},
 		
 		showModalEdit(evt) {
@@ -455,7 +559,7 @@
 			var that=this;
 			this.post_form.list=this.subList
 			this.post_form.group=this.form
-			console.log(JSON.stringify(this.post_form))
+			//alert(JSON.stringify(this.post_form))
 			this.$axios.post(GLOBAL.URL_ADDGROUP, 
 								JSON.stringify(this.post_form))
 								.then(function (response) {
@@ -470,8 +574,10 @@
 		/* 修改提交*/
 		setInfo() {
 			var that=this;
+			this.post_form.list=this.subList
+			this.post_form.group=this.form
 			this.$axios.post(GLOBAL.URL_SETGROPP, 
-							JSON.stringify(this.form))
+							JSON.stringify(this.post_form))
 							.then(function (response) {
 								that.getList();
 							})
@@ -484,10 +590,12 @@
 		getInfo(id) {
 			var that=this;
 			this.form.id=id
+			that.subList={}
 			this.$axios.post(GLOBAL.URL_GETGROUP, 
 						JSON.stringify(this.form))
 						.then(function (response) {
-							that.form.group_name=response.data.group_name
+							that.form=response.data.group
+							that.subList=response.data.list
 						})
 				.catch(function (error) {
 						console.log("=========>",error);
