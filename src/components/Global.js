@@ -16,6 +16,7 @@ export default {
 	URL_SETGROPP: '/jc/api/setgroup',
 	URL_ADDGROUP: '/jc/api/addgroup',
 	URL_GETGROUP: '/jc/api/getgroup',
+	URL_CHKGROUP: '/jc/api/chkgroup',
 	
 	URL_MAPDATA: 				'/device/getOnlineDeviceMap',
 	URL_DEVICELIST: 			'/device/getDeviceList',

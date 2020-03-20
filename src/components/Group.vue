@@ -9,8 +9,7 @@
 	  		@show="showModalAdd"
 	  		@hidden="hiddenModal"
 	  		size="lg"
-	  		@ok="handleAddOk"
-	      >
+	  		@ok="handleAddOk">
 			<template slot="modal-footer" slot-scope="{ ok, cancel, hide }">
 				<b-button size="md" variant="success" @click="ok()">
 					确定
@@ -21,10 +20,11 @@
 			</template>
 	        <form ref="form" @submit.stop.prevent="handleOk" >
 	  			<label for="feedback-user">模块名称</label>
-					<b-input v-model="form.group_name" :state="group_name_state" id="feedback-user">
+					<b-input autofocus=true v-on:blur="busiNoCheck()" v-model="form.group_name" 
+					:state="group_name_state" id="feedback-user" name="feedback-user" >
 					</b-input>
 				<b-form-invalid-feedback :state="group_name_state">
-					模块名称不能为空,长度在4到30字符之间.
+					模块名称不能为空且不能重复！
 				</b-form-invalid-feedback>
 				<b-form-valid-feedback :state="group_name_state">
 					校验通过
@@ -48,37 +48,36 @@
 					<label class="sr-only" for="inline-form-input-menu_name">菜单名称</label>
 					<b-input-group prepend="菜单名称" class="mb-2 mr-sm-2 mb-sm-0">
 					  	<b-input id="inline-form-input-menu-name"  v-model="subItem.menu_name" 
-					   	 :state="subItem.check"	placeholder="输入菜单名称">
+					   	 :state="subItem.menu_name_check"	placeholder="输入菜单名称">
 						</b-input>
-						<b-form-invalid-feedback :state="subItem.check">
-							菜单名称不能为空,长度在4到30字符之间.
+						<b-form-invalid-feedback :state="subItem.menu_name_check">
+							菜单名称不能为空
 						</b-form-invalid-feedback>
-						<b-form-valid-feedback :state="subItem.check">
+						<b-form-valid-feedback :state="subItem.menu_name_check">
 							校验通过
 						</b-form-valid-feedback>
 					</b-input-group>
-				
 					
 					<label class="sr-only" for="inline-form-input-menu-url">Username</label>
 					<b-input-group prepend="菜单地址" >
-					 	<b-input id="inline-form-input-menu-url"  v-model="subItem.menu_url"  
-						 style="width: 300px;" placeholder="菜单的Url">
+						<b-input id="inline-form-input-menu-url"  v-model="subItem.url"  
+						:state="subItem.url_check" style="width: 300px;" placeholder="菜单的Url">
 						</b-input>
+						<b-form-invalid-feedback :state="subItem.url_check">
+							菜单地址不能为空
+						</b-form-invalid-feedback>
+						<b-form-valid-feedback :state="subItem.url_check">
+							校验通过
+						</b-form-valid-feedback>
 					</b-input-group>
-					
 		
-					<b-button size="sm" variant="outline-info"" class="ml-2" @click="delSubItem(subItem.id)">
+					<b-button size="sm" variant="outline-info" class="ml-2" @click="delSubItem(subItem.id)">
 						<b-icon  font-scale="1.5" icon="trash" aria-hidden="true"></b-icon>
-						<span class="sr-only">Help</span>
 					</b-button>
 				</b-form>
 	  	 	</div >
-		 
-
 	    </b-modal>
-		
-		
-		  <b-modal
+		<b-modal
 			id="manage-modal-edit"
 			ref="modal2"
 			title="修改组"
@@ -98,15 +97,14 @@
 			</template>
 		    <form ref="form" @submit.stop.prevent="handleOk" >
 				<label for="feedback-user">模块名称</label>
-					<b-input v-model="form.group_name" :state="group_name_state" id="feedback-user">
+					<b-input v-model="form.group_name"  v-on:blur="busiNoCheck()"  :state="group_name_state" id="feedback-user">
 					</b-input>
 				<b-form-invalid-feedback :state="group_name_state">
-					模块名称不能为空,长度在4到30字符之间.
+					模块名称不能为空且不能重复！
 				</b-form-invalid-feedback>
 				<b-form-valid-feedback :state="group_name_state">
 					校验通过
 				</b-form-valid-feedback>
-				
 				<label for="feedback-memo">模块说明</label>
 				<b-textarea v-model="form.group_memo"  id="feedback-memo">
 				</b-textarea>
@@ -115,134 +113,146 @@
 			<div class="mt-1 " >
 				<div class="d-flex justify-content-between">
 				 <label class="text-primary">系统模块包括的菜单：</label>
-				 <b-button size="sm" variant="outline-info"" class="mb-1" @click="addSubItem()">
+				 <b-button size="sm" variant="outline-info" class="mb-1" @click="addSubItem()">
 					<b-icon font-scale="1.5" icon="plus" aria-hidden="true"></b-icon>
 					<span class="sr-only">Help</span>
 				 </b-button>
 				</div>
-				<b-form inline class="mt-1 d-flex justify-content-between" v-for="subItem in subList" >
-					<label class="sr-only" for="inline-form-input-username">菜单名称</label>
+				<b-form  class="mt-1 d-flex justify-content-between" v-for="subItem in subList" >
+					<label class="sr-only" for="inline-form-input-menu_name">菜单名称</label>
 					<b-input-group prepend="菜单名称" class="mb-2 mr-sm-2 mb-sm-0">
-					  <b-input id="inline-form-input-username" v-model="subItem.menu_name" placeholder="输入菜单名称"></b-input>
+					  	<b-input id="inline-form-input-menu-name"  v-model="subItem.menu_name" 
+					   	 :state="subItem.menu_name_check"	placeholder="输入菜单名称">
+						</b-input>
+						<b-form-invalid-feedback :state="subItem.menu_name_check">
+							菜单名称不能为空
+						</b-form-invalid-feedback>
+						<b-form-valid-feedback :state="subItem.menu_name_check">
+							校验通过
+						</b-form-valid-feedback>
 					</b-input-group>
-		
-					<label class="sr-only" for="inline-form-input-username">Username</label>
+
+					<label class="sr-only" for="inline-form-input-menu-url">Username</label>
 					<b-input-group prepend="菜单地址" >
-					  <b-input id="inline-form-input-username" v-model="subItem.url" style="width: 300px;" placeholder="菜单的Url"></b-input>
+						<b-input id="inline-form-input-menu-url"  v-model="subItem.url"  
+						:state="subItem.url_check" style="width: 300px;" placeholder="菜单的Url">
+						</b-input>
+						<b-form-invalid-feedback :state="subItem.url_check">
+							菜单地址不能为空
+						</b-form-invalid-feedback>
+						<b-form-valid-feedback :state="subItem.url_check">
+							校验通过
+						</b-form-valid-feedback>
 					</b-input-group>
-						
-					 <b-button size="sm" variant="outline-info"" class="ml-2" @click="delSubItem(subItem.id)">
+					<b-button size="sm" variant="outline-info" class="ml-2" @click="delSubItem(subItem.id)">
 						<b-icon  font-scale="1.5" icon="trash" aria-hidden="true"></b-icon>
 						<span class="sr-only">Help</span>
 					</b-button>
 				</b-form>
 		</div >
-		
 		</b-modal>
-
 	</div>
 		
 	<div style="" class="text-left ml-3 m">
 		<strong class="text-primary border-left  border-success">查询条件</strong>
 	</div>
-		<b-container fluid class="mt-2">
-			<b-row>
-			</b-row>
+	<b-container fluid class="mt-2">
 		<b-row>
-		<b-col md="4" class="my-1">
-			<b-form-group label-cols-sm="3" label="系统名称" class="mb-0">
-				<b-input-group>
-					<b-form-input v-model="search.group_name" placeholder="系统名称"></b-form-input>
-				</b-input-group>
-			</b-form-group>
-		</b-col>
-		<b-col md="1" class="my-1">
-				<b-button variant="outline-info"  @click="onSearchData">
-					<b-icon  font-scale="1.5" icon="search" aria-hidden="true"></b-icon>
-				</b-button>
-		</b-col>
-	</b-row>
+		</b-row>
+		<b-row>
+			<b-col md="4" class="my-1">
+				<b-form-group label-cols-sm="3" label="系统名称" class="mb-0">
+					<b-input-group>
+						<b-form-input v-model="search.group_name" placeholder="系统名称"></b-form-input>
+					</b-input-group>
+				</b-form-group>
+			</b-col>
+			<b-col md="1" class="my-1">
+					<b-button variant="outline-info"  @click="onSearchData">
+						<b-icon  font-scale="1.5" icon="search" aria-hidden="true"></b-icon>
+					</b-button>
+			</b-col>
+		</b-row>
  
-	 <b-table
-		ref="table"
-		class="mt-1 "
-		bordered
-		striped hover
-		caption-html="<strong class='text-primary border-left  border-success'>系统列表</strong>"
-		caption-top="true"
-		show-empty
-	    stacked="md"
-		:busy.sync="isBusy"
-		:items="items"
-		:fields="fields"
-		:current-page="form.page_no"
-		:per-page=0
-		:filter="filter"
-		:sort-by.sync="sortBy"
-		:sort-desc.sync="sortDesc"
-		:sort-direction="sortDirection"
-		head-variant="primary"
-		thead-class="table-primary"
-		@filtered="onFiltered"
-		@row-dblclicked="onDbClicked"
-		@sort-changed="onSorted"
-    >
-	
-	 <template v-slot:cell(index)="data">
-        {{ data.index + 1 }}
-      </template>
-	  
-	<template slot="empty" slot-scope="scope">
-		<h5>没有查询到设备数据！</h5>
-	</template>
-
-	<template v-slot:cell(status)="data">
-     	<span  v-if="data.value=='e'" >启用</span>
-		<span  v-if="data.value=='b'"  calss="border-primary">禁用</span>
-	</template>
-	
-	<template v-slot:cell(oper)="data">
-		 <b-button size="sm" variant="outline-info"" v-b-modal.manage-modal-edit class="ml-2" @click="getInfo(data.item.id)">
-			<b-icon  font-scale="1.5" icon="pencil" aria-hidden="true"></b-icon>
-			<span class="sr-only">Help</span>
-		</b-button>
+		<b-table
+			ref="table"
+			class="mt-1 "
+			bordered
+			striped hover
+			caption-html="<strong class='text-primary border-left  border-success'>系统列表</strong>"
+			caption-top="true"
+			show-empty
+			stacked="md"
+			:busy.sync="isBusy"
+			:items="items"
+			:fields="fields"
+			:current-page="form.page_no"
+			:per-page=0
+			:filter="filter"
+			:sort-by.sync="sortBy"
+			:sort-desc.sync="sortDesc"
+			sort-icon-left
+			:sort-direction="sortDirection"
+			head-variant="primary"
+			thead-class="table-primary"
+			@filtered="onFiltered"
+			@row-dblclicked="onDbClicked"
+			@sort-changed="onSorted"
+		>
+		<template v-slot:cell(index)="data">
+			{{ data.index + 1 }}
+		</template>
 		
-		 <b-button size="sm" variant="outline-info"" class="ml-2" @click="delInfo(data.item.id,data.item.group_name)">
-			<b-icon  font-scale="1.5" icon="trash" aria-hidden="true"></b-icon>
-			<span class="sr-only">Help</span>
-		</b-button>
-	</template>
-	</b-table>
+		<template slot="empty" slot-scope="scope">
+			<h5>没有查询到设备数据！</h5>
+		</template>
 
-	<b-row class="d-flex  align-items-center">
-		<b-col md="4" class="my-1">
-			<strong>
-				数据总共：{{totalRows}}条，每页{{search.page_size}}条，当前页：{{search.page_no}}
-			</strong>
-		</b-col>
+		<template v-slot:cell(status)="data">
+			<span  v-if="data.value=='e'" >启用</span>
+			<span  v-if="data.value=='b'"  calss="border-primary">禁用</span>
+		</template>
+		
+		<template v-slot:cell(oper)="data">
+			<b-button size="sm" variant="outline-info" v-b-modal.manage-modal-edit class="ml-2" @click="getInfo(data.item.id)">
+				<b-icon  font-scale="1.5" icon="pencil" aria-hidden="true"></b-icon>
+				<span class="sr-only">Help</span>
+			</b-button>
+			
+			<b-button size="sm" variant="outline-info" class="ml-2" @click="delInfo(data.item.id,data.item.group_name)">
+				<b-icon  font-scale="1.5" icon="trash" aria-hidden="true"></b-icon>
+				<span class="sr-only">Help</span>
+			</b-button>
+		</template>
+		</b-table>
 
-		<b-col md="4" class="my-1">
-			<b-pagination
-			  v-model="search.page_no"
-			  :total-rows="totalRows"
-			  :per-page="search.page_size"
-			  class="my-0"
-			  @change="onChange"
-			></b-pagination>
-		</b-col>
-		 <b-col md="4" class="my-1">
-			<b-button v-b-modal.manage-modal-add variant="outline-info">  
-			<b-icon  font-scale="1.5" icon="plus" aria-hidden="true"></b-icon>
-			新增系统</b-button>
-		 </b-col>
-    </b-row>
-  </b-container>
+		<b-row class="d-flex  align-items-center">
+			<b-col md="4" class="my-1">
+				<strong>
+					数据总共：{{totalRows}}条，每页{{search.page_size}}条，当前页：{{search.page_no}}
+				</strong>
+			</b-col>
 
-  <div  class="text-center text-danger  loading"  v-show="is">
-		<b-spinner class="align-middle"  role="status" >
-		</b-spinner>
-		<strong>loading...</strong>
-  </div>
+			<b-col md="4" class="my-1">
+				<b-pagination
+				v-model="search.page_no"
+				:total-rows="totalRows"
+				:per-page="search.page_size"
+				class="my-0"
+				@change="onChange"
+				></b-pagination>
+			</b-col>
+			<b-col md="4" class="my-1">
+				<b-button v-b-modal.manage-modal-add variant="outline-info">  
+				<b-icon  font-scale="1.5" icon="plus" aria-hidden="true"></b-icon>
+				新增系统</b-button>
+			</b-col>
+		</b-row>
+  	</b-container>
+	<div  class="text-center text-danger  loading"  v-show="is">
+			<b-spinner class="align-middle"  role="status" >
+			</b-spinner>
+			<strong>loading...</strong>
+	</div>
  </div>
 </template>
 
@@ -257,8 +267,8 @@
         fields: [
 				'index',
 				{ key: 'group_name', 	label: '系统名称' },
-				{ key: 'status', 		label: '状态' },
-				{ key: 'created_time', 	label: '创建时间' },
+				{ key: 'status', 		label: '状态' ,sortable: true },
+				{ key: 'created_time', 	label: '创建时间',sortable: true },
 				{ key: 'oper', 			label: '操作' },
    			],
 		form:{
@@ -272,20 +282,21 @@
 			list:[],
 		},
 		search:{
-				sort_fld: null,
-				sort_mode:null,
+				sort_fld: "id",
+				sort_mode:"desc",
 				id:0,
 				status:'',
 				group_name:'',
 				group_memo:'',
 				group_no:0,
 				page_no: 1,
-				page_size: 5,
+				page_size: 7,
 		},
 		subList:[
 			{
 				menu_name:'',
-				url:''
+				url:'',
+		
 			}
 		],
 	    totalRows: 1,
@@ -295,7 +306,8 @@
         sortDirection: 'asc',
         filter: null,
 		isSubmit:false,
-		menu_url:'',
+		checkPass:true,
+		isRepeat:false,
 	    infoModal: {
           id: 'info-modal',
           title: '',
@@ -305,7 +317,7 @@
     },
     computed: {
 		sortOptions() {
-  			return this.fields
+			return this.fields
 				.filter(f => f.sortable)
 				.map(f => {
 				return { text: f.label, value: f.key }
@@ -315,58 +327,33 @@
 			if  (!this.isSubmit){
 				return null;
 			}
-			return this.form.group_name.length > 4 && this.form.group_name.length < 13
+			return this.form.group_name.length!=""
 		},
+	},
 	
-		menu_name_state() {
-			return function(value){
-				if  (!this.isSubmit){
-					return null
-				}
-				if (this.subList[value].menu_name==""){
-					console.log("check is not pass.....")
-					// this.$root.$emit('bv::show::modal', 'manage-modal-add', '#focusThisOnClose')
-					return false
-				}else{
-					return true
-				}
-			}
-		},
-    },
     mounted() {
-		// console.log("------>",this.$route.params.region)
-		// if (this.$route.params.region!=null){
-		// 	this.form.region=this.$route.params.region
-		// }
-		// Util.$emit('setCurrIndex',2);
 		this.getList()
 	},
+
 	watch: {
 		subList: {
 	　　　　handler(newValue, oldValue) {
 	　　　　　　for (let i = 0; i < newValue.length; i++) {
-				console.log(newValue[i].menu_name)
-				if (this.subList[i].check==null){
+				if (this.subList[i].url_check==null&&
+					this.subList[i].menu_name_check==null){
+					console.log("===========",newValue)
 					return
 				}else{
-						//校验在这边加
-						if (newValue[i].menu_name==""){
-							this.subList[i].check=false
-						}else{
-							this.subList[i].check=true
-						}
+					console.log("===========",newValue)
+					this.preCheckSubForm(newValue,"watch")
 				}
 	　　　　　　}
 	　　　　},
 	　　　　deep: true
 	　　}
-	
 　　},
 
     methods: {
-
-	
-
 		statusColor(item) {
 			return item.type
 		},
@@ -379,17 +366,22 @@
 	
 		onDbClicked(filteredItems) {
 			console.log(filteredItems)
-			alert(filteredItems.sn)
+			
 		},
 			
 		onSorted(ctx) {
-			console.log("=======>",ctx)
-			if (ctx.sortDesc){				
-					this.getList(ctx.sortBy,"desc",ctx.currentPage,5)
+			if (ctx.sortDesc){			
+				this.search.sort_mode="desc"
 			}else{
-					this.getList(ctx.sortBy,"asc",ctx.currentPage,5)
+				this.search.sort_mode="asc"
 			}
+			this.search.sort_fld=ctx.sortBy
+			this.search.page_no=1
+			this.getList();
 		},
+		/*
+			子表单增加明细
+		*/
 		addSubItem() {
 			let maxNum=0;
 			if (this.subList.length>0){
@@ -401,7 +393,8 @@
 				}
 			}
 			maxNum=maxNum+1
-			this.subList.push({menu_name:'',url:'',id:maxNum,check:null})
+			this.subList.push({menu_name:'',url:'',id:maxNum,
+							menu_name_check:null,url_check:null})
 		},
 		
 		delSubItem(id) {
@@ -420,6 +413,7 @@
 			this.search.page_no=page
 			this.getList()
 		},
+		
 		onSearchData(){
 			this.search.page_no=1
 			this.getList()
@@ -427,70 +421,110 @@
 		
 		checkFormValidity() {
 			const valid = this.$refs.form.checkValidity()
-			console.log("checkFormValidity===",valid)
 			return valid
 		},
-		checkFormInput(){
-			let pass=true
-			if (!this.group_name_state){
-				pass=false
-			}
-			//
-			for(let i = 0,len = this.subList.length;i<len;i++){
-				if (this.subList[i].check=false){
-					pass=false
-					break;
+		/*
+		*/
+		preCheckSubForm(listArr,type){
+			//新增子表格，Watch 会触发这个事件
+			for(let i = 0,len = listArr.length;i<len;i++){
+				if (listArr[i].menu_name==""){
+					this.subList[i].menu_name_check=false
+				}else{
+					this.subList[i].menu_name_check=true
 				}
-				console.log(this.subList[i].check)
+				if (listArr[i].url==""){
+					this.subList[i].url_check=false
+				}else{
+					this.subList[i].url_check=true
+				}
 			}
+			let iSum=0
+			for(let i = 0,len = listArr.length;i<len;i++){
+				if (listArr[i].url_check==false||listArr[i].menu_name_check==false){
+					this.checkPass=false
+					break
+				}else{
+					iSum++
+				}
+			}
+			if (iSum==listArr.length){
+				this.checkPass=true
+			}
+		},
 
-			return pass
+		checkFormInput(){
+			if (!this.group_name_state){
+				this.checkPass=false
+			}
+			if (this.subList.length>0){
+				this.preCheckSubForm(this.subList,"submit")
+			}
+		},
 
+		busiNoCheck(){
+			var that=this;
+			this.post_form.group=this.form
+			if (this.form.group_name==""){
+				return
+			}
+			this.$axios.post(GLOBAL.URL_CHKGROUP, 
+								JSON.stringify(this.post_form))
+								.then(function (response) {
+							if (response.data.err_code=="0000"){
+								that.isRepeat=false
+							}else{
+								that.isRepeat=true
+								that.toast("模板名称重复了，请重新输入")
+							}
+						})
+				.catch(function (error) {
+						that.toast("出错了:"+error)
+			}); 		
 		},
 	
 		handleAddOk(evt) {
 			this.isSubmit=true
+			this.checkPass=true
+			this.checkFormInput()
 			
-			if (!this.checkFormInput()){
+			if (!this.checkPass){
 				evt.preventDefault()
 			 	return;
 			}
-			
-			//* 子表单的输入部分，采用数据校验。。。。
-			// let checkPass=true
-			// for(let i = 0,len = this.subList.length;i<len;i++){
-			// 	if (this.subList[i].menu_name==""){
-			// 		this.subList[i].check=false
-			// 		checkPass=false
-			// 	}else{
-			// 		this.subList[i].check=true
-			// 	}
-			// }
-			// if (!checkPass){
-			// 	evt.preventDefault()
-			// 	return;
-			// }
-			//////
+			if (this.isRepeat){
+				evt.preventDefault()
+				return;
+			}
 			if (!this.checkFormValidity()) {
 				return
 			}
 			this.$nextTick(() => {
 			this.$refs.modal.hide()
 				this.addInfo()
-				this.toast("新增成功")
 			})
 		},
 
 		handleEditOk(evt) {
 			this.isSubmit=true;
-			if (!this.group_name_state){
+			
+			this.checkPass=true
+
+			this.checkFormInput()
+			
+			if (!this.checkPass){
 				evt.preventDefault()
-				return
-			}  
+			 	return;
+			}
+			
+			if (this.isRepeat){
+				evt.preventDefault()
+				return;
+			}
+
 			this.$nextTick(() => {
 				this.$refs.modal2.hide()
 				this.setInfo()
-				this.toast("修改成功")
 			})
 		},
 		
@@ -514,10 +548,6 @@
 				autoHideDelay:1000,
 				appendToast: false
 			})
-		},
-		
-		hiddenModal(evt) {
-			//showModal(evt)
 		},
 			
 		prevPage() {
@@ -546,12 +576,11 @@
 						JSON.stringify(this.search),
 						{headers: {'Content-Type': 'application/json'}})
 						.then(function (response) {
-							console.log("========>",response.data)
 							that.items=response.data.list
 							that.totalRows = response.data.total
 						})
 				.catch(function (error) {
-					console.log("---->=========>",error);
+					that.toast("出错了:"+error)
 			}); 		
 		},
 		/* 新增*/
@@ -563,12 +592,18 @@
 			this.$axios.post(GLOBAL.URL_ADDGROUP, 
 								JSON.stringify(this.post_form))
 								.then(function (response) {
-									that.search.page_no=1
-									that.search.sort_fld="id"
-									that.search.sort_mode="desc"
-									that.getList();
-							})
+							if (response.data.err_code=="0000"){
+								that.toast(response.data.err_msg)
+								that.search.page_no=1
+								that.search.sort_fld="id"
+								that.search.sort_mode="desc"
+								that.getList();
+							}else{
+								that.toast(response.data.err_msg)
+							}
+						})
 				.catch(function (error) {
+						that.toast("出错了:"+error)
 			}); 		
 		},
 		/* 修改提交*/
@@ -579,10 +614,15 @@
 			this.$axios.post(GLOBAL.URL_SETGROPP, 
 							JSON.stringify(this.post_form))
 							.then(function (response) {
-								that.getList();
+								if (response.data.err_code=="0000"){
+									that.toast(response.data.err_msg)
+									that.getList();
+								}else{
+									that.toast(response.data.err_msg)
+								}
 							})
 				.catch(function (error) {
-						console.log("=========>",error);
+						that.toast("出错了:"+error)
 				}); 		
 			},
 			
@@ -595,10 +635,17 @@
 						JSON.stringify(this.form))
 						.then(function (response) {
 							that.form=response.data.group
+							/* 
+								有子表单时才出现
+							*/
 							that.subList=response.data.list
+								for(let i = 0,len = that.subList.length;i<len;i++){
+									that.subList[i].menu_name_check=true
+									that.subList[i].url_check=true
+								}
 						})
 				.catch(function (error) {
-						console.log("=========>",error);
+						that.toast("出错了:"+error)
 				}); 		
 		},
 			
@@ -622,15 +669,20 @@
 					this.form.id=id,
 					this.$axios.post(GLOBAL.URL_DELGROUP,JSON.stringify(this.form))
 							.then(function (response) {
-								that.getList();
+								if (response.data.err_code=="0000"){
+									that.toast(response.data.err_msg)
+									that.getList();
+								}else{
+									that.toast(response.data.err_msg)
+								}
 							})
 							.catch(function (error) {
-									console.log("=========>",error);
+								that.toast("出错了:"+error)
 							}); 		
 						}
 				})
 				.catch(err => {
-					// An error occurred
+					
 			})
 		},
     }

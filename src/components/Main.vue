@@ -322,6 +322,11 @@
 				})
 				
 			},
+			showModal(){
+				this.old_pwd=""
+				this.new_pwd=""
+				this.new_pwd2=""
+			}
 			
 	
     }
