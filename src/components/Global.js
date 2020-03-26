@@ -11,12 +11,21 @@ export default {
 	URL_ADDACCOUNT: '/jc/api/addaccount',
 	URL_GETACCOUNT: '/jc/api/getaccount',
 	/**/
+	URL_GETGROUP_LISTEX: '/jc/api/getgrplistex',
 	URL_GETGROUP_LIST: '/jc/api/getgrplist',
 	URL_DELGROUP: '/jc/api/delgroup',
 	URL_SETGROPP: '/jc/api/setgroup',
 	URL_ADDGROUP: '/jc/api/addgroup',
 	URL_GETGROUP: '/jc/api/getgroup',
 	URL_CHKGROUP: '/jc/api/chkgroup',
+
+	URL_GETROLE_LIST: '/jc/api/getrolelist',
+	URL_DELROLE: '/jc/api/delrole',
+	URL_SETROLE: '/jc/api/setrole',
+	URL_ADDROLE: '/jc/api/addrole',
+	URL_GETROLE: '/jc/api/getrole',
+	URL_CHKROLE: '/jc/api/chkrole',
+
 	
 	URL_MAPDATA: 				'/device/getOnlineDeviceMap',
 	URL_DEVICELIST: 			'/device/getDeviceList',

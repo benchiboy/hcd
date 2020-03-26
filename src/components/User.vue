@@ -95,7 +95,7 @@
 	
 				<b-form-group
 					:state="rightsState"
-					label="选择用户权限"
+					label="选择用户角色"
 					label-for="rights-input"
 					invalid-feedback="用户权限不能为空"
 					valid-feedback="权限校验通过"
@@ -103,8 +103,8 @@
 				>
 				<b-form-checkbox-group
 					id="rights-input"
-					v-model="form.rights"
-					:options="options"
+					v-model="form.roles"
+					:options="role_options"
 					switches
 				></b-form-checkbox-group>
  
@@ -207,7 +207,7 @@
 			
 						<b-form-group
 							:state="rightsState"
-							label="选择用户权限"
+							label="选择用户角色"
 							label-for="rights-input"
 							invalid-feedback="用户权限不能为空"
 							valid-feedback="权限校验通过"
@@ -215,8 +215,8 @@
 						>
 						<b-form-checkbox-group
 							id="rights-input"
-							v-model="form.rights"
-							:options="options"
+							v-model="form.roles"
+							:options="role_options"
 							switches
 						></b-form-checkbox-group>
 					 </b-form-group>
@@ -265,7 +265,6 @@
 							<span><h6>用户状态:</h6></span><span>{{ account.status=='e'?'正常': account.status=='f'?'冻结':'禁用'}}</span>
 						</div>
 						<div class="d-flex justify-content-between">
-							<span><h6>权限:</h6></span><span>{{ getRights(account.rights)}}</span>
 						</div>
 						<div class="d-flex justify-content-end">
 							<b-button-group size="sm"  class="mt-2" >
@@ -281,9 +280,8 @@
 				</b-card>
 			</b-col >	
 		</b-row>		
-		</b-container
- 
- </div>
+		</b-container 
+	 </div>
 	</div>
 
 </div>
@@ -310,11 +308,7 @@
   export default {
     data() {
       return {
-		options: [
-          { text: '设备地图', value: 'm' },
-          { text: '设备列表', value: 'l' },
-          { text: '设备分析', value: 'a' },
-          { text: '设备决策', value: 'd' }
+		role_options: [
         ],
 		status_options: [
           { text: '正常', value: 'e' },
@@ -330,7 +324,8 @@
 			 page_size:8,
 			 user_id:0,
 			 login_name: '',
-			 rights:[],
+			 roles:[],
+			 list:[],
 			 login_pass:'',
 			 login_pass2:'',
 			 expire_date:'',
@@ -355,12 +350,7 @@
 			return this.form.nick_name.length > 2 && this.form.nick_name.length < 20
 		},
 		
-		rightsState() {
-			if  (!this.isSubmit){
-				return null;
-			}
-			return this.form.rights.length>0?true:false;
-		},
+	
 		expireState() {
 			if  (!this.isSubmit){
 				return null;
@@ -370,23 +360,11 @@
 	  },
 	  
     mounted() {
+		this.getRoleList()
 		this.getActList()
     },
     methods: {
-		getRights(rights) {
-			let text=""
-			let r=rights.split(",")
-			console.log("======>----",r.length)
-			for ( var j = 0; j <r.length; j++){
-				for ( var i = 0; i <this.options.length; i++){
-					if (this.options[i].value==r[j]){
-						text=text+this.options[i].text+" "
-						break
-					}
-				}
-			}
-			return text
-		},
+	
 			
 		checkFormValidity() {
 			const valid = this.$refs.form.checkValidity()
@@ -422,7 +400,7 @@
 				this.isSubmit=false;
 				this.form.nick_name='';
 				this.form.login_name=''
-				this.form.rights=['m']
+				this.form.roles=[];
 				this.form.expire_date=getCurrDate()
 				this.form.status='e'
 			},
@@ -489,15 +467,32 @@
 											that.totalPage=t
 										}
 										console.log("total-Page======>",that.totalPage)
-										
 									})
 									.catch(function (error) {
+						}); 		
+			},
+				/* 用户列表*/
+			getRoleList() {
+				var that=this;
+				this.$axios.post(GLOBAL.URL_GETROLE_LIST, 
+									JSON.stringify(this.form))
+									.then(function (response) {
+								
+								for(let i = 0,len =response.data.list.length;i<len;i++){
+									that.role_options.push({"text":response.data.list[i].role_name,"value":response.data.list[i].role_no})
+								}
+
+							})
+							.catch(function (error) {
 						}); 		
 			},
 			/* 新增用户*/
 			addAccount() {
 				var that=this;
-				alert(JSON.stringify(this.form))
+				this.form.list=[];
+				for(let i = 0,len =this.form.roles.length;i<len;i++){
+					this.form.list.push({"role_no":this.form.roles[i]})
+				}
 				this.$axios.post(GLOBAL.URL_ADDACCOUNT, 
 									JSON.stringify(this.form))
 									.then(function (response) {
@@ -509,29 +504,38 @@
 			/* 修改用户提交*/
 			setAccount() {
 				var that=this;
+				this.form.list=[];
+				for(let i = 0,len =this.form.roles.length;i<len;i++){
+					this.form.list.push({"role_no":this.form.roles[i]})
+				}
 				this.$axios.post(GLOBAL.URL_SETACCOUNT, 
 									JSON.stringify(this.form))
 									.then(function (response) {
 									})
-									.catch(function (error) {
-										console.log("=========>",error);
+							.catch(function (error) {
+								console.log("=========>",error);
 						}); 		
 			},
 			
 			/* 得到用户信息*/
 			getAccount(user_id) {
 				var that=this;
+				this.form.roles=[];
 				this.form.user_id=user_id
 				this.$axios.post(GLOBAL.URL_GETACCOUNT, 
 									JSON.stringify(this.form))
 									.then(function (response) {
-										that.form.nick_name=response.data.nick_name
-										that.form.login_name=response.data.login_name
-										that.form.expire_date=response.data.expire_date
-										that.form.status=response.data.status
-										that.form.rights=response.data.rights.split(",")
-										that.form.login_pass=response.data.login_pass
-										that.form.login_pass2=response.data.login_pass
+										that.form.nick_name=response.data.account.nick_name
+										that.form.login_name=response.data.account.login_name
+										that.form.expire_date=response.data.account.expire_date
+										that.form.status=response.data.account.status
+										that.form.login_pass=response.data.account.login_pass
+										that.form.login_pass2=response.data.account.login_pass
+									
+										for(let i = 0,len =response.data.list.length;i<len;i++){
+											that.form.roles.push(response.data.list[i].role_no)
+										}
+									
 									})
 									.catch(function (error) {
 										console.log("=========>",error);
