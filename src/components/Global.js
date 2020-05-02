@@ -10,6 +10,7 @@ export default {
 	URL_SETACCOUNT: '/jc/api/setaccount',
 	URL_ADDACCOUNT: '/jc/api/addaccount',
 	URL_GETACCOUNT: '/jc/api/getaccount',
+	URL_GETLEFT_MENU: '/jc/api/getmenus',
 	/**/
 	URL_GETGROUP_LISTEX: '/jc/api/getgrplistex',
 	URL_GETGROUP_LIST: '/jc/api/getgrplist',

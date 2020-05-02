@@ -1,6 +1,5 @@
 <template>
  <div>
-	 
 	 	
 	 <b-modal
 	 			id="modal-1"
@@ -89,9 +88,9 @@
 				 
 				<b-navbar-nav class="ml-auto">
 					<b-navbar-nav  id="map" >
-							<b-nav-item  v-b-modal.modal-1  href="#">
-								<b-span class="text-white font-weight-bold text-decoration-none">修改密码 </b-span>
-							</b-nav-item>
+						<b-nav-item  v-b-modal.modal-1  href="#">
+							<b-span class="text-white font-weight-bold text-decoration-none">修改密码 </b-span>
+						</b-nav-item>
 					</b-navbar-nav >
 				<b-navbar-nav  id="map" >
 						<b-nav-item href="#" >
@@ -113,99 +112,31 @@
 		<b-row class="menuBox">
 				<b-col :md="menuCols"  style="background-color:steelblue">
 					<div v-show="isCollapse">
-						
-						
-							<div>
-								<span>
-								<b-button v-b-toggle.collapse-2  variant="primary" block 
-								class=" mt-2 d-flex justify-content-between " @click="onMenuClick(1)">
-									<img  src="../assets/icon_addperson.png" 
-												alt="Image 1" 
-												width="20" 
-												height="20">
-									</img>
-									<span >短信系统管理</span>
-									<img  src="../assets/arrow_up.png" alt="Image 1" 
-												width="20" height="20" class="" v-show="isMenuUpClick[1]">
-									</img>
-									<img  src="../assets/arrow_down.png" alt="Image 1" 
-												width="20" height="20" class="" v-show="isMenuDownClick[1]">
-									</img> 
-								</b-button>
-								</span>
-								<b-collapse id="collapse-2"  accordion="my-accordion" class="m-2">
-									
-									<b-button block pill :variant="currSelIndex==6?'success':'info'"
-									@click="onSelected(6)">应用管理</b-button>
-																			
-									<b-button block pill :variant="currSelIndex==7?'success':'info'"
-									@click="onSelected(7)">模板管理</b-button>
-																		
-									<b-button block pill :variant="currSelIndex==8?'success':'info'"
-									@click="onSelected(8)">发送日志</b-button>
-								
-								</b-collapse>
-							</div>
-							<div >
-									<span>
-									<b-button v-b-toggle.collapse-3  variant="primary" block 
-									class=" mt-2 d-flex justify-content-between " @click="onMenuClick(2)">
-										<img  src="../assets/icon_addperson.png" alt="Image 1" width="20" height="20" class="">
-										</img>
-									<span >Portal管理</span>
-										<img  src="../assets/arrow_up.png" alt="Image 1" 
-													width="20" height="20" class="" v-show="isMenuUpClick[2]">
-										</img>
-										<img  src="../assets/arrow_down.png" alt="Image 1" 
-													width="20" height="20" class="" v-show="isMenuDownClick[2]">
-										</img> 
-									</b-button>
-									</span>
-									<b-collapse id="collapse-3"  accordion="my-accordion" class="m-2">
-										<div>
-											<a href="#/Main/Role"   >
-												<b-button block pill :variant="currSelIndex==10?'success':'info'"
-												@click="onSelected(10)">角色定义</b-button>
-											</a >	
-										</div>
-										
-										<div class="mt-2">
-											<a href="#/Main/Group"  class="mt-2" >
-												<b-button block pill :variant="currSelIndex==11?'success':'info'"
-												@click="onSelected(11)">系统管理</b-button>
-											</a >										
-										</div>
-										
-										
-										<div class="mt-2">
-											<a href="#/Main/Menu"  class="mt-2" >
-												<b-button block pill :variant="currSelIndex==12?'success':'info'"
-												@click="onSelected(12)">菜单管理</b-button>
-											</a >										
-										</div>
-										
-										<div class="mt-2">
-											<a href="#/Main/User"  class="mt-2" >
-												<b-button block pill :variant="currSelIndex==13?'success':'info'"
-												@click="onSelected(11)">用户管理</b-button>
-											</a >										
-										</div>
-										
-										<div class="mt-2">
-											<a href="#/Main/SystemLog"  class="mt-2" >
-											<b-button block pill :variant="currSelIndex==14?'success':'info'"
-											@click="onSelected(14)">系统日志</b-button>
-											</a >		
-										</div>
-										
-										<div class="mt-2">
-											<b-button block pill  v-b-modal.modal-1 :variant="currSelIndex==15?'success':'info'"
-											@click="onSelected(15)">修改密码</b-button>
-										</div>										
-																	
-									</b-collapse>
-							</div>
-					
+						<div v-for="(group,gindex) in groups">
+							<span>
+							<b-button  v-b-toggle="'collapse-'+gindex"  variant="primary" block 
+							class=" mt-2 d-flex justify-content-between " @click="onMenuClick(gindex)">
+								<img  src="../assets/icon_addperson.png" alt="Image 1" width="20" height="20" class="">
+								</img>
+							<span >{{group.group_name}}</span>
+								<img  src="../assets/arrow_up.png" alt="Image 1" 
+											width="20" height="20" class="" v-show="isMenuUpClick[gindex]">
+								</img>
+								<img  src="../assets/arrow_down.png" alt="Image 1" 
+											width="20" height="20" class="" v-show="isMenuDownClick[gindex]">
+								</img> 
+							</b-button>
+							</span>
+							<b-collapse :id=forId(gindex)  accordion="my-accordion" class="m-2">
+								<div v-for="(menu,index) in group.list"  :class="{'mt-2':index>0}" >
+									<a :href="menu.url"  class="mt-2" >
+										<b-button block pill :variant="currSelIndex==(index+1)*(gindex+1)?'success':'info'"
+										@click="onSelected((index+1)*(gindex+1))">{{menu.menu_name}}</b-button>
+									</a >										
+								</div>
+							</b-collapse>
+						</div>
+
 					</div>
 				</b-col>
 				
@@ -235,6 +166,7 @@
 					new_pwd:'',
 					new_pwd2:'',
 				},
+				groups:[],
 				currSelIndex:0,
 				isSubmit:false,
 			}
@@ -242,7 +174,24 @@
     
 	mounted() {
 		//this.$router.push({name:'DeviceList',params:{}});
-		let that=this;
+			console.log("======>=========");
+		var that=this;
+		this.$axios.post(GLOBAL.URL_GETLEFT_MENU, 
+								{ id: 123})
+								.then(function (response) {
+					
+					console.log("======>",response.data);
+					that.groups=response.data.list;
+					
+						
+							
+				})
+				.catch(function (error) {
+						
+		}); 		
+			
+
+	
 		Util.$on('setCurrIndex', function (index) {
 			that.setCurrIndex(index)
 		})
@@ -270,6 +219,9 @@
 			// },
 		},
     methods: {
+		forId:function(index){
+			 return "collapse-" +index
+ 		},
 			setCurrIndex(index){
 				this.currSelIndex=index;
 			},
@@ -327,8 +279,6 @@
 				this.new_pwd=""
 				this.new_pwd2=""
 			}
-			
-	
     }
   }
 </script>

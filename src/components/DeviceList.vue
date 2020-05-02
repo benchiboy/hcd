@@ -238,7 +238,7 @@
     },
     mounted() {
 		// Set the initial number of items
-		console.log("------>",this.$route.params.region)
+	//	console.log("------>",this.$route.params.region)
 		if (this.$route.params.region!=null){
 			this.form.region=this.$route.params.region
 		}
@@ -251,6 +251,7 @@
 				return item.type
 			},
 			getDataList(sortFld,sortMode,pageNo,pageSize){
+			
 				var that=this;
 				this.form.sort_fld=sortFld
 				this.form.sort_mode=sortMode
@@ -262,8 +263,8 @@
 									{headers: {'Content-Type': 'application/json'}})
 							.then(function (response) {
 								console.log("========>",response.data)
-								that.items=response.data.data.device_list
-								console.log(that.items)
+								that.items=response.data.List
+								console.log("----->",that.items)
 
 								for (var i=0;i<that.items.length;i++){
 									if (that.items[i].is_online=='0'){
@@ -319,7 +320,7 @@
 		},
 		
 		onSearchData(){
-			alert(JSON.stringify(this.form))
+			
 			this.getDataList("id","desc",this.currentPage,5)
 		}
 			
