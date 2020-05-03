@@ -96,8 +96,7 @@
 			 },
 			 
 				mounted(){		
-					this.onTabId()
-					
+					//this.onTabId()
 				},
 	
         methods:{

@@ -25,7 +25,7 @@
 	  
   <b-tabs class="mt-3">
     <!-- Add your b-tab components here -->
-    <template slot="tabs">
+    <template v-slot:tabs-end>
       <b-nav-item href="#" @click="onDeviceInfo(sn)" 
 	  :class="currIndex==1?'selectedItem':''">基本信息</b-nav-item>
       <b-nav-item href="#" @click="onDeviceConfig(sn)"
@@ -40,6 +40,8 @@
 	  :class="currIndex==6?'selectedItem':''">设备日志</b-nav-item>
     </template>
   </b-tabs>
+
+
  	<div>  
 		<router-view/>
 	</div>

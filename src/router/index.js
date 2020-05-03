@@ -8,6 +8,8 @@ import DeviceDetail_Version from '@/components/DeviceDetail_Version'
 import DeviceDetail_Chip from '@/components/DeviceDetail_Chip'
 import DeviceDetail_ChkResult from '@/components/DeviceDetail_ChkResult'
 import DeviceDetail_RunLog from '@/components/DeviceDetail_RunLog'
+import DeviceAnalysis from '@/components/Analysis'
+import DeviceAnalysis_Status from '@/components/Analysis_Status'
 import DeviceMap from '@/components/DeviceMap'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
@@ -56,6 +58,25 @@ export default new Router({
 						meta: {
 									requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
 						},
+					},
+
+					{
+						path: 'DeviceAnalysis',
+						name: 'DeviceAnalysis',
+						component: DeviceAnalysis,
+						meta: {
+									requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+						},
+							children: [
+								{
+									path: 'DeviceAnalysis_Status',
+									name: 'DeviceAnalysis_Status',
+									component: DeviceAnalysis_Status,
+											meta: {
+												requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
+											},
+							}
+						]
 					},
 					{
 						path: 'DeviceDetail',
@@ -123,14 +144,7 @@ export default new Router({
 							requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
 						},
 					},
-					{
-						path: 'MainInfo',
-						name: 'MainInfo',
-						component: MainInfo,
-						meta: {
-							requireAuth: false,  // 添加该字段，表示进入这个路由是需要登录的
-						},
-					},
+					
 					{
 						path: 'Role',
 						name: 'Role',

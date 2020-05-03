@@ -262,10 +262,7 @@
 									JSON.stringify(this.form),
 									{headers: {'Content-Type': 'application/json'}})
 							.then(function (response) {
-								console.log("========>",response.data)
 								that.items=response.data.List
-								console.log("----->",that.items)
-
 								for (var i=0;i<that.items.length;i++){
 									if (that.items[i].is_online=='0'){
 										that.items[i]._cellVariants={ is_online: 'danger'}
